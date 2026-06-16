@@ -49,19 +49,21 @@ Docker Compose is recommended because:
 
 - service name: `app`
 - container name: `marketsync-app`
+- image: `ghcr.io/jimamuto/marketsync-app:latest`
 - exposed port: `3000`
 - database URL inside Docker: `postgresql://postgres:postgres@postgres:5432/marketsync`
 
-The hostname `postgres` works inside Docker Compose because it is the service name.
+The app image is built by GitHub Actions and published to GitHub Container Registry. The GHCR package should be public so a partner can pull it without logging in. The hostname `postgres` works inside Docker Compose because it is the service name.
 
 ---
 
 ## 4. Recommended Setup Commands
 
-Build and start the full project:
+Download the latest published app image and start the full project:
 
 ```bash
-docker compose up --build
+docker compose pull
+docker compose up
 ```
 
 Open the app:
@@ -205,7 +207,8 @@ Commit `.env.example`, but do not commit real `.env` files.
 Both partners should verify:
 
 - Docker is installed.
-- `docker compose up --build` starts the app and PostgreSQL.
+- `docker compose pull` downloads the published app image.
+- `docker compose up` starts the app and PostgreSQL.
 - PostgreSQL starts successfully in the `marketsync-postgres` container.
 - The app starts successfully in the `marketsync-app` container.
 - `http://localhost:3000/api/health/db` returns `status: ok`.

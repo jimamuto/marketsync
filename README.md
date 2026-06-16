@@ -23,8 +23,13 @@ Install these before running the project:
 From the repository root, run:
 
 ```bash
-docker compose up --build
+docker compose pull
+docker compose up
 ```
+
+The app image is built by GitHub Actions and published to GitHub Container Registry as `ghcr.io/jimamuto/marketsync-app:latest`.
+
+If Docker cannot pull the image, make sure the GHCR package is public or log in with `docker login ghcr.io`.
 
 This starts:
 
@@ -92,9 +97,10 @@ npm run dev
 ## Common Commands
 
 ```bash
-docker compose up --build  # build and start app + PostgreSQL
-docker compose up -d       # start existing app + PostgreSQL containers
-docker compose down        # stop app + PostgreSQL
+docker compose pull     # download the latest published app image
+docker compose up       # start app + PostgreSQL
+docker compose up -d    # start app + PostgreSQL in the background
+docker compose down     # stop app + PostgreSQL
 ```
 
 ```bash
