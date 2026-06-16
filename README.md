@@ -1,8 +1,108 @@
 # MarketSync
 
-Fresh-slate planning repository for the **Web-Based Market Synchronization and B2B Booking Platform for Small-Scale Farmers and Institutional Buyers in Kenya**.
+Web-Based Market Synchronization and B2B Booking Platform for Small-Scale Farmers and Institutional Buyers in Kenya.
 
-This repository starts with planning documentation so the team can agree on the roadmap, branches, Docker setup, documentation standards, and foundational work before implementation begins.
+This repository contains the project foundation:
+
+- Next.js application
+- TypeScript configuration
+- Docker Compose app service
+- Docker Compose PostgreSQL service
+- environment variable example
+- database migration folder structure
+
+## Requirements
+
+Install these before running the project:
+
+- Docker Desktop or another Docker Compose-compatible runtime
+- Node.js 20+ and npm only if you want to run development commands outside Docker
+
+## Recommended Setup: Run Everything with Docker Compose
+
+From the repository root, run:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+
+- `marketsync-postgres` on PostgreSQL port `5432`
+- `marketsync-app` on app port `3000`
+
+Open the app at:
+
+```text
+http://localhost:3000
+```
+
+Check the database health endpoint:
+
+```text
+http://localhost:3000/api/health/db
+```
+
+Stop the full setup:
+
+```bash
+docker compose down
+```
+
+Reset the Docker database volume only when you intentionally want a fresh database:
+
+```bash
+docker compose down -v
+```
+
+## Optional: Run the App Directly with npm
+
+Use this only if PostgreSQL is already running through Docker Compose.
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a local environment file:
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell, use:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Start only PostgreSQL:
+
+```bash
+docker compose up -d postgres
+```
+
+Start the app:
+
+```bash
+npm run dev
+```
+
+## Common Commands
+
+```bash
+docker compose up --build  # build and start app + PostgreSQL
+docker compose up -d       # start existing app + PostgreSQL containers
+docker compose down        # stop app + PostgreSQL
+```
+
+```bash
+npm run lint   # run lint checks
+npm run build  # create a production build
+```
+
+## Documentation
 
 Start here:
 

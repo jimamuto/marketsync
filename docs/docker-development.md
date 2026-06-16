@@ -1,68 +1,134 @@
-# Docker and Local PostgreSQL Development Guide
+# Docker and PostgreSQL Development Guide
 
-The project will use **locally hosted PostgreSQL**, preferably through Docker Compose, so both partners can run the same database setup on their own machines.
+The project uses **PostgreSQL through Docker Compose** so both partners can run the same database setup on their own computers.
+
+The database should be created and started by Docker Compose, not by manually creating a database in a local PostgreSQL installation.
 
 The key requirement is that every database table/change must be created through migration SQL scripts. No important table should exist only because someone manually created it on their machine.
 
 ---
 
-## 1. Why Local PostgreSQL?
+## 1. Why PostgreSQL?
 
-Local PostgreSQL is suitable because:
+PostgreSQL is suitable because:
 
-- it keeps the project simple and explainable
-- it avoids depending on a shared online database during development
-- each partner can run the system independently
-- SQL and table structure remain visible
+- the project has relational data such as users, crop supply, buyer demand, and bookings
+- SQL relationships are easy to explain during presentation
 - migrations can recreate the database from scratch
+- both partners can inspect the same table structure
 
 ---
 
-## 2. Why Docker?
+## 2. Why Docker Compose?
 
-Docker is recommended because:
+Docker Compose is recommended because:
 
-- both partners can use the same PostgreSQL version
-- setup is repeatable
-- the database can be started with one command
-- the project is easier to demo on another machine
-
-If one partner already has PostgreSQL installed locally, that can work too, but Docker is preferred for consistency.
+- both partners use the same PostgreSQL version
+- the app and database start with one command
+- setup is repeatable on Windows, Mac, and Linux
+- the app connects to the Docker database service by service name
+- development does not depend on one person's local PostgreSQL installation
 
 ---
 
-## 3. Planned Docker Service
+## 3. Docker Services
 
-PostgreSQL service:
+`docker-compose.yml` defines two services.
 
+### PostgreSQL service
+
+- service name: `postgres`
+- container name: `marketsync-postgres`
+- image: `postgres:16`
 - database: `marketsync`
 - user: `postgres`
 - password: `postgres` for local development only
-- port: `5432`
+- exposed port: `5432`
 
-Example future `docker-compose.yml`:
+### App service
 
-```yaml
-services:
-  postgres:
-    image: postgres:16
-    container_name: marketsync-postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: marketsync
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+- service name: `app`
+- container name: `marketsync-app`
+- exposed port: `3000`
+- database URL inside Docker: `postgresql://postgres:postgres@postgres:5432/marketsync`
 
-volumes:
-  postgres_data:
+The hostname `postgres` works inside Docker Compose because it is the service name.
+
+---
+
+## 4. Recommended Setup Commands
+
+Build and start the full project:
+
+```bash
+docker compose up --build
+```
+
+Open the app:
+
+```text
+http://localhost:3000
+```
+
+Check the app can reach the Docker PostgreSQL database:
+
+```text
+http://localhost:3000/api/health/db
+```
+
+Stop the setup:
+
+```bash
+docker compose down
+```
+
+Reset the Docker database volume only when a fresh database is intentionally needed:
+
+```bash
+docker compose down -v
 ```
 
 ---
 
-## 4. Migration Script Rule
+## 5. Optional npm Development Commands
+
+These commands are optional and are mainly useful while actively editing the app.
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a local environment file:
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Start only the Docker PostgreSQL service:
+
+```bash
+docker compose up -d postgres
+```
+
+Start the app directly with npm:
+
+```bash
+npm run dev
+```
+
+If a computer already has local PostgreSQL using port `5432`, stop that local PostgreSQL service before using this Docker setup. The project database should come from Docker Compose.
+
+---
+
+## 6. Migration Script Rule
 
 All database changes must be written as SQL migration files.
 
@@ -85,37 +151,21 @@ Recommended naming:
 Rules:
 
 - One migration should have one clear purpose.
-- Never create important tables only through the database UI.
+- Never create important tables only through a database UI.
 - If a table changes, add a new migration instead of silently editing the database manually.
 - Each migration should be committed to Git.
 - Update `docs/database.md` after schema changes.
 
----
-
-## 5. Expected Commands After Setup
-
-Start database:
-
-```bash
-docker compose up -d
-```
-
-Stop database:
-
-```bash
-docker compose down
-```
-
-Open PostgreSQL shell:
+Open the Docker PostgreSQL shell:
 
 ```bash
 docker exec -it marketsync-postgres psql -U postgres -d marketsync
 ```
 
-Run a migration manually:
+Run a migration manually after migrations are added:
 
 ```bash
-psql "postgresql://postgres:postgres@localhost:5432/marketsync" -f database/migrations/001_create_users.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/001_create_users.sql
 ```
 
 Later we can add a script like:
@@ -128,37 +178,50 @@ that runs all migration files in order.
 
 ---
 
-## 6. Environment Variables
+## 7. Environment Variables
 
-The app should use:
+Docker Compose sets this for the app container automatically:
 
 ```text
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/marketsync
+DATABASE_URL=postgresql://postgres:postgres@postgres:5432/marketsync
 ```
+
+`.env.example` is only for optional npm-based local development from the host machine.
 
 Commit `.env.example`, but do not commit real `.env` files.
 
 ---
 
-## 7. Review Checklist
+## 8. Operating System Notes
 
-Both partners should verify:
-
-- Docker is installed or PostgreSQL is locally available.
-- PostgreSQL starts successfully.
-- The database can be recreated from migration scripts.
-- Both partners can run the migrations.
-- Both partners can explain every table.
-- `docs/database.md` matches the migration scripts.
+- Windows: use Docker Desktop and run commands in PowerShell, Git Bash, or Windows Terminal.
+- Mac: Docker Desktop works with the same `docker compose` commands.
+- Linux: install Docker Engine with the Compose plugin, then use the same `docker compose` commands.
 
 ---
 
-## 8. Presentation Explanation
+## 9. Review Checklist
 
-If asked why local PostgreSQL was used:
+Both partners should verify:
+
+- Docker is installed.
+- `docker compose up --build` starts the app and PostgreSQL.
+- PostgreSQL starts successfully in the `marketsync-postgres` container.
+- The app starts successfully in the `marketsync-app` container.
+- `http://localhost:3000/api/health/db` returns `status: ok`.
+- The database can be recreated from migration scripts.
+- Both partners can run the migrations.
+- Both partners can explain every table.
+- `docs/database.md` matches the migration scripts after schema work begins.
+
+---
+
+## 10. Presentation Explanation
+
+If asked why PostgreSQL was used:
 
 > We used PostgreSQL because our system has relational data: users, crop supply, buyer demand, and bookings. We kept migration scripts for every table so the database can be recreated consistently by either partner.
 
-If asked why Docker was used:
+If asked why Docker Compose was used:
 
-> Docker helps both partners run the same PostgreSQL setup locally without different manual installations causing problems.
+> Docker Compose lets both partners run the same app and PostgreSQL setup locally without relying on different manual database installations.
