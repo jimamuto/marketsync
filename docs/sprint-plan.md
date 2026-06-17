@@ -143,25 +143,32 @@ Both partners should explain:
 
 ---
 
-## Sprint 3: Authentication and Role Foundation
+## Sprint 3: Authentication and Role APIs
 
 ### Goal
 
-Allow users to exist with roles.
+Build and test simple custom authentication before creating full frontend screens.
 
 ### Work
 
-- Register user.
-- Login user.
-- Password hashing.
-- Store role: Farmer, Buyer, Admin.
-- Basic role-based redirects or protected endpoints.
+- Implement custom auth using the existing `users` table.
+- Hash passwords before saving them.
+- Add role support for Farmer, Buyer, and Admin.
+- Create API routes:
+  - `POST /api/auth/register`
+  - `POST /api/auth/login`
+  - `POST /api/auth/logout`
+  - `GET /api/auth/me`
+- Test the routes using curl, Postman, Thunder Client, or another API client.
+- Keep frontend work minimal until the APIs are verified.
 
 ### Documentation
 
 - Create/update `docs/authentication.md`.
+- Create/update `docs/api.md` with auth endpoints.
 - Explain roles and permissions.
 - Explain password hashing at a high level.
+- Add example request/response bodies for testing.
 
 ### Review
 
@@ -171,103 +178,127 @@ Both partners should explain:
 - where the password is stored
 - why passwords are hashed
 - how the system knows if someone is a farmer, buyer, or admin
+- how each auth endpoint is tested
 
 ### Exit Criteria
 
-- Users can register/login.
+- Register, login, logout, and current-user APIs work.
 - Roles are stored correctly.
+- API tests pass.
 - Both partners can explain the login flow.
 
 ---
 
-## Sprint 4: Farmer Supply Vertical Slice
+## Sprint 4: Farmer Supply APIs
 
 ### Goal
 
-Build the first complete farmer feature.
+Build and test the farmer crop supply API layer.
 
 ### Work
 
-- Farmer can add crop supply.
-- Farmer can view crop supply.
-- Data saves to PostgreSQL.
-- Basic validation is included.
+- Create API routes for farmer crop supplies:
+  - `POST /api/supplies`
+  - `GET /api/supplies`
+  - `GET /api/supplies/:id`
+  - `PATCH /api/supplies/:id`
+  - `DELETE /api/supplies/:id`
+- Save crop supply data to PostgreSQL.
+- Add basic validation for required fields, quantity, dates, and status.
+- Ensure farmer-owned records can be created and viewed.
+- Test endpoints with API requests before building full pages.
 
 ### Documentation
 
 - Update `docs/api.md` with farmer supply endpoints.
-- Update `docs/code-explanation.md` with farmer supply flow.
+- Update `docs/code-explanation.md` with farmer supply API flow.
+- Reference `crop_supplies` in `docs/database.md` if anything changes.
 
 ### Review
 
 Both partners should explain:
 
-- form data
-- API route
-- SQL insert/select
-- database table
+- request body fields
+- API routes
+- SQL insert/select/update/delete operations
+- `crop_supplies` table
 - how this supports the crop calendar later
 
 ### Exit Criteria
 
-- Farmer supply can be created and viewed.
+- Farmer supply APIs can create, read, update, and delete records.
+- API tests pass.
 - Documentation is updated.
 
 ---
 
-## Sprint 5: Buyer Demand Vertical Slice
+## Sprint 5: Buyer Demand APIs
 
 ### Goal
 
-Build the first complete buyer feature.
+Build and test the institutional buyer demand API layer.
 
 ### Work
 
-- Buyer can add demand request.
-- Buyer can view demand requests.
-- Data saves to PostgreSQL.
-- Basic validation is included.
+- Create API routes for buyer demand requests:
+  - `POST /api/demands`
+  - `GET /api/demands`
+  - `GET /api/demands/:id`
+  - `PATCH /api/demands/:id`
+  - `DELETE /api/demands/:id`
+- Save demand request data to PostgreSQL.
+- Add basic validation for required fields, quantity, required date, and status.
+- Ensure buyer-owned demand records can be created and viewed.
+- Test endpoints with API requests before building full pages.
 
 ### Documentation
 
 - Update `docs/api.md` with buyer demand endpoints.
-- Update `docs/code-explanation.md` with buyer demand flow.
+- Update `docs/code-explanation.md` with buyer demand API flow.
+- Reference `demand_requests` in `docs/database.md` if anything changes.
 
 ### Review
 
 Both partners should explain:
 
-- demand form fields
-- API route
-- SQL insert/select
-- database table
+- request body fields
+- API routes
+- SQL insert/select/update/delete operations
+- `demand_requests` table
 - how this supports matching
 
 ### Exit Criteria
 
-- Buyer demand can be created and viewed.
+- Buyer demand APIs can create, read, update, and delete records.
+- API tests pass.
 - Documentation is updated.
 
 ---
 
-## Sprint 6: Matching Logic
+## Sprint 6: Matching API
 
 ### Goal
 
-Connect farmer supply to buyer demand.
+Connect farmer supply to buyer demand through a tested deterministic matching endpoint.
 
 ### Work
 
-Implement deterministic matching by:
-
-- crop name
-- location
-- quantity
-- harvest date near required date
+- Implement a matching API such as:
+  - `GET /api/demands/:id/matches`
+- Match demand to supply using deterministic rules:
+  - crop name
+  - location
+  - quantity
+  - harvest date near required date
+  - active/open statuses
+- Return possible supply matches for a demand request.
+- Add demo records for testing the matching query.
+- Test successful matches and no-match cases.
 
 ### Documentation
 
 - Create/update `docs/matching-logic.md`.
+- Update `docs/api.md` with the matching endpoint.
 - Explain matching rules in plain language.
 - State limitations and future improvements.
 
@@ -277,28 +308,37 @@ Both partners should explain:
 
 - why matching is not AI
 - what rules are used
+- what SQL/query logic is used
 - what happens when no match exists
 - how matching supports the proposal aim
 
 ### Exit Criteria
 
-- Matching works with demo data.
+- Matching API works with demo data.
+- No-match cases are handled clearly.
+- API tests pass.
 - Both partners can explain the query/rules.
 
 ---
 
-## Sprint 7: Booking Flow
+## Sprint 7: Booking APIs
 
 ### Goal
 
-Allow buyers to reserve matched produce.
+Allow buyers to reserve matched produce through tested booking endpoints.
 
 ### Work
 
-- Buyer creates booking request.
-- Booking starts as pending.
-- Farmer accepts or rejects.
-- Buyer can see booking status.
+- Create booking API routes:
+  - `POST /api/bookings`
+  - `GET /api/bookings`
+  - `GET /api/bookings/:id`
+  - `PATCH /api/bookings/:id/status`
+- Booking starts as `pending`.
+- Farmer can accept or reject a booking.
+- Buyer can view booking status.
+- Validate booking quantity, status changes, linked supply, and linked demand.
+- Test the full booking flow through API requests.
 
 ### Documentation
 
@@ -314,30 +354,40 @@ Both partners should explain:
 - how booking connects supply and demand
 - booking statuses
 - farmer decision process
+- which API request changes each status
 
 ### Exit Criteria
 
-- End-to-end booking flow works.
+- Booking APIs support create, view, and status updates.
+- Pending, accepted, rejected, cancelled, and completed statuses are understood.
+- API tests pass.
 - Documentation is updated.
 
 ---
 
-## Sprint 8: Admin Overview and Reports
+## Sprint 8: Admin APIs and Reporting Data
 
 ### Goal
 
-Give the administrator enough visibility for MVP.
+Give the administrator enough backend visibility for MVP before building admin screens.
 
 ### Work
 
-- Admin can view users.
-- Admin can view supply/demand/bookings.
-- Add simple summary counts.
-- Optional: simple report table.
+- Create admin API routes such as:
+  - `GET /api/admin/users`
+  - `GET /api/admin/supplies`
+  - `GET /api/admin/demands`
+  - `GET /api/admin/bookings`
+  - `GET /api/admin/summary`
+- Add simple summary counts for users, supplies, demands, and bookings.
+- Keep reports generated from existing tables first.
+- Do not add a report table unless the MVP clearly needs it.
+- Test admin-only access and response data.
 
 ### Documentation
 
 - Update `docs/admin.md`.
+- Update `docs/api.md` with admin endpoints.
 - Explain what admin can and cannot do in MVP.
 
 ### Review
@@ -346,24 +396,33 @@ Both partners should explain:
 
 - admin role
 - what admin monitors
+- which tables provide report data
 - what is future work
 
 ### Exit Criteria
 
-- Admin overview works.
+- Admin APIs return useful overview data.
+- Admin-only access is tested.
 - Documentation is updated.
 
 ---
 
-## Sprint 9: Calendar and Demo Polish
+## Sprint 9: Frontend Integration and Demo Polish
 
 ### Goal
 
-Make the system easier to present.
+Build the user interface on top of verified APIs and prepare the final demo.
 
 ### Work
 
-- Add simple harvest/demand timeline or calendar list.
+- Add simple frontend screens after the APIs are working:
+  - register/login
+  - farmer dashboard and supply form/list
+  - buyer dashboard and demand form/list
+  - matches view
+  - bookings view
+  - admin overview
+- Add simple harvest/demand timeline or calendar list if time allows.
 - Polish navigation.
 - Add demo data.
 - Prepare presentation script.
@@ -371,6 +430,7 @@ Make the system easier to present.
 ### Documentation
 
 - Create/update `docs/presentation-guide.md`.
+- Update `docs/code-explanation.md` with frontend-to-API flow.
 - Add final demo script.
 - Add troubleshooting notes.
 
@@ -381,6 +441,7 @@ Both partners should independently run and explain the demo.
 ### Exit Criteria
 
 - Demo works from start to finish.
+- Frontend uses tested APIs.
 - Either partner can present alone.
 
 ---
