@@ -116,5 +116,6 @@ Start here:
 - `docs/sprint-plan.md` — sprint-by-sprint work and review structure
 - `docs/branching-and-documentation.md` — branch workflow and documentation rules
 - `docs/docker-development.md` — local PostgreSQL and Docker development setup
+- `docs/database.md` — current database schema, relationships, and migration commands
 - `docs/database-migrations.md` — migration-script rules for every table/change
 - `docs/foundational-work.md` — very small first steps before feature coding

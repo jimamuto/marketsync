@@ -176,7 +176,7 @@ A farmer can publish future crop supply. A buyer can publish future demand. The 
 
 ### Why PostgreSQL Directly
 
-The team is more comfortable with PostgreSQL than Prisma/ORM tools. Raw SQL is easier to explain during presentation because table structure and queries are visible.
+The team is more comfortable with PostgreSQL . Raw SQL is easier to explain during presentation because table structure and queries are visible.
 
 ---
 
