@@ -10,7 +10,7 @@ type LoginForm = {
 };
 
 const roleRoutes = {
-  farmer:"/farmer",
+  farmer: "/farmer",
   buyer: "/buyer",
   admin: "/admin",
 } as const;
@@ -70,17 +70,16 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="auth-page">
-      <section className="auth-card">
-        <p className="eyebrow">Welcome back</p>
-        <h1>Log in to MarketSync</h1>
-        <p className="auth-intro">
-          Use your registered email and password to continue.
-        </p>
+    <main className="login-card-page">
+      <section className="login-card-shell">
+        <div className="login-card-header">
+          <h1>Login to your account</h1>
+          <p>Enter your email below to login to your account.</p>
+        </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label>
-            Email
+        <form className="login-card-form" onSubmit={handleSubmit}>
+          <label className="login-field">
+            <span>Email</span>
             <input
               type="email"
               value={form.email}
@@ -90,8 +89,8 @@ export default function LoginPage() {
             />
           </label>
 
-          <label>
-            Password
+          <label className="login-field">
+            <span>Password</span>
             <input
               type="password"
               value={form.password}
@@ -104,13 +103,14 @@ export default function LoginPage() {
           {error && <p className="form-message form-error">{error}</p>}
           {message && <p className="form-message form-success">{message}</p>}
 
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Logging in..." : "Log in"}
+          <button type="submit" className="login-primary-button" disabled={isSubmitting}>
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
+
         </form>
 
-        <p className="auth-link-row">
-          Need an account? <Link href="/register">Create one here</Link>
+        <p className="login-card-footer">
+          Don&apos;t have an account? <Link href="/register">Sign up</Link>
         </p>
       </section>
     </main>

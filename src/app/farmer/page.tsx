@@ -28,12 +28,6 @@ export default function FarmerPage(){
         title="Crop Planning calender"
         description="Track planting cycles,upcoming harvests, and active buyer bookings"
       />
-    <section className= "dashboard-header">
-        <p className="eyebrow"> Farmer Dashboard</p>
-        <h1>Crop Planning Calender</h1>
-        <p className="dashboard-intro">
-        Track planting cycles upcoming harvests and active buyer bookings</p>
-      </section>
 
       <section className="dashboard-grid">
         <DashboardCard className="calender-card">
