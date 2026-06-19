@@ -37,10 +37,10 @@ export async function POST(request: Request) {
       );
     }
 //check against admin registering to system
-    if(role=="admin"){
+    if (role === "admin") {
       return NextResponse.json(
-        {message:"admin can not be created through public registration"}
-        {status:403}
+        { message: "Admin accounts cannot be created through public registration" },
+        { status: 403 },
       );
     }
 
