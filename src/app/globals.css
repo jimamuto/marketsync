@@ -197,3 +197,148 @@ h1 {
      background: #eaf7ea;
      color: #226b25;
    }
+   .dashboard-page {
+     display: grid;
+     gap: 1.5rem;
+     padding: 2rem;
+   }
+
+   .dashboard-header {
+     width: min(1100px, 100%);
+   }
+
+   .dashboard-header h1 {
+     max-width: none;
+     font-size: clamp(2rem, 5vw, 3.5rem);
+   }
+
+   .dashboard-intro {
+     color: var(--muted);
+     line-height: 1.6;
+     max-width: 65ch;
+   }
+
+   .dashboard-card {
+     border: 1px solid #d7e3d1;
+     border-radius: 24px;
+     background: var(--card);
+     box-shadow: 0 18px 50px rgba(22, 32, 21, 0.08);
+     padding: 1.5rem;
+   }
+
+   .buyer-layout {
+     display: grid;
+     gap: 1.5rem;
+     grid-template-columns: 1fr 1.5fr;
+   }
+
+   .demand-form {
+     display: grid;
+     gap: 1rem;
+   }
+
+   .demand-form label {
+     display: grid;
+     gap: 0.4rem;
+     font-weight: 700;
+   }
+
+   .demand-form input,
+   .demand-form textarea {
+     border: 1px solid #cbd8c5;
+     border-radius: 14px;
+     color: var(--foreground);
+     font: inherit;
+     padding: 0.9rem 1rem;
+   }
+
+   .demand-form textarea {
+     min-height: 120px;
+     resize: vertical;
+   }
+
+   .primary-button,
+   .secondary-button,
+   .table-button {
+     border: 0;
+     border-radius: 999px;
+     cursor: pointer;
+     font: inherit;
+     font-weight: 800;
+     padding: 0.8rem 1rem;
+   }
+
+   .primary-button {
+     background: var(--accent);
+     color: #ffffff;
+   }
+
+   .secondary-button,
+   .table-button {
+     background: #eaf7ea;
+     color: var(--accent);
+   }
+
+   .match-grid {
+     display: grid;
+     gap: 1rem;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+   }
+
+   .match-card {
+     display: grid;
+     gap: 1rem;
+     border: 1px solid #d7e3d1;
+     border-radius: 18px;
+     padding: 1rem;
+   }
+
+   .image-placeholder {
+     aspect-ratio: 16 / 9;
+     border: 1px solid #cbd8c5;
+     border-radius: 14px;
+     background: linear-gradient(135deg, #edf5ea, #ffffff);
+   }
+
+   .match-card-content p {
+     margin: 0.35rem 0;
+   }
+
+   .table-wrap {
+     overflow-x: auto;
+   }
+
+   table {
+     width: 100%;
+     border-collapse: collapse;
+   }
+
+   th,
+   td {
+     border: 1px solid #d7e3d1;
+     padding: 0.9rem;
+     text-align: left;
+   }
+
+   th {
+     background: #edf5ea;
+   }
+
+   .status-pill {
+     display: inline-block;
+     border-radius: 999px;
+     background: #eaf7ea;
+     color: var(--accent);
+     font-weight: 800;
+     padding: 0.35rem 0.75rem;
+   }
+
+   @media (max-width: 900px) {
+     .buyer-layout {
+       grid-template-columns: 1fr;
+     }
+
+     .match-grid {
+       grid-template-columns: 1fr;
+     }
+   }

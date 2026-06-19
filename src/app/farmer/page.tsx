@@ -1,5 +1,5 @@
-import PageHeader from "../../components/PageHeader.tsx";
-import DashboardCard from "../../components/DashboardCard.tsx";
+import PageHeader from "../../components/PageHeader";
+import DashboardCard from "../../components/DashboardCard";
 
 const bookings = [
   {
@@ -9,7 +9,7 @@ const bookings = [
        date: "12/06/2026",
        status: "Pending",
   },
-  {
+  
     {
        buyer: "County Hospital",
        crop: "Potatoes",
@@ -17,7 +17,7 @@ const bookings = [
        date: "18/06/2026",
        status: "Confirmed",
      },
-  }
+  
 ];
 
 export default function FarmerPage(){
@@ -46,7 +46,7 @@ export default function FarmerPage(){
             <span>SAT</span>
             <span>SUN</span>
 
-            {Array.from({ length: 21 }, (_, index) => (
+            {Array.from({ length: 21 }, (_, index) => ( //use array to create 21 days
                  <div key={index} className="calendar-day">
                    {index + 1}
                  </div>
