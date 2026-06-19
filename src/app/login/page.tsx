@@ -62,6 +62,8 @@ export default function LoginPage() {
       });
       //redirect to the respective role dashboards but fallbacks to home
       router.push(roleRoutes[data.user.role as keyof typeof roleRoutes] ?? "/");
+      router.refresh(); //so as to save the session of the user
+
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
