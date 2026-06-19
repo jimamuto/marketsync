@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 
 // creating template for Form with custom type RegisterForm
@@ -77,17 +78,16 @@ export default function RegisterPage() {
 
   // returning the html file and on submit triggers a function
   return (
-    <main className="auth-page">
-      <section className="auth-card">
-        <p className="eyebrow">Create account</p>
-        <h1>Join MarketSync</h1>
-        <p className="auth-intro">
-          Register as a farmer, buyer, or admin to start using the marketplace.
-        </p>
+    <main className="login-card-page">
+      <section className="login-card-shell register-card-shell">
+        <div className="login-card-header">
+          <h1>Create your account</h1>
+          <p>Register as a farmer, buyer, or admin to start using MarketSync.</p>
+        </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label>
-            Name
+        <form className="login-card-form" onSubmit={handleSubmit}>
+          <label className="login-field">
+            <span>Name</span>
             <input
               type="text"
               value={form.name}
@@ -97,8 +97,8 @@ export default function RegisterPage() {
             />
           </label>
 
-          <label>
-            Email
+          <label className="login-field">
+            <span>Email</span>
             <input
               type="email"
               value={form.email}
@@ -108,8 +108,8 @@ export default function RegisterPage() {
             />
           </label>
 
-          <label>
-            Password
+          <label className="login-field">
+            <span>Password</span>
             <input
               type="password"
               value={form.password}
@@ -120,8 +120,8 @@ export default function RegisterPage() {
             />
           </label>
 
-          <label>
-            Role
+          <label className="login-field">
+            <span>Role</span>
             <select
               value={form.role}
               onChange={(event) => updateField("role", event.target.value)}
@@ -133,8 +133,8 @@ export default function RegisterPage() {
             </select>
           </label>
 
-          <label>
-            Phone
+          <label className="login-field">
+            <span>Phone</span>
             <input
               type="tel"
               value={form.phone}
@@ -143,8 +143,8 @@ export default function RegisterPage() {
             />
           </label>
 
-          <label>
-            Location
+          <label className="login-field">
+            <span>Location</span>
             <input
               type="text"
               value={form.location}
@@ -156,10 +156,14 @@ export default function RegisterPage() {
           {error && <p className="form-message form-error">{error}</p>}
           {message && <p className="form-message form-success">{message}</p>}
 
-          <button type="submit" disabled={isSubmitting}>
+          <button type="submit" className="login-primary-button" disabled={isSubmitting}>
             {isSubmitting ? "Creating account..." : "Create account"}
           </button>
         </form>
+
+        <p className="login-card-footer">
+          Already have an account? <Link href="/login">Login</Link>
+        </p>
       </section>
     </main>
   );
