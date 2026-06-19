@@ -67,7 +67,7 @@ export default function BuyerPage(){
             <textarea placeholder="Must be packaged in 50kg bags"/>
           </label>
 
-          <button>
+          <button className="primary-button">
             Submit Requirements
           </button>
         </form>

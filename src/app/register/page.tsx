@@ -138,7 +138,7 @@ export default function RegisterPage() {
               type="tel"
               value={form.phone}
               onChange={(event) => updateField("phone", event.target.value)}
-              placeholder="0240000000"
+              placeholder="0736872381"
             />
           </label>
 
@@ -148,7 +148,7 @@ export default function RegisterPage() {
               type="text"
               value={form.location}
               onChange={(event) => updateField("location", event.target.value)}
-              placeholder="Kumasi"
+              placeholder="Nairobi"
             />
           </label>
 

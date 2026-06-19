@@ -97,6 +97,22 @@ h1 {
      color: var(--accent);
    }
 
+   .navbar-button {
+     border: 1px solid #162015;
+     border-radius: 0.6rem;
+     background: #162015;
+     color: #ffffff;
+     cursor: pointer;
+     font: inherit;
+     font-weight: 800;
+     padding: 0.55rem 0.8rem;
+   }
+
+   .navbar-button:hover {
+     border-color: #2f7d32;
+     background: #2f7d32;
+   }
+
    @media (max-width: 640px) {
      .navbar {
        align-items: flex-start;
@@ -276,23 +292,35 @@ h1 {
    .primary-button,
    .secondary-button,
    .table-button {
-     border: 0;
-     border-radius: 8px;
+     border-radius: 0.6rem;
      cursor: pointer;
      font: inherit;
      font-weight: 800;
-     padding: 0.8rem 1rem;
+     padding: 0.75rem 1rem;
    }
 
    .primary-button {
-     background: var(--accent);
+     border: 1px solid #162015;
+     background: #162015;
      color: #ffffff;
+   }
+
+   .primary-button:hover {
+     background: #2f7d32;
+     border-color: #2f7d32;
    }
 
    .secondary-button,
    .table-button {
-     background: #eaf7ea;
-     color: var(--accent);
+     border: 1px solid #d8ded2;
+     background: #ffffff;
+     color: #162015;
+   }
+
+   .secondary-button:hover,
+   .table-button:hover {
+     border-color: #2f7d32;
+     color: #2f7d32;
    }
 
    .match-grid {
