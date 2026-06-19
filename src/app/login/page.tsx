@@ -9,6 +9,12 @@ type LoginForm = {
   password: string;
 };
 
+const roleRoutes = {
+  farmer:"/farmer",
+  buyer: "/buyer",
+  admin: "/admin",
+} as const;
+
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState<LoginForm>({
@@ -54,8 +60,8 @@ export default function LoginPage() {
         email: "",
         password: "",
       });
-
-      router.push("/");
+      //redirect to the respective role dashboards but fallbacks to home
+      router.push(roleRoutes[data.user.role as keyof typeof roleRoutes] ?? "/");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
