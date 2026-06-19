@@ -36,6 +36,13 @@ export async function POST(request: Request) {
         {status: 400},
       );
     }
+//check against admin registering to system
+    if(role=="admin"){
+      return NextResponse.json(
+        {message:"admin can not be created through public registration"}
+        {status:403}
+      );
+    }
 
     const existingUser = await getDb().query(
     "select id from users where email = $1",[email],

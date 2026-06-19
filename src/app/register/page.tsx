@@ -82,7 +82,7 @@ export default function RegisterPage() {
       <section className="login-card-shell register-card-shell">
         <div className="login-card-header">
           <h1>Create your account</h1>
-          <p>Register as a farmer, buyer, or admin to start using MarketSync.</p>
+          <p>Register as a farmer or buyer to start using MarketSync.</p>
         </div>
 
         <form className="login-card-form" onSubmit={handleSubmit}>
@@ -129,7 +129,6 @@ export default function RegisterPage() {
             >
               <option value="farmer">Farmer</option>
               <option value="buyer">Buyer</option>
-              <option value="admin">Admin</option>
             </select>
           </label>
 
