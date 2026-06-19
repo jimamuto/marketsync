@@ -12,6 +12,7 @@ export default function Navbar (){
            <Link href="/register">Register</Link>
            <Link href="/login">Login</Link>
          </nav>
+
     </header>
 
   );
