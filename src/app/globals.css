@@ -333,12 +333,142 @@ h1 {
      padding: 0.35rem 0.75rem;
    }
 
+   .dashboard-grid {
+     display: grid;
+     gap: 1.5rem;
+     grid-template-columns: 2fr 1fr;
+   }
+
+   .calendar-top {
+     display: flex;
+     gap: 1rem;
+     margin-bottom: 1rem;
+   }
+
+   .calendar-grid {
+     display: grid;
+     grid-template-columns: repeat(7, 1fr);
+     border: 1px solid #d7e3d1;
+   }
+
+   .calendar-grid span,
+   .calendar-day {
+     min-height: 56px;
+     border: 1px solid #d7e3d1;
+     padding: 0.75rem;
+   }
+
+   .calendar-grid span {
+     min-height: auto;
+     font-weight: 800;
+     text-align: center;
+   }
+
+   .calendar-note {
+     display: inline-block;
+     border-radius: 999px;
+     color: #ffffff;
+     font-weight: 800;
+     margin-top: 1rem;
+     padding: 0.5rem 1rem;
+   }
+
+   .planting {
+     background: #2f7d32;
+   }
+
+   .harvest {
+     background: #b7791f;
+   }
+
+   .booking-list {
+     display: grid;
+     gap: 1rem;
+   }
+
+   .booking-card {
+     display: flex;
+     justify-content: space-between;
+     gap: 1rem;
+     border: 1px solid #d7e3d1;
+     border-radius: 18px;
+     padding: 1rem;
+   }
+
+   .admin-page {
+     display: grid;
+     grid-template-columns: 240px 1fr;
+     min-height: calc(100vh - 73px);
+   }
+
+   .admin-content {
+     display: grid;
+     gap: 1.5rem;
+     padding: 2rem;
+   }
+
+   .dashboard-sidebar {
+     display: flex;
+     flex-direction: column;
+     gap: 1.5rem;
+     border-right: 1px solid #d7e3d1;
+     background: #ffffff;
+     padding: 2rem;
+   }
+
+   .dashboard-sidebar a {
+     color: var(--muted);
+     font-weight: 700;
+     text-decoration: none;
+   }
+
+   .dashboard-sidebar a:hover {
+     color: var(--accent);
+   }
+
+   .bar-chart {
+     display: grid;
+     gap: 2rem;
+   }
+
+   .bar-chart > div {
+     display: grid;
+     gap: 0.5rem;
+   }
+
+   .bar {
+     border-radius: 999px;
+     color: #ffffff;
+     font-size: 0.9rem;
+     font-weight: 800;
+     padding: 0.6rem 1rem;
+   }
+
+   .bar.supply {
+     background: #7fb069;
+   }
+
+   .bar.demand {
+     background: #2f3e46;
+   }
+
    @media (max-width: 900px) {
-     .buyer-layout {
+     .dashboard-grid,
+     .buyer-layout,
+     .admin-page {
        grid-template-columns: 1fr;
+     }
+
+     .dashboard-sidebar {
+       border-right: 0;
+       border-bottom: 1px solid #d7e3d1;
      }
 
      .match-grid {
        grid-template-columns: 1fr;
+     }
+
+     .booking-card {
+       flex-direction: column;
      }
    }
