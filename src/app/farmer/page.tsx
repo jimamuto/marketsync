@@ -23,6 +23,11 @@ const bookings = [
 export default function FarmerPage(){
   return(
   <main className= "dashboard-page">
+      <PageHeader
+        eyebrow="farmer dashboard"
+        title="Crop Planning calender"
+        description="Track planting cycles,upcoming harvests, and active buyer bookings"
+      />
     <section className= "dashboard-header">
         <p className="eyebrow"> Farmer Dashboard</p>
         <h1>Crop Planning Calender</h1>
@@ -33,8 +38,8 @@ export default function FarmerPage(){
       <section className="dashboard-grid">
         <DashboardCard className="calender-card">
           <div>
-            <Strong>May</Strong>
-            <Strong>2026</Strong>
+            <strong>May</strong>
+            <strong>2026</strong>
           </div>
 
           <div className="calender-grid">

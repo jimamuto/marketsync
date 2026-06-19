@@ -8,10 +8,10 @@ type DashboardProps={
 
 export default function DashboardCard({title,children,className = ""}:DashboardProps) {
   return(
-  <section>
+    <section className={`dashboard-card ${className}`}>
       {title && <h2>{title}</h2>}
       {children}
     </section>
-  )
+  );
   
 }
