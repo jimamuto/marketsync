@@ -1,26 +1,45 @@
 # MarketSync Authentication
 
-This document explains the Sprint 3 authentication work currently in progress.
+This document explains the current MarketSync authentication work, what has been completed, and what remains.
 
 ---
 
-## Sprint 3 Auth Goal
+## Ownership
 
-Sprint 3 focuses on building simple custom authentication APIs before the full frontend screens are created.
+Current working split:
 
-The authentication work uses the existing `users` table from the database migrations.
+- **Jim**: frontend auth pages, nested page creation, page wiring, loading/error states, and user-facing flows.
+- **Christine**: backend auth APIs, database/security logic, email/token handling, and API tests.
 
-Allowed user roles are:
+This split keeps Jim moving quickly on UI while Christine finishes the API layer that those pages will call.
+
+---
+
+## Auth Goal
+
+MarketSync uses custom authentication backed by the existing PostgreSQL `users` table.
+
+Allowed roles:
 
 ```text
 farmer, buyer, admin
 ```
 
+Rules:
+
+- Farmers use the farmer dashboard.
+- Buyers use the buyer dashboard.
+- Admins use the admin dashboard.
+- Public registration must not create admin accounts.
+- Admin accounts are seeded by a database script.
+- Passwords are stored as hashes, never as plain text.
+- API responses must never return `password_hash`.
+
 ---
 
-## Work Completed So Far
+## Completed Work
 
-### Auth Helper Library
+### Auth helper
 
 File:
 
@@ -30,19 +49,40 @@ src/lib/auth.ts
 
 Purpose:
 
-- Defines the valid user roles.
-- Checks whether a submitted role is valid.
-- Hashes passwords before saving them.
+- Defines valid user roles.
+- Checks whether a role is valid.
+- Hashes passwords with `bcryptjs`.
 - Compares submitted passwords with stored password hashes.
-- Converts a database user row into a safe user object.
+- Converts database user rows into safe user objects.
 
-Important rule:
+---
+
+### Mail helper
+
+File:
 
 ```text
-Never return password_hash in API responses.
+src/lib/mail.ts
 ```
 
-The helper uses `bcryptjs` for password hashing.
+Purpose:
+
+- Centralizes SMTP email sending.
+- Uses environment variables for SMTP host, port, user, and app password.
+- Supports future password reset, email verification, and 2FA email flows.
+
+Required local environment values:
+
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+APP_URL=http://localhost:3000
+```
+
+Do not commit real email credentials.
 
 ---
 
@@ -65,6 +105,7 @@ Purpose:
 - Reads registration data from the request body.
 - Validates required fields.
 - Validates the user role.
+- Blocks public admin registration.
 - Checks whether the email already exists.
 - Hashes the password.
 - Inserts the new user into the `users` table.
@@ -83,21 +124,6 @@ Example request body:
 }
 ```
 
-Example success response:
-
-```json
-{
-  "user": {
-    "id": 1,
-    "name": "Ama Farmer",
-    "email": "ama@example.com",
-    "role": "farmer",
-    "phone": "0240000000",
-    "location": "Kumasi"
-  }
-}
-```
-
 Expected error cases:
 
 | Status | Reason |
@@ -105,63 +131,247 @@ Expected error cases:
 | `400` | Required fields are missing. |
 | `400` | Password is too short. |
 | `400` | Role is not `farmer`, `buyer`, or `admin`. |
+| `403` | Public registration attempted to create an admin. |
 | `409` | Email already exists. |
 | `500` | Unexpected server/database error. |
 
 ---
 
-## Remaining Sprint 3 Auth Work
+### Login API
 
-The next APIs are assigned as follow-up work:
+File:
+
+```text
+src/app/api/auth/login/route.ts
+```
+
+Endpoint:
 
 ```text
 POST /api/auth/login
+```
+
+Purpose:
+
+- Reads email and password from the request body.
+- Looks up the user by email.
+- Compares the submitted password with the stored hash.
+- Returns safe user data on success.
+- Sets auth cookies used by the frontend navigation and role redirects.
+
+Frontend redirects by role:
+
+```text
+farmer -> /farmer
+buyer -> /buyer
+admin -> /admin
+```
+
+---
+
+### Logout API
+
+File:
+
+```text
+src/app/api/auth/logout/route.ts
+```
+
+Endpoint:
+
+```text
 POST /api/auth/logout
 ```
 
-Recommended split:
+Purpose:
 
-- Existing register endpoint is the golden example.
-- Login should copy the same route, validation, database, and safe-response style.
-- Logout can be a simple endpoint for now.
+- Clears auth cookies.
+- Allows the logout button to return the user to `/login`.
+
+---
+
+### Admin seed script
+
+File:
+
+```text
+database/migrations/006_seed_admin_user.sql
+```
+
+Purpose:
+
+- Creates a known admin user because public registration blocks admin accounts.
+- Uses a pre-hashed password.
+- Uses `ON CONFLICT (email) DO UPDATE` so the script can be run more than once safely.
+
+Local test admin:
+
+```text
+Email: admin@marketsync.local
+Password: Admin123!
+```
+
+---
+
+### Password reset token migration
+
+File:
+
+```text
+database/migrations/007_create_password_reset_tokens.sql
+```
+
+Purpose:
+
+- Stores hashed password reset tokens.
+- Links reset tokens to users.
+- Tracks expiry and whether a token has already been used.
+
+This migration has been run locally.
+
+---
+
+### Auth frontend pages
+
+Implemented pages:
+
+```text
+/login
+/register
+/forgot-password
+/reset-password
+/check-email
+/unauthorized
+```
+
+Files:
+
+```text
+src/app/login/page.tsx
+src/app/register/page.tsx
+src/app/forgot-password/page.tsx
+src/app/reset-password/page.tsx
+src/app/check-email/page.tsx
+src/app/unauthorized/page.tsx
+```
+
+Current state:
+
+- Login and register pages call real APIs.
+- Forgot/reset pages exist but still need to call real password reset APIs.
+- Check-email and unauthorized pages are presentational support pages.
+
+---
+
+## Remaining Auth Work
+
+### Christine: backend/API work
+
+Priority APIs:
+
+```text
+GET /api/auth/me
+POST /api/auth/forgot-password
+POST /api/auth/reset-password
+```
+
+Recommended behavior:
+
+#### `GET /api/auth/me`
+
+- Reads auth cookies.
+- Returns the current safe user if logged in.
+- Returns `401` if not logged in.
+- Never returns `password_hash`.
+
+#### `POST /api/auth/forgot-password`
+
+- Accepts an email address.
+- Always returns a generic success message so attackers cannot discover registered emails.
+- If the user exists:
+  - creates a random reset token
+  - stores only a hash of that token
+  - sets an expiry time
+  - emails a reset link such as `/reset-password?token=...`
+
+#### `POST /api/auth/reset-password`
+
+- Accepts `token` and new `password`.
+- Hashes the submitted token.
+- Finds a matching unused, unexpired token.
+- Hashes the new password.
+- Updates `users.password_hash`.
+- Marks the reset token as used.
+
+Future/optional APIs:
+
+```text
+POST /api/auth/verify-email
+POST /api/auth/resend-verification
+POST /api/auth/2fa/setup
+POST /api/auth/2fa/verify
+POST /api/auth/2fa/disable
+```
+
+---
+
+### Jim: frontend work
+
+Next frontend tasks:
+
+- Connect `/forgot-password` to `POST /api/auth/forgot-password`.
+- Connect `/reset-password` to `POST /api/auth/reset-password`.
+- Read the reset token from the URL query string.
+- Show loading, success, and error states.
+- Redirect to `/check-email` after a successful forgot-password request.
+- Redirect to `/login` after a successful password reset.
+- Use `/unauthorized` when a logged-in user reaches a page for the wrong role.
+- Use `GET /api/auth/me` for future protected page checks once Christine implements it.
 
 ---
 
 ## Manual Testing Plan
 
-After starting the app with:
+Run the app:
 
 ```bash
 npm run dev
 ```
 
-Test registration with an API client or curl.
+Test register/login/logout manually through the pages:
 
-Windows PowerShell/cmd-style example:
-
-```bash
-curl -X POST http://localhost:3000/api/auth/register ^
-  -H "Content-Type: application/json" ^
-  -d "{\"name\":\"Ama Farmer\",\"email\":\"ama@example.com\",\"password\":\"password123\",\"role\":\"farmer\",\"phone\":\"0240000000\",\"location\":\"Kumasi\"}"
+```text
+/register
+/login
 ```
 
-Verification command run during this work:
+Test admin login with the seeded account:
+
+```text
+Email: admin@marketsync.local
+Password: Admin123!
+```
+
+Run checks before committing auth changes:
 
 ```bash
 npm run lint
+npm run build
 ```
 
-Result:
+Current known completed checks:
 
 ```text
-Lint completed successfully.
+npm run lint passed
+npm run build passed
 ```
 
 ---
 
 ## Notes
 
-- Passwords must be stored as hashes, not plain text.
-- API responses must not expose `password_hash`.
-- The `users` table is shared by farmers, buyers, and admins.
-- `.env` should stay untracked; use `.env.example` for template values if needed.
+- `.env` must stay untracked.
+- Use `.env.example` for safe placeholder values only.
+- Gmail app passwords are acceptable for local MVP/demo use.
+- A production deployment should eventually use a transactional email provider such as Resend, SendGrid, Mailgun, or AWS SES.
+- Password reset and 2FA should be completed only after the base login/session flow is stable.
