@@ -1,4 +1,4 @@
-import nodemmailer from "nodemmailer";
+import nodemmailer from "nodemailer";
 const stmpPort = Number(process.env.STMP_PORT?? 465);
 
 export const mailTransporter = nodemmailer.createTransport({
