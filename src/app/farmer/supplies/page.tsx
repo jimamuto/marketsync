@@ -7,7 +7,7 @@ const supplies = [
        id: 1,
        crop: "Tomatoes",
        quantity: "200 kg",
-       location: "Kumasi",
+       location: "Nairobi",
        plantingDate: "2026-05-01",
        harvestDate: "2026-07-10",
        status: "Available",
@@ -16,7 +16,7 @@ const supplies = [
        id: 2,
        crop: "Maize",
        quantity: "500 kg",
-       location: "Ejisu",
+       location: "Embu",
        plantingDate: "2026-04-15",
        harvestDate: "2026-08-20",
        status: "Growing",
@@ -25,7 +25,7 @@ const supplies = [
        id: 3,
        crop: "Onions",
        quantity: "120 kg",
-       location: "Mampong",
+       location: "Kisumu",
        plantingDate: "2026-05-22",
        harvestDate: "2026-07-30",
        status: "Booked",
@@ -45,21 +45,27 @@ export default function FarmerSuppliesPage(){
       <DashboardCard title="supply records">
       <div className="booking-list">
           {/*allocating key to the article to uniquely identify the content mapped*/}
-          {supplies.map((supply)=>(
-            <article key={supply.id}>
+          {supplies.map(supply)=>(
+            <article>
+
               <div>
                 <strong>{supply.crop}</strong>
                 <p>quantity:{supply.quantity}</p>
-                <p>location:{supply.location}</p>
+                <p>location:{supply.status}</p>
                 <p>status:{supply.status}</p>
               </div>
+
+              <div className="booking-meta">
+              <p>Planting:{supply.plantingDate}</p>
+              <p>Harvest:{supply.harvestDate}</p>
+
+                <Link href={"/farmer/supplies/${supply.id}`}"
+                className="secondary-button"> View </Link>
+              </div>
             </article>
-          ))}
-
-
+          )}
         </div>
       </DashboardCard>
     </main>
-
   );
 }
