@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import {useRouter} from "next/navigation";
 
 // creating template for Form with custom type RegisterForm
 type RegisterForm = {
@@ -15,6 +16,7 @@ type RegisterForm = {
 
 // creation of page with states of the form
 export default function RegisterPage() {
+  const router= useRouter();
   const [form, setForm] = useState<RegisterForm>({
     name: "",
     email: "",
@@ -61,6 +63,7 @@ export default function RegisterPage() {
       }
 
       setMessage("Account created successfully. You can now log in.");
+
       setForm({
         name: "",
         email: "",
@@ -69,6 +72,8 @@ export default function RegisterPage() {
         phone: "",
         location: "",
       });
+
+      router.push("/login");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
