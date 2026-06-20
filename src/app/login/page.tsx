@@ -112,6 +112,10 @@ export default function LoginPage() {
         </form>
 
         <p className="login-card-footer">
+          <Link href="/forgot-password">Forgot password?</Link>
+        </p>
+
+        <p className="login-card-footer">
           Don&apos;t have an account? <Link href="/register">Sign up</Link>
         </p>
       </section>
