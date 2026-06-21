@@ -12,10 +12,12 @@ Current auth route status:
 
 | Method | Route | Status | Owner |
 | --- | --- | --- | --- |
-| `POST` | `/api/auth/register` | Started / golden example | Current work |
-| `POST` | `/api/auth/login` | To do | Follow-up colleague task |
-| `POST` | `/api/auth/logout` | To do | Follow-up colleague task |
-| `GET` | `/api/auth/me` | Later | Needs session/cookie/JWT decision |
+| `POST` | `/api/auth/register` | Implemented | Jim/backend foundation |
+| `POST` | `/api/auth/login` | Implemented | Christine |
+| `POST` | `/api/auth/logout` | Implemented | Christine |
+| `GET` | `/api/auth/me` | Implemented | Christine |
+| `POST` | `/api/auth/forgot-password` | Implemented | Christine |
+| `POST` | `/api/auth/reset-password` | Implemented | Christine |
 
 ---
 
@@ -110,7 +112,7 @@ For every auth endpoint:
 
 ---
 
-## Planned `POST /api/auth/login`
+## `POST /api/auth/login`
 
 Expected behavior:
 
@@ -149,7 +151,7 @@ Expected success response:
 
 ---
 
-## Planned `POST /api/auth/logout`
+## `POST /api/auth/logout`
 
 Expected behavior for the current simple version:
 
@@ -164,7 +166,82 @@ Expected success response:
 }
 ```
 
-A fuller logout flow can be added later after the project decides on session, cookie, or JWT handling.
+The current logout flow clears the session cookies used by the app.
+
+---
+
+## `GET /api/auth/me`
+
+Returns the current authenticated user from the session cookies.
+
+Success response:
+
+```json
+{
+  "user": {
+    "id": 1,
+    "name": "Ama Farmer",
+    "email": "ama@example.com",
+    "role": "farmer",
+    "phone": "0240000000",
+    "location": "Kumasi"
+  }
+}
+```
+
+Error responses:
+
+| Status | Meaning |
+| --- | --- |
+| `401` | No valid session cookie is present. |
+| `404` | Session user no longer exists. |
+| `500` | Server or database error. |
+
+---
+
+## `POST /api/auth/forgot-password`
+
+Starts the password reset flow.
+
+Request body:
+
+```json
+{
+  "email": "ama@example.com"
+}
+```
+
+Behavior:
+
+- Always returns a generic success message when an email is provided.
+- If the user exists, creates a secure reset token.
+- Stores only the hashed reset token in `password_reset_tokens`.
+- Emails `/reset-password?token=...` using `src/lib/mail.ts`.
+- The token expires after 30 minutes.
+
+---
+
+## `POST /api/auth/reset-password`
+
+Completes the password reset flow.
+
+Request body:
+
+```json
+{
+  "token": "reset-token-from-email",
+  "password": "newPassword123"
+}
+```
+
+Behavior:
+
+- Requires token and password.
+- Requires password length of at least 8 characters.
+- Hashes the submitted token before lookup.
+- Rejects invalid, expired, or already-used tokens.
+- Hashes the new password before updating `users.password_hash`.
+- Marks the reset token as used.
 
 ---
 
@@ -287,3 +364,80 @@ Each match includes:
 - `match_score`
 - `match_reasons`
 - `harvest_gap_days`
+
+---
+
+## Sprint 7: Booking APIs
+
+Current booking route status:
+
+| Method | Route | Status |
+| --- | --- | --- |
+| `POST` | `/api/bookings` | Implemented |
+| `GET` | `/api/bookings` | Implemented |
+| `GET` | `/api/bookings/[id]` | Implemented |
+| `PATCH` | `/api/bookings/[id]/status` | Implemented |
+
+### Access Rules
+
+- Buyers can create bookings from their own demand requests.
+- Buyers can view their own bookings and cancel them.
+- Farmers can view bookings for their supplies and accept or reject them.
+- Admins can view and update all bookings.
+
+### Booking Create Request Body
+
+```json
+{
+  "supply_id": 1,
+  "demand_request_id": 2,
+  "quantity": 50,
+  "unit": "bags",
+  "message": "Optional note to the farmer"
+}
+```
+
+### Booking Validation Notes
+
+- `supply_id`, `demand_request_id`, `quantity`, and `unit` are required.
+- `quantity` must be greater than `0`.
+- Supply and demand crop names must match.
+- Supply and demand locations must match.
+- Booking unit must match both supply and demand units.
+- Booking quantity cannot exceed supply or demand quantity.
+- New bookings start as `pending`.
+
+### Booking Status Updates
+
+Endpoint:
+
+```text
+PATCH /api/bookings/[id]/status
+```
+
+Request body:
+
+```json
+{
+  "status": "accepted"
+}
+```
+
+Allowed statuses:
+
+```text
+pending, accepted, rejected, cancelled, completed
+```
+
+Role rules:
+
+- Buyers can only change their bookings to `cancelled`.
+- Farmers can only change their bookings to `accepted` or `rejected`.
+- Admins can use any valid status.
+- Completed bookings cannot be changed back to another status.
+
+Related status effects:
+
+- `accepted` sets the linked crop supply to `booked`.
+- `rejected` or `cancelled` reopens the linked demand request.
+- `completed` marks the demand as `fulfilled` and returns the supply to `ready`.

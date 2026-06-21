@@ -258,50 +258,93 @@ src/app/unauthorized/page.tsx
 Current state:
 
 - Login and register pages call real APIs.
-- Forgot/reset pages exist but still need to call real password reset APIs.
+- Forgot/reset pages exist and are ready to be connected to Christine's password reset APIs.
 - Check-email and unauthorized pages are presentational support pages.
 
 ---
 
-## Remaining Auth Work
+### Current User API
 
-### Christine: backend/API work
+File:
 
-Priority APIs:
+```text
+src/app/api/auth/me/route.ts
+```
+
+Endpoint:
 
 ```text
 GET /api/auth/me
-POST /api/auth/forgot-password
-POST /api/auth/reset-password
 ```
 
-Recommended behavior:
-
-#### `GET /api/auth/me`
+Purpose:
 
 - Reads auth cookies.
 - Returns the current safe user if logged in.
 - Returns `401` if not logged in.
 - Never returns `password_hash`.
 
-#### `POST /api/auth/forgot-password`
+---
+
+### Forgot Password API
+
+File:
+
+```text
+src/app/api/auth/forgot-password/route.ts
+```
+
+Endpoint:
+
+```text
+POST /api/auth/forgot-password
+```
+
+Purpose:
 
 - Accepts an email address.
 - Always returns a generic success message so attackers cannot discover registered emails.
 - If the user exists:
   - creates a random reset token
   - stores only a hash of that token
-  - sets an expiry time
+  - sets a 30 minute expiry time
   - emails a reset link such as `/reset-password?token=...`
 
-#### `POST /api/auth/reset-password`
+---
+
+### Reset Password API
+
+File:
+
+```text
+src/app/api/auth/reset-password/route.ts
+```
+
+Endpoint:
+
+```text
+POST /api/auth/reset-password
+```
+
+Purpose:
 
 - Accepts `token` and new `password`.
+- Requires the new password to be at least 8 characters.
 - Hashes the submitted token.
 - Finds a matching unused, unexpired token.
 - Hashes the new password.
 - Updates `users.password_hash`.
 - Marks the reset token as used.
+
+---
+
+## Remaining Auth Work
+
+### Christine: backend/API follow-up work
+
+- Add API tests or documented curl/Thunder Client checks for current-user and password reset endpoints.
+- Confirm SMTP placeholders are documented safely without real credentials.
+- Help verify the complete reset flow after the frontend pages call the APIs.
 
 Future/optional APIs:
 
@@ -326,7 +369,7 @@ Next frontend tasks:
 - Redirect to `/check-email` after a successful forgot-password request.
 - Redirect to `/login` after a successful password reset.
 - Use `/unauthorized` when a logged-in user reaches a page for the wrong role.
-- Use `GET /api/auth/me` for future protected page checks once Christine implements it.
+- Use `GET /api/auth/me` for future protected page checks.
 
 ---
 
@@ -374,4 +417,5 @@ npm run build passed
 - Use `.env.example` for safe placeholder values only.
 - Gmail app passwords are acceptable for local MVP/demo use.
 - A production deployment should eventually use a transactional email provider such as Resend, SendGrid, Mailgun, or AWS SES.
-- Password reset and 2FA should be completed only after the base login/session flow is stable.
+- Password reset backend APIs are implemented; remaining reset work is frontend wiring and endpoint checks.
+- 2FA should be completed only after the base login/session and password reset flows are stable.

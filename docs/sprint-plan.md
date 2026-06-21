@@ -173,6 +173,9 @@ Build and test custom authentication with role-aware redirects, admin seeding, p
   - `POST /api/auth/register`
   - `POST /api/auth/login`
   - `POST /api/auth/logout`
+  - `GET /api/auth/me`
+  - `POST /api/auth/forgot-password`
+  - `POST /api/auth/reset-password`
 - Blocked public admin registration.
 - Added admin seed migration:
   - `database/migrations/006_seed_admin_user.sql`
@@ -180,6 +183,11 @@ Build and test custom authentication with role-aware redirects, admin seeding, p
   - `database/migrations/007_create_password_reset_tokens.sql`
 - Added SMTP mail helper:
   - `src/lib/mail.ts`
+- Christine completed the password reset API flow:
+  - sends reset emails through `src/lib/mail.ts`
+  - stores only hashed reset tokens
+  - rejects expired or already-used reset tokens
+  - keeps forgot-password responses generic so registered emails cannot be guessed
 - Added auth pages:
   - `/login`
   - `/register`
@@ -193,16 +201,11 @@ Build and test custom authentication with role-aware redirects, admin seeding, p
 
 ### Remaining Work
 
-Christine should own the backend/API tasks:
+Christine should own the backend/API follow-up tasks:
 
-- Add `GET /api/auth/me`.
-- Add `POST /api/auth/forgot-password`.
-- Add `POST /api/auth/reset-password`.
-- Send password reset emails using `src/lib/mail.ts`.
-- Store only hashed reset tokens.
-- Reject expired or already-used reset tokens.
-- Keep API responses generic so registered emails cannot be guessed.
-- Add API tests or documented curl/Thunder Client checks.
+- Add API tests or documented curl/Thunder Client checks for `GET /api/auth/me`, forgot-password, and reset-password.
+- Confirm SMTP environment values are documented in `.env.example` without real credentials.
+- Help verify the full password reset flow once Jim connects the frontend pages.
 
 Jim should own the frontend tasks:
 
@@ -255,7 +258,7 @@ Both partners should explain:
 
 ## Sprint 4: Farmer Supply Feature
 
-**Status: Not started / next after auth.** This sprint should be split so Christine builds the farmer supply APIs and Jim builds the farmer-facing pages on top of them.
+**Status: Backend APIs implemented by Christine; frontend integration and endpoint checks remain.**
 
 ### Goal
 
@@ -263,17 +266,22 @@ Allow farmers to create, view, edit, and manage crop supply records that later p
 
 ### Christine: Backend/API Work
 
-- Create API routes for farmer crop supplies:
+Completed:
+
+- Created API routes for farmer crop supplies:
   - `POST /api/supplies`
   - `GET /api/supplies`
   - `GET /api/supplies/:id`
   - `PATCH /api/supplies/:id`
   - `DELETE /api/supplies/:id`
-- Save crop supply data to PostgreSQL using the `crop_supplies` table.
-- Add validation for crop name, quantity, unit, location, planting date, harvest date, and status.
-- Ensure farmers can only create and manage their own supply records.
-- Return clear API errors for missing fields, invalid quantity, invalid dates, and unauthorized access.
-- Test endpoints with curl, Postman, Thunder Client, or another API client.
+- Saved crop supply data to PostgreSQL using the `crop_supplies` table.
+- Added validation for crop name, quantity, unit, location, planting date, harvest date, and status.
+- Ensured farmers can only create and manage their own supply records; admins can manage all records.
+- Returned clear API errors for missing fields, invalid quantity, invalid dates, and unauthorized access.
+
+Remaining:
+
+- Test endpoints with curl, Postman, Thunder Client, or another API client and record the checks.
 
 ### Jim: Frontend Work
 
@@ -318,7 +326,7 @@ Both partners should explain:
 
 ## Sprint 5: Buyer Demand Feature
 
-**Status: Not started.** Christine should build demand APIs while Jim builds buyer demand pages and connects them when ready.
+**Status: Backend APIs implemented by Christine; frontend integration and endpoint checks remain.**
 
 ### Goal
 
@@ -326,17 +334,22 @@ Allow institutional buyers to create, view, edit, and manage demand requests for
 
 ### Christine: Backend/API Work
 
-- Create API routes for buyer demand requests:
+Completed:
+
+- Created API routes for buyer demand requests:
   - `POST /api/demands`
   - `GET /api/demands`
   - `GET /api/demands/:id`
   - `PATCH /api/demands/:id`
   - `DELETE /api/demands/:id`
-- Save demand request data to PostgreSQL using the `demand_requests` table.
-- Add validation for crop name, quantity, unit, location, required date, and status.
-- Ensure buyers can only create and manage their own demand records.
-- Return clear API errors for missing fields, invalid quantity, invalid dates, and unauthorized access.
-- Test endpoints with API requests before full page integration.
+- Saved demand request data to PostgreSQL using the `demand_requests` table.
+- Added validation for crop name, quantity, unit, location, required date, and status.
+- Ensured buyers can only create and manage their own demand records; admins can manage all records.
+- Returned clear API errors for missing fields, invalid quantity, invalid dates, and unauthorized access.
+
+Remaining:
+
+- Test endpoints with API requests before full page integration and record the checks.
 
 ### Jim: Frontend Work
 
@@ -379,7 +392,7 @@ Both partners should explain:
 
 ## Sprint 6: Matching Feature
 
-**Status: Not started.** Matching should stay deterministic for the MVP; it does not need AI.
+**Status: Backend matching API implemented by Christine; frontend match pages, demo data, and endpoint checks remain.**
 
 ### Goal
 
@@ -387,18 +400,23 @@ Connect buyer demand to farmer supply through a tested matching endpoint and a b
 
 ### Christine: Backend/API Work
 
-- Implement a matching API such as:
+Completed:
+
+- Implemented matching API:
   - `GET /api/demands/:id/matches`
-- Match demand to supply using deterministic rules:
+- Matched demand to supply using deterministic rules:
   - crop name
   - location
   - available quantity
   - harvest date near required date
-  - active/open statuses
-- Return possible supply matches for a demand request.
-- Handle no-match cases clearly.
+  - active/open supply statuses
+- Returned possible supply matches with `match_score`, `match_reasons`, and `harvest_gap_days`.
+- Handled no-match cases by returning an empty `matches` array and `match_count`.
+
+Remaining:
+
 - Add demo records for successful match and no-match testing.
-- Test the matching query and response shape.
+- Test the matching query and response shape and record the checks.
 
 ### Jim: Frontend Work
 
@@ -440,7 +458,7 @@ Both partners should explain:
 
 ## Sprint 7: Booking Feature
 
-**Status: Not started.** This sprint connects matches to real reservations and farmer decisions.
+**Status: Backend booking APIs implemented by Christine; frontend booking pages and full-flow checks remain.**
 
 ### Goal
 
@@ -448,18 +466,24 @@ Allow buyers to reserve matched produce and allow farmers to accept or reject bo
 
 ### Christine: Backend/API Work
 
-- Create booking API routes:
+Completed:
+
+- Created booking API routes:
   - `POST /api/bookings`
   - `GET /api/bookings`
   - `GET /api/bookings/:id`
   - `PATCH /api/bookings/:id/status`
-- Booking starts as `pending`.
-- Farmer can accept or reject a booking.
-- Buyer can view booking status.
-- Validate booking quantity, status changes, linked supply, and linked demand.
-- Prevent invalid status changes.
-- Ensure buyers and farmers only see bookings relevant to them unless the user is an admin.
-- Test the full booking flow through API requests.
+- Bookings start as `pending`.
+- Farmers can accept or reject bookings.
+- Buyers can view booking status and cancel their bookings.
+- Validated booking quantity, status changes, linked supply, and linked demand.
+- Blocked invalid status changes such as changing completed bookings.
+- Ensured buyers and farmers only see bookings relevant to them unless the user is an admin.
+- Updated linked demand/supply statuses when bookings are accepted, rejected, cancelled, or completed.
+
+Remaining:
+
+- Test the full booking flow through API requests and record the checks.
 
 ### Jim: Frontend Work
 
