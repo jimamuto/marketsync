@@ -165,3 +165,125 @@ Expected success response:
 ```
 
 A fuller logout flow can be added later after the project decides on session, cookie, or JWT handling.
+
+---
+
+## Sprint 4: Farmer Supply APIs
+
+Current supply route status:
+
+| Method | Route | Status |
+| --- | --- | --- |
+| `POST` | `/api/supplies` | Implemented |
+| `GET` | `/api/supplies` | Implemented |
+| `GET` | `/api/supplies/[id]` | Implemented |
+| `PATCH` | `/api/supplies/[id]` | Implemented |
+| `DELETE` | `/api/supplies/[id]` | Implemented |
+
+### Access Rules
+
+- Farmers can create, update, view, and delete their own supplies.
+- Admins can view and manage all supplies.
+- Other roles receive `403 Forbidden`.
+
+### Supply Create Request Body
+
+```json
+{
+  "crop_name": "Maize",
+  "crop_variety": "Yellow maize",
+  "quantity": 100,
+  "unit": "bags",
+  "planting_date": "2026-06-01",
+  "expected_harvest_date": "2026-08-15",
+  "location": "Kisumu",
+  "status": "planned"
+}
+```
+
+### Supply Validation Notes
+
+- `crop_name`, `quantity`, `unit`, `planting_date`, `expected_harvest_date`, and `location` are required.
+- `quantity` must be greater than `0`.
+- `expected_harvest_date` must be on or after `planting_date`.
+- Allowed statuses are `planned`, `growing`, `ready`, `booked`, and `cancelled`.
+
+---
+
+## Sprint 5: Buyer Demand APIs
+
+Current demand route status:
+
+| Method | Route | Status |
+| --- | --- | --- |
+| `POST` | `/api/demands` | Implemented |
+| `GET` | `/api/demands` | Implemented |
+| `GET` | `/api/demands/[id]` | Implemented |
+| `PATCH` | `/api/demands/[id]` | Implemented |
+| `DELETE` | `/api/demands/[id]` | Implemented |
+
+### Access Rules
+
+- Buyers can create, update, view, and delete their own demand requests.
+- Admins can view and manage all demand requests.
+- Other roles receive `403 Forbidden`.
+
+### Demand Create Request Body
+
+```json
+{
+  "crop_name": "Maize",
+  "quantity": 50,
+  "unit": "bags",
+  "required_date": "2026-08-20",
+  "location": "Kisumu",
+  "notes": "Need delivery before the school term starts",
+  "status": "open"
+}
+```
+
+### Demand Validation Notes
+
+- `crop_name`, `quantity`, `unit`, `required_date`, and `location` are required.
+- `quantity` must be greater than `0`.
+- Allowed statuses are `open`, `matched`, `booked`, `cancelled`, and `fulfilled`.
+
+---
+
+## Sprint 6: Matching API
+
+Current matching route status:
+
+| Method | Route | Status |
+| --- | --- | --- |
+| `GET` | `/api/demands/[id]/matches` | Implemented |
+
+### Access Rules
+
+- Buyers can view matches for their own demand requests.
+- Admins can view matches for any demand request.
+- Other roles receive `403 Forbidden`.
+
+### Matching Rules
+
+The backend uses deterministic rules:
+
+- crop name must match
+- location must match
+- supply quantity must cover demand quantity
+- harvest date should be near the required date
+- supply status must be open for matching (`planned`, `growing`, or `ready`)
+
+### Matching Response Shape
+
+The endpoint returns:
+
+- the demand record
+- the matched supply records
+- a `match_count`
+
+Each match includes:
+
+- `match_score`
+- `match_reasons`
+- `harvest_gap_days`
