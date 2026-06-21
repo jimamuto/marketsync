@@ -258,7 +258,7 @@ Both partners should explain:
 
 ## Sprint 4: Farmer Supply Feature
 
-**Status: Backend APIs implemented by Christine; frontend integration and endpoint checks remain.**
+**Status: Backend APIs implemented by Christine; Jim's farmer page shells are added; frontend API integration and endpoint checks remain.**
 
 ### Goal
 
@@ -285,16 +285,23 @@ Remaining:
 
 ### Jim: Frontend Work
 
-- Build farmer supply pages:
+Completed:
+
+- Added farmer-facing page shells:
   - `/farmer/supplies`
   - `/farmer/supplies/new`
   - `/farmer/supplies/[id]`
   - `/farmer/calendar`
-- Build a crop supply form with loading, success, and error states.
-- Build a supply list/table using temporary placeholder data first.
-- Connect the pages to Christine's APIs once ready.
-- Update the farmer dashboard to link to the new supply pages.
-- Display supply records in a simple calendar or timeline view.
+- Added farmer dashboard shell at `/farmer` with crop calendar and active booking sections.
+- Added placeholder supply form/list/detail UI so the flow can be reviewed before API wiring.
+- Added simple calendar/timeline-style page for supply planning.
+
+Remaining:
+
+- Connect farmer supply pages to Christine's real `/api/supplies` endpoints.
+- Replace placeholder supply arrays with `fetch()` data.
+- Add final loading, success, empty, and error states after API wiring.
+- Update dashboard cards/links once final routes are confirmed.
 
 ### Documentation
 
@@ -326,7 +333,7 @@ Both partners should explain:
 
 ## Sprint 5: Buyer Demand Feature
 
-**Status: Backend APIs implemented by Christine; frontend integration and endpoint checks remain.**
+**Status: Backend APIs implemented by Christine; Jim's buyer demand page shells are added; frontend API integration and endpoint checks remain.**
 
 ### Goal
 
@@ -353,14 +360,21 @@ Remaining:
 
 ### Jim: Frontend Work
 
-- Build buyer demand pages:
+Completed:
+
+- Added buyer-facing page shells:
   - `/buyer/demands`
   - `/buyer/demands/new`
   - `/buyer/demands/[id]`
-- Build a demand request form with loading, success, and error states.
-- Build a demand list/table using temporary placeholder data first.
-- Connect buyer demand pages to Christine's APIs once ready.
-- Update the buyer dashboard to link to demand creation and demand history.
+- Added buyer dashboard shell at `/buyer` with demand submission, matched listings, and procurement history sections.
+- Added placeholder demand form/list/detail UI so the flow can be reviewed before API wiring.
+
+Remaining:
+
+- Connect buyer demand pages to Christine's real `/api/demands` endpoints.
+- Replace placeholder demand arrays with `fetch()` data.
+- Add final loading, success, empty, and error states after API wiring.
+- Update buyer dashboard cards/links once final routes are confirmed.
 
 ### Documentation
 
@@ -392,7 +406,7 @@ Both partners should explain:
 
 ## Sprint 6: Matching Feature
 
-**Status: Backend matching API implemented by Christine; frontend match pages, demo data, and endpoint checks remain.**
+**Status: Backend matching API implemented by Christine; Jim's match page shell is added; API wiring, demo data, and endpoint checks remain.**
 
 ### Goal
 
@@ -420,13 +434,19 @@ Remaining:
 
 ### Jim: Frontend Work
 
-- Build match pages:
+Completed:
+
+- Added match page shell:
   - `/buyer/demands/[id]/matches`
-  - optional `/buyer/matches`
-- Show matched supply cards or table rows.
-- Show no-match empty state.
-- Add a button or link from a demand detail page to its matches.
-- Prepare UI for creating a booking from a selected match in Sprint 7.
+- Added placeholder matched supply cards/table-style content.
+- Added placeholder empty/review structure for the matching flow.
+- Prepared the page route that will later support creating a booking from a selected match.
+
+Remaining:
+
+- Connect the match page to Christine's real `/api/demands/:id/matches` endpoint.
+- Add final no-match empty state based on real API results.
+- Add create-booking action once booking UI wiring is ready.
 
 ### Documentation
 
@@ -458,7 +478,7 @@ Both partners should explain:
 
 ## Sprint 7: Booking Feature
 
-**Status: Backend booking APIs implemented by Christine; frontend booking pages and full-flow checks remain.**
+**Status: Backend booking APIs implemented by Christine; Jim's buyer/farmer booking page shells are added; API wiring and full-flow checks remain.**
 
 ### Goal
 
@@ -487,15 +507,22 @@ Remaining:
 
 ### Jim: Frontend Work
 
-- Build booking pages:
+Completed:
+
+- Added booking page shells:
   - `/buyer/bookings`
   - `/farmer/bookings`
-  - optional `/bookings/[id]`
-- Add a create-booking action from the match result page.
-- Add buyer booking status display.
-- Add farmer accept/reject controls.
-- Show clear empty, loading, success, and error states.
-- Update dashboard cards to show booking counts or recent booking activity.
+- Added placeholder buyer booking status display.
+- Added placeholder farmer booking review/decision sections.
+- Added dashboard sections that show recent booking/procurement activity.
+
+Remaining:
+
+- Connect booking pages to Christine's real `/api/bookings` endpoints.
+- Add create-booking action from the match result page.
+- Wire farmer accept/reject controls to `PATCH /api/bookings/:id/status`.
+- Add final loading, success, empty, and error states after API wiring.
+- Optional: add `/bookings/[id]` if shared booking detail view is still needed.
 
 ### Documentation
 
@@ -549,13 +576,20 @@ Give the administrator enough backend visibility for the MVP and connect admin s
 
 ### Jim: Frontend Work
 
-- Build admin pages:
+Completed:
+
+- Added static admin overview shell at `/admin`.
+- Added navigation/documentation planning for admin-related pages in `docs/navigation.md`.
+
+Remaining:
+
+- Build nested admin pages:
   - `/admin/users`
   - `/admin/supplies`
   - `/admin/demands`
   - `/admin/bookings`
   - `/admin/reports`
-- Connect `/admin` overview cards to `GET /api/admin/summary`.
+- Connect `/admin` overview cards to `GET /api/admin/summary` once Christine adds admin APIs.
 - Build tables for users, supplies, demands, and bookings.
 - Add loading, empty, and error states.
 - Keep admin actions read-only for MVP unless Christine adds safe mutation APIs.
@@ -588,7 +622,7 @@ Both partners should explain:
 
 ## Sprint 9: Frontend Integration and Demo Polish
 
-**Status: Partially started.** Base dashboard pages and auth pages exist, but most API integration remains.
+**Status: Page shells and navigation are significantly progressed. Auth pages exist, farmer/buyer nested page shells are added, and most remaining work is API integration plus demo polish.**
 
 ### Goal
 
@@ -596,17 +630,30 @@ Finish the user interface on top of verified APIs and prepare the final demo.
 
 ### Jim: Frontend Work
 
-- Finalize page flows:
-  - register/login/logout
-  - forgot/reset password
-  - farmer supply form/list/calendar
-  - buyer demand form/list
-  - matches view
-  - buyer and farmer bookings views
-  - admin overview and nested admin pages
+Completed:
+
+- Added/register/login auth page flows and support pages:
+  - `/login`
+  - `/register`
+  - `/forgot-password`
+  - `/reset-password`
+  - `/check-email`
+  - `/unauthorized`
+- Added role-aware `Navbar` behavior for logged-in dashboard links and logout.
+- Added base farmer, buyer, and admin dashboard shells.
+- Added nested farmer pages for supplies, supply detail/new, calendar, and bookings.
+- Added nested buyer pages for demands, demand detail/new, matches, and bookings.
+- Added reusable frontend building blocks:
+  - `src/components/PageHeader.tsx`
+  - `src/components/DashboardCard.tsx`
+- Added `docs/navigation.md` to document the route/page structure.
+
+Remaining:
+
+- Finish forgot/reset password frontend API wiring if not already verified in the browser.
 - Replace temporary placeholder arrays with real `fetch()` calls.
-- Polish navigation by role.
-- Add consistent empty, loading, success, and error states.
+- Polish navigation by role after all route protection is decided.
+- Add final empty, loading, success, and error states to API-backed pages.
 - Improve responsive behavior.
 - Prepare demo data screens and presentation flow.
 
