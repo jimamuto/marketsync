@@ -11,7 +11,7 @@ const bookings = [
   },
   
     {
-       buyer: "County Hospital",
+       buyer: "Kenyatta National Hospital",
        crop: "Potatoes",
        quantity: "200 Kgs",
        date: "18/06/2026",
