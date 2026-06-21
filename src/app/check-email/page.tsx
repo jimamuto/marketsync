@@ -29,7 +29,7 @@ export default async function CheckEmailPage({ searchParams }: CheckEmailPagePro
           )}
         </div>
 
-        <Link href="/login" className="login-primary-button">
+        <Link href="/login" className="login-primary-button check-email-login-button">
           Back to login
         </Link>
 

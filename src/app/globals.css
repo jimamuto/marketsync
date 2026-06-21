@@ -802,6 +802,14 @@ h1 {
   border-color: #2f7d32;
 }
 
+.check-email-login-button {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
 .login-secondary-button {
   border: 1px solid #d8ded2;
   background: #ffffff;
