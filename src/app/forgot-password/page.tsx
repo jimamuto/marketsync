@@ -6,13 +6,32 @@ import { FormEvent, useState } from "react";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setMessage("");
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
-    setMessage(
-      "If an account exists with this email, password reset instructions will be sent.",
-    );
+      const data = await response.json();
+
+      setMessage(
+        data.message ||
+          "If an account exists with this email, password reset instructions will be sent.",
+      );
+    } catch {
+      setMessage("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -37,8 +56,8 @@ export default function ForgotPasswordPage() {
 
           {message && <p className="form-success">{message}</p>}
 
-          <button type="submit" className="login-primary-button">
-            Send reset instructions
+          <button type="submit" className="login-primary-button" disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Send reset instructions"}
           </button>
         </form>
 
