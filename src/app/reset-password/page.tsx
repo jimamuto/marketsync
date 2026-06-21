@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import {useRouter} from "next/navigation";
 
 export default function ResetPasswordPage() {
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const router = useRouter();
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,6 +29,8 @@ export default function ResetPasswordPage() {
     }
 
     setMessage("Your password has been reset. You can now log in.");
+
+    router.push("/login");
     setPassword("");
     setConfirmPassword("");
   }
