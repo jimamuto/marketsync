@@ -1,3 +1,5 @@
+//manages booking requests from farmers that matches their demands
+//buyers can create and fetch bookings
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDb } from "../../../lib/database";
@@ -19,7 +21,7 @@ export async function POST(request: NextRequest) {
         { status: 403 },
       );
     }
-
+//extract fields
     const body = await request.json();
     const supplyId = toNumber(body.supply_id ?? body.supplyId);
     const demandRequestId = toNumber(body.demand_request_id ?? body.demandRequestId);
@@ -40,7 +42,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-
+//find supplies from database
     const supplyResult = await getDb().query(
       `select id, farmer_id, crop_name, quantity, unit, location, status
        from crop_supplies
@@ -54,9 +56,9 @@ export async function POST(request: NextRequest) {
         { status: 404 },
       );
     }
-
+// extract the first row
     const supply = supplyResult.rows[0];
-
+//extract demand requests from database
     const demandResult = await getDb().query(
       `select id, buyer_id, crop_name, quantity, unit, location, status
        from demand_requests
@@ -100,7 +102,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-
+//insert values into booking table
     const result = await getDb().query(
       `insert into bookings
        (supply_id, demand_request_id, buyer_id, farmer_id, quantity, unit, status, message)
@@ -108,7 +110,7 @@ export async function POST(request: NextRequest) {
        returning id, supply_id, demand_request_id, buyer_id, farmer_id, quantity, unit, status, message, created_at, updated_at`,
       [supplyId, demandRequestId, userId, supply.farmer_id, quantity, unit, message],
     );
-
+//set booked status
     await getDb().query(
       "update demand_requests set status = 'booked', updated_at = CURRENT_TIMESTAMP where id = $1",
       [demandRequestId],

@@ -61,12 +61,12 @@ export async function POST(request: Request) {
     }
 
     const passwordHash = await hashPassword(password);
-
+//update users password
     await getDb().query(
       "update users set password_hash = $1, updated_at = CURRENT_TIMESTAMP where id = $2",
       [passwordHash, resetToken.user_id],
     );
-
+//mark reset token as used
     await getDb().query(
       "update password_reset_tokens set used_at = CURRENT_TIMESTAMP where id = $1",
       [resetToken.id],

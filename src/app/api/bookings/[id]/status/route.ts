@@ -1,3 +1,4 @@
+//updates the status of a booking
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDb } from "../../../../../lib/database";

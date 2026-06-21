@@ -33,7 +33,7 @@ async function getOwnedSupply(request: NextRequest, supplyId: number) {
       body: { message: "Only farmers can access crop supplies" },
     };
   }
-
+//fetch supplies for farmer and admin
   const result =
     role === "admin"
       ? await getDb().query(
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const supplyId = Number(id);
-    if (!Number.isInteger(supplyId) || supplyId <= 0) {
+    if (!Number.isInteger(supplyId) || supplyId <= 0) { //use number helper to find valid number for id
       return NextResponse.json(
         { message: "Invalid supply id" },
         { status: 400 },
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     );
   }
 }
-
+//update supplies
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     const userId = getSessionUserId(request);
@@ -112,7 +112,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         { status: 400 },
       );
     }
-
+//check if supplies exist to the user
     const existing =
       role === "admin"
         ? await getDb().query("select id from crop_supplies where id = $1", [supplyId])
@@ -129,13 +129,14 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     const body = await request.json();
+    //create two arrays for updates and values
     const updates: string[] = [];
     const values: Array<string | number | null> = [];
-
+//if crop name and cropName are provided possible types they are pushed to the arrays
     const cropName = body.crop_name ?? body.cropName;
     if (cropName !== undefined) {
-      updates.push(`crop_name = $${values.length + 1}`);
-      values.push(String(cropName).trim());
+      updates.push(`crop_name = $${values.length + 1}`); //keeps track of updates in the updates array
+      values.push(String(cropName).trim()); //pushes the value of crop name to array once converted to array and trimmed
     }
 
     const cropVariety = body.crop_variety ?? body.cropVariety;
@@ -190,7 +191,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       values.push(status);
     }
 
-    if (updates.length === 0) {
+    if (updates.length === 0) { //if update array empty
       return NextResponse.json(
         { message: "No valid fields provided to update" },
         { status: 400 },
@@ -199,6 +200,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     updates.push("updated_at = CURRENT_TIMESTAMP");
 
+//update all the fields in the database
     const result = await getDb().query(
       `update crop_supplies
        set ${updates.join(", ")}
@@ -206,7 +208,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
        returning id, farmer_id, crop_name, crop_variety, quantity, unit, planting_date, expected_harvest_date, location, status, created_at, updated_at`,
       [...values, supplyId],
     );
-
+//return updated supply
     return NextResponse.json(
       { supply: result.rows[0] },
       { status: 200 },

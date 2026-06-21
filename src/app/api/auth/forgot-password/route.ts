@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from "crypto";
+import { createHash, randomBytes } from "crypto"; //library for encryption purposes
 import { NextResponse } from "next/server";
 import { getDb } from "../../../../lib/database";
 import { sendMail } from "../../../../lib/mail";
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     const user = userResult.rows[0];
     const resetToken = randomBytes(32).toString("hex");
     const tokenHash = hashToken(resetToken);
-    const expiresAt = new Date(Date.now() + 1000 * 60 * 30);
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 30); //token expires in 30 minutes
 
     await getDb().query(
       `insert into password_reset_tokens (user_id, token_hash, expires_at)

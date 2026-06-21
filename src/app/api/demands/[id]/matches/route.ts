@@ -1,3 +1,4 @@
+//finds matching crop supplies for specific buyer demand requests
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDb } from "../../../../../lib/database";
@@ -36,15 +37,16 @@ type SupplyRow = {
   updated_at: string;
 };
 
-function toDate(value: string) {
+function toDate(value: string) {//creates date object in UTC timezone
   return new Date(`${value}T00:00:00Z`);
 }
 
-function daysBetween(left: string, right: string) {
+function daysBetween(left: string, right: string) { //calculates difference between two days to be used for planting and harvest dates
   const diffMs = Math.abs(toDate(left).getTime() - toDate(right).getTime());
-  return Math.round(diffMs / (1000 * 60 * 60 * 24));
+  return Math.round(diffMs / (1000 * 60 * 60 * 24)); //converts milliseconds to days
 }
-
+//Defines a function that gives a supply a match score against a demand request.
+//performs the math
 function scoreMatch(demand: DemandRow, supply: SupplyRow) {
   let score = 0;
   const reasons: string[] = [];
@@ -85,7 +87,7 @@ function scoreMatch(demand: DemandRow, supply: SupplyRow) {
     harvestGapDays: harvestGap,
   };
 }
-
+// fetch matches
 export async function GET(request: NextRequest, context: RouteContext) {
   try {
     const userId = getSessionUserId(request);
@@ -144,19 +146,19 @@ export async function GET(request: NextRequest, context: RouteContext) {
        order by expected_harvest_date asc, quantity desc, created_at desc`,
       [demand.crop_name, demand.location, demand.quantity],
     );
-
+// Loops over every matching supply row and transforms it
     const matches = supplyResult.rows.map((supply) => {
       const match = scoreMatch(demand, supply);
 
       return {
-        ...supply,
+        ...supply, //copies all supply fields into new object
         match_score: match.score,
         match_reasons: match.reasons,
         harvest_gap_days: match.harvestGapDays,
       };
     });
 
-    matches.sort((left, right) => right.match_score - left.match_score);
+    matches.sort((left, right) => right.match_score - left.match_score); //sorts matches highest comes first
 
     return NextResponse.json(
       {

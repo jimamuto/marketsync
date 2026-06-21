@@ -1,13 +1,15 @@
+//farmers can create crop supplies and get crop supplies
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDb } from "../../../lib/database";
 import { getSessionRole, getSessionUserId, hasFarmerAccess } from "../../../lib/session";
 
+// helper that converts value to number and validates numbers
 function toNumber(value: unknown) {
   const numberValue = Number(value);
   return Number.isFinite(numberValue) ? numberValue : null;
 }
-
+//helper that trims whitespace from dates and returns "" for invalid dates
 function normalizeDate(value: unknown) {
   const date = String(value ?? "").trim();
   return date || null;
@@ -27,6 +29,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+  //extract fields of supply variables
     const cropName = String(body.crop_name ?? body.cropName ?? "").trim();
     const cropVariety = body.crop_variety || body.cropVariety ? String(body.crop_variety ?? body.cropVariety).trim() : null;
     const quantity = toNumber(body.quantity);

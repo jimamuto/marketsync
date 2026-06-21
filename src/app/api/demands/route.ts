@@ -1,3 +1,4 @@
+// used by buyers to create demands and fetch demands
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDb } from "../../../lib/database";
