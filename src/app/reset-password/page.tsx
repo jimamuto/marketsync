@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import {useRouter} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ResetPasswordPage() {
 
@@ -10,13 +10,21 @@ export default function ResetPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token") || "";
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setMessage("");
+
+    if (!token) {
+      setError("Reset token is missing. Please use the link from your email.");
+      return;
+    }
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters.");
@@ -28,11 +36,37 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    setMessage("Your password has been reset. You can now log in.");
+    setIsSubmitting(true);
 
-    router.push("/login");
-    setPassword("");
-    setConfirmPassword("");
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Failed to reset password.");
+        return;
+      }
+
+      setMessage("Your password has been reset. You can now log in.");
+      setPassword("");
+      setConfirmPassword("");
+
+      router.push("/login");
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -69,8 +103,8 @@ export default function ResetPasswordPage() {
           {error && <p className="form-error">{error}</p>}
           {message && <p className="form-success">{message}</p>}
 
-          <button type="submit" className="login-primary-button">
-            Reset password
+          <button type="submit" className="login-primary-button" disabled={isSubmitting}>
+            {isSubmitting ? "Resetting..." : "Reset password"}
           </button>
         </form>
 

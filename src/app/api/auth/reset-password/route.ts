@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
 import { NextResponse } from "next/server";
 import { getDb } from "../../../../lib/database";
-import { hashPassword } from "../../../../lib/auth";
+import { confirmPassword, hashPassword } from "../../../../lib/auth";
 
 function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
@@ -56,6 +56,32 @@ export async function POST(request: Request) {
     if (new Date(resetToken.expires_at) < new Date()) {
       return NextResponse.json(
         { message: "Invalid or expired reset token" },
+        { status: 400 },
+      );
+    }
+    // Fetch the user's current password hash so the new password cannot match the old one.
+    const userResult = await getDb().query(
+      "select password_hash from users where id = $1",
+      [resetToken.user_id],
+    );
+
+    if (userResult.rowCount === 0) {
+      return NextResponse.json(
+        { message: "User account no longer exists" },
+        { status: 404 },
+      );
+    }
+
+    const oldPasswordMatches = await confirmPassword(
+      password,
+      // userResult.rows[0] is the user row returned from the database.
+      // password_hash is that user's currently saved hashed password.
+      userResult.rows[0].password_hash,
+    );
+
+    if (oldPasswordMatches) {
+      return NextResponse.json(
+        { message: "New password cannot be the same as your old password" },
         { status: 400 },
       );
     }
