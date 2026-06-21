@@ -61,8 +61,13 @@ export default function RegisterPage() {
         setError(data.message || "Failed to register user.");
         return;
       }
+      const registeredEmail = form.email;
 
-      setMessage("Account created successfully. You can now log in.");
+      setMessage(
+           data.message ||
+             "Account created. Please check your email to verify your account.",
+         );
+
 
       setForm({
         name: "",
@@ -72,8 +77,7 @@ export default function RegisterPage() {
         phone: "",
         location: "",
       });
-
-      router.push("/login");
+    router.push(`/check-email?email=${encodeURIComponent(registeredEmail)}`);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

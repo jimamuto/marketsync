@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     // find user by email
     const result = await getDb().query(
-      "select id, name, email, password_hash, role, phone, location from users where email = $1",
+      "select id, name, email, password_hash, role, phone, location, email_verified_at from users where email = $1",
       [email],
     );
 
@@ -41,6 +41,13 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { message: "Invalid email or password" },
         { status: 401 },
+      );
+    }
+
+    if (!user.email_verified_at) {
+      return NextResponse.json(
+        { message: "Please verify your email before logging in." },
+        { status: 403 },
       );
     }
 

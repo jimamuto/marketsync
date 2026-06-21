@@ -1,6 +1,8 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { getDb } from "../../../../lib/database";
-import { IsvalidRole, hashPassword, tosafeUser } from "../../../../lib/auth";
+import { IsvalidRole, hashPassword } from "../../../../lib/auth";
+import { sendMail } from "../../../../lib/mail";
 
 export async function POST(request: Request) {
   try {
@@ -64,10 +66,35 @@ export async function POST(request: Request) {
 
     );
 
+    const user= result.rows[0];
+    //generating of token
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiresAt = new Date (Date.now() + 1000 * 60 * 30 );
+
+    await getDb().query(
+      `insert into email_verification_tokens (user_id, token, expires_at)
+       values ($1, $2, $3)`,
+      [user.id, token, expiresAt],
+    );
+
+    const appUrl = process.env.APP_URL ?? "http://localhost:3000";
+    const verifyUrl = `${appUrl}/api/auth/verify-email?token=${token}`;
+
+    await sendMail({
+      to: user.email,
+      subject: "Verify your MarketSync account",
+      html: `
+        <p>Hello ${user.name},</p>
+        <p>Click the link below to verify your email and log in:</p>
+        <p><a href="${verifyUrl}">Verify my account</a></p>
+        <p>This link expires in 30 minutes.</p>
+      `,
+    });
+
     // return success message
     return NextResponse.json(
-      {user:tosafeUser(result.rows[0])},
-      {status:201},
+      { message: "Account created. Please check your email to verify your account." },
+      { status: 201 },
     );
   } catch (error){
     return NextResponse.json(
