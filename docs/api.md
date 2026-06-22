@@ -521,3 +521,44 @@ Related status effects:
 - `accepted` sets the linked crop supply to `booked`.
 - `rejected` or `cancelled` reopens the linked demand request.
 - `completed` marks the demand as `fulfilled` and returns the supply to `ready`.
+
+---
+
+## Manual Verification Log
+
+These are the endpoint checks that were run locally in PowerShell during development:
+
+### Auth
+
+- `POST /api/auth/register` returned a created user for:
+  - a test farmer account
+  - a test buyer account
+- `POST /api/auth/login` returned the signed-in user and set the session cookies.
+- `POST /api/auth/logout` clears the auth session for the current browser session.
+
+### Farmer supply
+
+- `POST /api/supplies` created a crop supply for the signed-in farmer.
+- `GET /api/supplies` returned the farmer's supply list.
+
+### Buyer demand
+
+- `POST /api/demands` created a demand request for the signed-in buyer.
+- `GET /api/demands` returned the buyer's demand list.
+
+### Booking flow
+
+- `POST /api/bookings` created a booking from a matched supply and demand pair.
+- `GET /api/bookings` returned the buyer's bookings.
+- `PATCH /api/bookings/[id]/status` changed the booking status to `accepted`.
+- `GET /api/bookings/[id]` returned the booking after the status update.
+
+### Admin reporting
+
+- `GET /api/admin/summary`
+- `GET /api/admin/users`
+- `GET /api/admin/supplies`
+- `GET /api/admin/demands`
+- `GET /api/admin/bookings`
+
+These admin routes are implemented and included in the production build. They should be checked with an admin session once Docker is running again.

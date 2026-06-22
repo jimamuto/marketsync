@@ -21,6 +21,10 @@ Run migrations in order because later tables depend on earlier tables.
 | `003_create_demand_requests.sql` | Creates institutional buyer procurement demand records. |
 | `004_create_bookings.sql` | Creates booking records that connect buyer demand to farmer supply. |
 | `005_add_indexes.sql` | Adds indexes for faster filtering, matching, and lookup. |
+| `006_seed_admin_user.sql` | Adds a default admin user for review and demo access. |
+| `007_create_password_reset_tokens.sql` | Adds password reset token storage for recovery flows. |
+| `008_create_email_verification_tokens.sql` | Adds email verification token storage for signup flows. |
+| `009_seed_demo_data.sql` | Adds sample demo farmers, buyers, supplies, and demand requests. |
 
 ---
 
@@ -244,6 +248,10 @@ docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/mig
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/003_create_demand_requests.sql
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/004_create_bookings.sql
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/005_add_indexes.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/006_seed_admin_user.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/007_create_password_reset_tokens.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/008_create_email_verification_tokens.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/009_seed_demo_data.sql
 ```
 
 Check the tables:
