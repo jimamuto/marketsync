@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
 import DashboardCard from "../../components/DashboardCard";
 
@@ -52,15 +53,24 @@ export default function FarmerPage(){
                ))}
           </div>
 
-          <div className="calendar-note planting">Planting</div>
-          <div className="calendar-note harvest">Peak Harvest</div>
         </DashboardCard>
 
 
         <DashboardCard title="Log new planting cycle">
           <p>Add crop variety,estimated supply,planting date and expected harvest date</p>
-          <button className="primary-button">Log new crop</button>
+          <Link href="/farmer/supplies/new">Log new crop</Link>
         </DashboardCard>
+        
+        <DashboardCard title="View Crop Calender">
+          <p>Track planting and harvest dates for your crop supplies</p>
+          <Link href="/farmer/calendar">View crop calendar</Link>
+        </DashboardCard>
+
+        <DashboardCard title="Buyer booking requests" className="buyer-booking-request-card">
+          <p>Review buyer requests for your crop supplies</p>
+          <Link href="/farmer/bookings">Manage buyer booking request</Link>
+        </DashboardCard>
+
       </section>
 
       <DashboardCard title="Active Booking contracts">
