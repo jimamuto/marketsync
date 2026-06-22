@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
-import {useSearchParams} from "/next/navigation";
-import {useState} from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
-export default function CheckEmailPage(){
+function CheckEmailContent(){
   
   const searchParams= useSearchParams();
   const email = searchParams.get("email") || "";
@@ -24,14 +24,13 @@ export default function CheckEmailPage(){
 
       const data = await response.json();
       setMessage(data.message || "If this account exists, we sent a new verification email.");
-    } catch (error) {
-      setMessage("something went wrong please try again");
+    } catch {
+      setMessage("Something went wrong. Please try again.");
     }finally{
       setIsSubmitting(false);
     }
   }
 
-}
   return (
     <main className="login-card-page">
       <section className="login-card-shell">
@@ -50,7 +49,7 @@ export default function CheckEmailPage(){
             </p>
           )}
         </div>
-      {message && <p className="form-message form-succes">{message}</p>}
+        {message && <p className="form-message form-success">{message}</p>}
           <button
              type="button"
              className="login-secondary-button"
@@ -69,5 +68,13 @@ export default function CheckEmailPage(){
         </p>
       </section>
     </main>
+  );
+}
+
+export default function CheckEmailPage() {
+  return (
+    <Suspense fallback={<main className="login-card-page">Loading...</main>}>
+      <CheckEmailContent />
+    </Suspense>
   );
 }

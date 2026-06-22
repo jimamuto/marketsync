@@ -25,18 +25,18 @@ export default function FarmerPage(){
   <main className= "dashboard-page">
       <PageHeader
         eyebrow="farmer dashboard"
-        title="Crop Planning calender"
+        title="Crop Planning calendar"
         description="Track planting cycles,upcoming harvests, and active buyer bookings"
       />
 
       <section className="dashboard-grid">
-        <DashboardCard className="calender-card">
-          <div className="calender-top">
+        <DashboardCard className="calendar-card">
+          <div className="calendar-top">
             <strong>May</strong>
             <strong>2026</strong>
           </div>
 
-          <div className="calender-grid">
+          <div className="calendar-grid">
             <span>MON</span>
             <span>TUE</span>
             <span>WED</span>
@@ -45,15 +45,15 @@ export default function FarmerPage(){
             <span>SAT</span>
             <span>SUN</span>
 
-            {Array.from({ length: 31 }, (_, index) => ( //use array to create 31 days of the month
-                 <div key={index} className="calendar-day">
+            {Array.from({ length: 31 }, (_, index) => ( 
+            <div key={index} className="calendar-day">
                    {index + 1}
                  </div>
                ))}
           </div>
 
-          <div className="calender-note planting">Planting</div>
-          <div className="calender-note harvest">Peak Harvest</div>
+          <div className="calendar-note planting">Planting</div>
+          <div className="calendar-note harvest">Peak Harvest</div>
         </DashboardCard>
 
 
