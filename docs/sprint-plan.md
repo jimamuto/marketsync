@@ -181,13 +181,27 @@ Build and test custom authentication with role-aware redirects, admin seeding, p
   - `database/migrations/006_seed_admin_user.sql`
 - Added password reset token migration:
   - `database/migrations/007_create_password_reset_tokens.sql`
+- Added email verification token migration:
+  - `database/migrations/008_create_email_verification_tokens.sql`
 - Added SMTP mail helper:
   - `src/lib/mail.ts`
 - Christine completed the password reset API flow:
   - sends reset emails through `src/lib/mail.ts`
   - stores only hashed reset tokens
   - rejects expired or already-used reset tokens
+  - rejects resetting to the same old password
   - keeps forgot-password responses generic so registered emails cannot be guessed
+- Added email verification flow:
+  - registration sends a verification email
+  - `/api/auth/verify-email` marks the account verified, sets session cookies, and redirects to the role dashboard
+  - `/api/auth/resend-verification` sends a fresh verification link for unverified accounts
+  - manual login blocks users until `email_verified_at` is set
+- Added middleware route protection in `src/middleware.ts`:
+  - `/farmer/:path*` requires the `farmer` session role
+  - `/buyer/:path*` requires the `buyer` session role
+  - `/admin/:path*` requires the `admin` session role
+  - unauthenticated users are redirected to `/login` before protected pages render
+  - wrong-role users are redirected to `/unauthorized` before protected pages render
 - Added auth pages:
   - `/login`
   - `/register`
@@ -203,26 +217,21 @@ Build and test custom authentication with role-aware redirects, admin seeding, p
 
 Christine should own the backend/API follow-up tasks:
 
-- Add API tests or documented curl/Thunder Client checks for `GET /api/auth/me`, forgot-password, and reset-password.
+- Add API tests or documented curl/Thunder Client checks for `GET /api/auth/me`, forgot-password, reset-password, verify-email, and resend-verification.
 - Confirm SMTP environment values are documented in `.env.example` without real credentials.
-- Help verify the full password reset flow once Jim connects the frontend pages.
+- Manually verify the full register -> email verification -> auto-login flow with real SMTP.
+- Manually verify middleware redirects for logged-out users and wrong-role users.
 
-Jim should own the frontend tasks:
+Jim should own the frontend follow-up tasks:
 
-- Connect `/forgot-password` to `POST /api/auth/forgot-password`.
-- Redirect forgot-password success to `/check-email`.
-- Read the reset token from `/reset-password?token=...`.
-- Connect `/reset-password` to `POST /api/auth/reset-password`.
-- Show clear loading, success, and error states.
-- Redirect reset-password success back to `/login`.
-- Use `/unauthorized` for wrong-role access once route protection is added.
+- Polish loading, success, and error states on auth pages as needed.
+- Keep `/unauthorized` clear for wrong-role access.
 
 Later optional hardening:
 
-- Email verification APIs and pages.
 - 2FA setup, verify, and disable APIs.
 - 2FA UI flow after password login.
-- Stronger session handling and role-based route protection.
+- Stronger session handling beyond the current role cookie approach.
 
 ### Documentation
 
