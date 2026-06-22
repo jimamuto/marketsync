@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!user.email_verified_at) {
+    if (!user.email_verified_at && user.role!=="admin") {
       return NextResponse.json(
         { message: "Please verify your email before logging in." },
         { status: 403 },
