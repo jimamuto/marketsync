@@ -30,3 +30,7 @@ export function hasFarmerAccess(role: UserRole | null) {
 export function hasBuyerAccess(role: UserRole | null) {
   return role === "buyer" || role === "admin";
 }
+
+export function hasAdminAccess(role: UserRole | null) {
+  return role === "admin";
+}
