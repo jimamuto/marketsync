@@ -367,6 +367,86 @@ Each match includes:
 
 ---
 
+## Sprint 8: Admin Reporting APIs
+
+Current admin route status:
+
+| Method | Route | Status |
+| --- | --- | --- |
+| `GET` | `/api/admin/summary` | Implemented |
+| `GET` | `/api/admin/users` | Implemented |
+| `GET` | `/api/admin/supplies` | Implemented |
+| `GET` | `/api/admin/demands` | Implemented |
+| `GET` | `/api/admin/bookings` | Implemented |
+
+### Access Rules
+
+- Only admins can access these routes.
+- Non-admin users receive `403 Forbidden`.
+
+### Admin Summary Response
+
+```json
+{
+  "summary": {
+    "users": 12,
+    "supplies": 8,
+    "demands": 6,
+    "bookings": 3
+  }
+}
+```
+
+### Admin Users Response
+
+```json
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "role": "admin",
+      "phone": null,
+      "location": null,
+      "email_verified_at": null,
+      "created_at": "2026-06-22T00:00:00.000Z",
+      "updated_at": "2026-06-22T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+### Admin Supplies Response
+
+```json
+{
+  "supplies": []
+}
+```
+
+### Admin Demands Response
+
+```json
+{
+  "demands": []
+}
+```
+
+### Admin Bookings Response
+
+```json
+{
+  "bookings": []
+}
+```
+
+### Testing Note
+
+These routes are meant to be tested with an admin session cookie or an admin login flow. The routes are read-only reporting endpoints and do not change data.
+
+---
+
 ## Sprint 7: Booking APIs
 
 Current booking route status:
