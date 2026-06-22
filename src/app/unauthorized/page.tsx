@@ -12,7 +12,7 @@ export default function UnauthorizedPage() {
           </p>
         </div>
 
-        <Link href="/login" className="login-primary-button">
+        <Link href="/login" className="login-primary-button unauthorized-login-button">
           Go to login
         </Link>
 

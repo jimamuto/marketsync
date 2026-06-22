@@ -1,5 +1,6 @@
 import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
+import  {useRequireRole} from "../../../hooks/useRequireRole";
 
 const calendarItems = [
   {
