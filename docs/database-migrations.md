@@ -28,7 +28,10 @@ Planned first migrations:
 003_create_demand_requests.sql
 004_create_bookings.sql
 005_add_indexes.sql
-006_seed_demo_data.sql
+006_seed_admin_user.sql
+007_create_password_reset_tokens.sql
+008_create_email_verification_tokens.sql
+009_seed_demo_data.sql
 ```
 
 ### 001_create_users.sql
@@ -55,7 +58,19 @@ Creates booking requests connecting crop supply and buyer demand.
 
 Adds indexes for faster matching/searching.
 
-### 006_seed_demo_data.sql
+### 006_seed_admin_user.sql
+
+Adds a default admin account for setup and review.
+
+### 007_create_password_reset_tokens.sql
+
+Creates password reset token storage for account recovery flows.
+
+### 008_create_email_verification_tokens.sql
+
+Creates email verification token storage for account verification flows.
+
+### 009_seed_demo_data.sql
 
 Adds sample demo data for presentation.
 
