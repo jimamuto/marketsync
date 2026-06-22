@@ -555,10 +555,17 @@ These are the endpoint checks that were run locally in PowerShell during develop
 
 ### Admin reporting
 
-- `GET /api/admin/summary`
-- `GET /api/admin/users`
-- `GET /api/admin/supplies`
-- `GET /api/admin/demands`
-- `GET /api/admin/bookings`
+Verified with the seeded admin account:
 
-These admin routes are implemented and included in the production build. They should be checked with an admin session once Docker is running again.
+```text
+Email: admin@marketsync.local
+Password: Admin123!
+```
+
+Results:
+
+- `GET /api/admin/summary` returned `200` with counts for users, supplies, demands, and bookings.
+- `GET /api/admin/users` returned `200` with the user list.
+- `GET /api/admin/supplies` returned `200` with the crop supply list.
+- `GET /api/admin/demands` returned `200` with the demand request list.
+- `GET /api/admin/bookings` returned `200` with the booking list.
