@@ -17,12 +17,6 @@ Current verified project checks:
 
 These pages mostly do not call the real APIs yet:
 
-- `src/app/farmer/page.tsx`
-- `src/app/farmer/supplies/page.tsx`
-- `src/app/farmer/supplies/new/page.tsx`
-- `src/app/farmer/supplies/[id]/page.tsx`
-- `src/app/farmer/calendar/page.tsx`
-- `src/app/farmer/bookings/page.tsx`
 - `src/app/buyer/page.tsx`
 - `src/app/buyer/demands/page.tsx`
 - `src/app/buyer/demands/new/page.tsx`
@@ -36,6 +30,11 @@ Needed work:
 - Connect pages to existing API routes.
 - Add loading, empty, success, and error states.
 - Confirm each page works while logged in as the correct role.
+
+Status update:
+
+- Farmer pages have now been wired to the existing APIs.
+- Buyer pages still need the same treatment.
 
 #### 2. Admin backend is implemented, but admin pages are still missing
 
@@ -122,21 +121,21 @@ Needed work:
 
 Christine should own backend-heavy work and farmer page wiring:
 
-1. Wire farmer pages to existing APIs:
-   - `src/app/farmer/page.tsx`
-   - `src/app/farmer/supplies/page.tsx`
-   - `src/app/farmer/supplies/new/page.tsx`
-   - `src/app/farmer/supplies/[id]/page.tsx`
-   - `src/app/farmer/calendar/page.tsx`
-   - `src/app/farmer/bookings/page.tsx`
-2. Create admin API routes:
+1. Create admin API routes:
    - `/api/admin/users`
    - `/api/admin/supplies`
    - `/api/admin/demands`
    - `/api/admin/bookings`
    - `/api/admin/summary`
-3. Document/test backend endpoint checks for her API work.
-4. Add or help define demo seed data if backend data setup is needed.
+2. Document/test backend endpoint checks for her API work.
+3. Add or help define demo seed data if backend data setup is needed.
+
+Completed by Christine:
+
+- Farmer pages are wired to the existing APIs.
+- Admin backend routes are implemented.
+- Demo seed data migration has been added.
+- Backend endpoint checks are documented.
 
 ### Jim
 
