@@ -1,56 +1,110 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 
-const calendarItems = [
-  {
-    crop: "Tomatoes",
-    activity: "Expected harvest",
-    date: "2026-07-10",
-    location: "Nakuru",
-    status: "Available soon",
-  },
-  {
-    crop: "Maize",
-    activity: "Growing period",
-    date: "2026-08-20",
-    location: "Eldoret",
-    status: "Growing",
-  },
-  {
-    crop: "Onions",
-    activity: "Ready for buyers",
-    date: "2026-07-30",
-    location: "Meru",
-    status: "Booked",
-  },
-];
+type Supply = {
+  id: number;
+  crop_name: string;
+  crop_variety: string | null;
+  quantity: number;
+  unit: string;
+  planting_date: string;
+  expected_harvest_date: string;
+  location: string;
+  status: string;
+};
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString("en-KE", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function FarmerCalendarPage() {
+  const [supplies, setSupplies] = useState<Supply[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadSupplies() {
+      try {
+        const response = await fetch("/api/supplies", {
+          credentials: "include",
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load calendar data");
+        }
+
+        if (active) {
+          setSupplies(data.supplies ?? []);
+        }
+      } catch (loadError) {
+        if (active) {
+          setError(loadError instanceof Error ? loadError.message : "Failed to load calendar data");
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadSupplies();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const timeline = [...supplies].sort((left, right) =>
+    left.expected_harvest_date.localeCompare(right.expected_harvest_date),
+  );
+
   return (
     <main className="dashboard-page">
       <PageHeader
         eyebrow="Crop calendar"
         title="Harvest timeline"
-        description="Track planting and harvest dates for your crop supplies"
+        description="Track planting and harvest dates for your crop supplies."
       />
 
       <DashboardCard title="Upcoming crop activities">
-        <div className="booking-list">
-          {calendarItems.map((item) => (
-            <article key={`${item.crop}-${item.date}`} className="booking-card">
-              <div>
-                <strong>{item.crop}</strong>
-                <p>{item.activity}</p>
-                <p>Location: {item.location}</p>
-              </div>
+        {loading ? (
+          <p>Loading crop timeline...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : timeline.length === 0 ? (
+          <p>No crop supplies yet. Create a supply record to see the calendar timeline.</p>
+        ) : (
+          <div className="booking-list">
+            {timeline.map((item) => (
+              <article key={item.id} className="booking-card">
+                <div>
+                  <strong>{item.crop_name}</strong>
+                  <p>
+                    {item.crop_variety ? `${item.crop_variety} - ` : ""}
+                    {item.quantity} {item.unit}
+                  </p>
+                  <p>Location: {item.location}</p>
+                </div>
 
-              <div className="booking-meta">
-                <p>Date: {item.date}</p>
-                <p>Status: {item.status}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+                <div className="booking-meta">
+                  <p>Planting: {formatDate(item.planting_date)}</p>
+                  <p>Harvest: {formatDate(item.expected_harvest_date)}</p>
+                  <p>Status: {item.status}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </DashboardCard>
     </main>
   );
