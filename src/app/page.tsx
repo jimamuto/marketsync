@@ -27,6 +27,16 @@ export default function Home() {
   return (
     <main className="landing-page">
       <section className="landing-hero" aria-labelledby="landing-title">
+        <div className="landing-visual" aria-label="MarketSync landing page illustration">
+          <Image
+            src="/marketsync-landing.png"
+            alt="Illustration of farmers and fresh produce representing the MarketSync crop marketplace"
+            width={1524}
+            height={704}
+            priority
+          />
+        </div>
+
         <div className="landing-hero-copy">
           <p className="eyebrow">MarketSync</p>
           <h1 id="landing-title">Synchronize crop production with real buyer demand.</h1>
@@ -42,16 +52,6 @@ export default function Home() {
               Log in
             </Link>
           </div>
-        </div>
-
-        <div className="landing-visual" aria-label="MarketSync landing page illustration">
-          <Image
-            src="/marketsync-landing.png"
-            alt="Illustration of farmers and fresh produce representing the MarketSync crop marketplace"
-            width={1524}
-            height={704}
-            priority
-          />
         </div>
       </section>
 
