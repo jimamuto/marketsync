@@ -367,6 +367,86 @@ Each match includes:
 
 ---
 
+## Sprint 8: Admin Reporting APIs
+
+Current admin route status:
+
+| Method | Route | Status |
+| --- | --- | --- |
+| `GET` | `/api/admin/summary` | Implemented |
+| `GET` | `/api/admin/users` | Implemented |
+| `GET` | `/api/admin/supplies` | Implemented |
+| `GET` | `/api/admin/demands` | Implemented |
+| `GET` | `/api/admin/bookings` | Implemented |
+
+### Access Rules
+
+- Only admins can access these routes.
+- Non-admin users receive `403 Forbidden`.
+
+### Admin Summary Response
+
+```json
+{
+  "summary": {
+    "users": 12,
+    "supplies": 8,
+    "demands": 6,
+    "bookings": 3
+  }
+}
+```
+
+### Admin Users Response
+
+```json
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "role": "admin",
+      "phone": null,
+      "location": null,
+      "email_verified_at": null,
+      "created_at": "2026-06-22T00:00:00.000Z",
+      "updated_at": "2026-06-22T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+### Admin Supplies Response
+
+```json
+{
+  "supplies": []
+}
+```
+
+### Admin Demands Response
+
+```json
+{
+  "demands": []
+}
+```
+
+### Admin Bookings Response
+
+```json
+{
+  "bookings": []
+}
+```
+
+### Testing Note
+
+These routes are meant to be tested with an admin session cookie or an admin login flow. The routes are read-only reporting endpoints and do not change data.
+
+---
+
 ## Sprint 7: Booking APIs
 
 Current booking route status:
@@ -441,3 +521,51 @@ Related status effects:
 - `accepted` sets the linked crop supply to `booked`.
 - `rejected` or `cancelled` reopens the linked demand request.
 - `completed` marks the demand as `fulfilled` and returns the supply to `ready`.
+
+---
+
+## Manual Verification Log
+
+These are the endpoint checks that were run locally in PowerShell during development:
+
+### Auth
+
+- `POST /api/auth/register` returned a created user for:
+  - a test farmer account
+  - a test buyer account
+- `POST /api/auth/login` returned the signed-in user and set the session cookies.
+- `POST /api/auth/logout` clears the auth session for the current browser session.
+
+### Farmer supply
+
+- `POST /api/supplies` created a crop supply for the signed-in farmer.
+- `GET /api/supplies` returned the farmer's supply list.
+
+### Buyer demand
+
+- `POST /api/demands` created a demand request for the signed-in buyer.
+- `GET /api/demands` returned the buyer's demand list.
+
+### Booking flow
+
+- `POST /api/bookings` created a booking from a matched supply and demand pair.
+- `GET /api/bookings` returned the buyer's bookings.
+- `PATCH /api/bookings/[id]/status` changed the booking status to `accepted`.
+- `GET /api/bookings/[id]` returned the booking after the status update.
+
+### Admin reporting
+
+Verified with the seeded admin account:
+
+```text
+Email: admin@marketsync.local
+Password: Admin123!
+```
+
+Results:
+
+- `GET /api/admin/summary` returned `200` with counts for users, supplies, demands, and bookings.
+- `GET /api/admin/users` returned `200` with the user list.
+- `GET /api/admin/supplies` returned `200` with the crop supply list.
+- `GET /api/admin/demands` returned `200` with the demand request list.
+- `GET /api/admin/bookings` returned `200` with the booking list.

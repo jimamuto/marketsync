@@ -17,12 +17,6 @@ Current verified project checks:
 
 These pages mostly do not call the real APIs yet:
 
-- `src/app/farmer/page.tsx`
-- `src/app/farmer/supplies/page.tsx`
-- `src/app/farmer/supplies/new/page.tsx`
-- `src/app/farmer/supplies/[id]/page.tsx`
-- `src/app/farmer/calendar/page.tsx`
-- `src/app/farmer/bookings/page.tsx`
 - `src/app/buyer/page.tsx`
 - `src/app/buyer/demands/page.tsx`
 - `src/app/buyer/demands/new/page.tsx`
@@ -37,12 +31,17 @@ Needed work:
 - Add loading, empty, success, and error states.
 - Confirm each page works while logged in as the correct role.
 
-#### 2. Admin backend is not implemented
+Status update:
+
+- Farmer pages have now been wired to the existing APIs.
+- Buyer pages still need the same treatment.
+
+#### 2. Admin backend is implemented, but admin pages are still missing
 
 Current state:
 
-- No `src/app/api/admin/...` routes exist.
-- Only `src/app/admin/page.tsx` exists.
+- `src/app/api/admin/...` routes now exist.
+- Only `src/app/admin/page.tsx` exists on the frontend side.
 
 Missing admin API routes:
 
@@ -54,10 +53,9 @@ Missing admin API routes:
 
 Needed work:
 
-- Create admin-only API routes.
-- Query existing database tables.
-- Return useful summary and table data.
-- Block non-admin access.
+- Create admin-only frontend pages.
+- Wire those pages to the new admin APIs.
+- Keep the admin routes read-only for the MVP.
 - Document and manually test each route.
 
 #### 3. Admin nested pages are missing
@@ -78,65 +76,44 @@ Needed work:
 - Add loading, empty, and error states.
 - Keep admin actions read-only for the MVP unless safe mutation APIs are added.
 
-#### 4. `.env.example` is incomplete
+#### 4. `.env.example` has been updated, but it should stay in sync with future email changes
 
 Current state:
 
-- `.env.example` only has `DATABASE_URL`.
-- SMTP/email variables are not documented there yet, even though mail, reset-password, and email-verification code exists.
+- `.env.example` now includes safe placeholder SMTP/email variables.
+- Real credentials are not committed.
 
 Needed work:
 
-- Add safe placeholder SMTP/email variables to `.env.example`.
-- Do not commit real credentials.
-- Keep values clearly marked as examples.
+- Keep `.env.example` updated if new email fields are added later.
 
-#### 5. No demo seed migration exists
+#### 5. Demo seed migration exists
 
 Current state:
 
-- `docs/database-migrations.md` mentions `006_seed_demo_data.sql`.
-- Actual migrations do not include demo data.
-- Current migration `006` is `006_seed_admin_user.sql`, not demo data.
+- `database/migrations/009_seed_demo_data.sql` now exists.
+- The schema docs and migration plan have been updated to reference the actual migration sequence.
 
 Needed work:
 
-- Either create a real demo seed migration with a correct new number, or update the documentation so it no longer references the wrong migration.
-- Add demo data that supports the final presentation flow:
-  - farmer account
-  - buyer account
-  - crop supply
-  - demand request
-  - matchable records
-  - booking examples if needed
+- Keep the seed data aligned with the demo flow if future features change the schema.
 
-#### 6. API/manual endpoint checks are still not documented
+#### 6. API/manual endpoint checks are partially documented
 
 Current state:
 
-- Documentation says endpoint checks are needed.
-- Completed curl, Thunder Client, or Postman result sections were not found for the newer feature APIs.
-
-Checks still need to be documented for:
-
-- Auth follow-up flows:
+- `docs/api.md` now includes manual verification notes for the auth, supply, demand, booking, and admin reporting flows that were checked locally.
+- Auth follow-up flows still need dedicated verification if the SMTP/email path changes again:
   - `GET /api/auth/me`
   - `POST /api/auth/forgot-password`
   - `POST /api/auth/reset-password`
   - `GET /api/auth/verify-email`
   - `POST /api/auth/resend-verification`
-- Farmer supplies APIs.
-- Buyer demands APIs.
-- Matching API.
-- Booking APIs.
-- Admin APIs after they are created.
 
 Needed work:
 
-- Add request examples.
-- Add expected responses.
-- Record which manual checks passed.
-- Include role/access checks where relevant.
+- Keep adding request/response examples as more backend routes change.
+- Re-run the remaining auth email-flow checks if SMTP settings or token logic change.
 
 ## Proposed Work Allocation
 
@@ -144,21 +121,21 @@ Needed work:
 
 Christine should own backend-heavy work and farmer page wiring:
 
-1. Wire farmer pages to existing APIs:
-   - `src/app/farmer/page.tsx`
-   - `src/app/farmer/supplies/page.tsx`
-   - `src/app/farmer/supplies/new/page.tsx`
-   - `src/app/farmer/supplies/[id]/page.tsx`
-   - `src/app/farmer/calendar/page.tsx`
-   - `src/app/farmer/bookings/page.tsx`
-2. Create admin API routes:
+1. Create admin API routes:
    - `/api/admin/users`
    - `/api/admin/supplies`
    - `/api/admin/demands`
    - `/api/admin/bookings`
    - `/api/admin/summary`
-3. Document/test backend endpoint checks for her API work.
-4. Add or help define demo seed data if backend data setup is needed.
+2. Document/test backend endpoint checks for her API work.
+3. Add or help define demo seed data if backend data setup is needed.
+
+Completed by Christine:
+
+- Farmer pages are wired to the existing APIs.
+- Admin backend routes are implemented.
+- Demo seed data migration has been added.
+- Backend endpoint checks are documented.
 
 ### Jim
 
