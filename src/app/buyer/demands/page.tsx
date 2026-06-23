@@ -4,15 +4,16 @@ import Link from "next/link";
 import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 
-type Demand ={
-  id:number;
-  crop_name:string;
-  quantity:number;
-  location:string;
-  required_date:string;
-  status:string;
-  notes:string | null;
-}
+type Demand = {
+  id: number;
+  crop_name: string;
+  quantity: number;
+  unit: string;
+  location: string;
+  required_date: string;
+  status: string;
+  notes: string | null;
+};
 
 export default function BuyerDemandsPage() {
 
@@ -67,14 +68,14 @@ export default function BuyerDemandsPage() {
           {demands.map((demand) => (
             <article key={demand.id} className="booking-card">
               <div>
-                <strong>{demand.crop}</strong>
-                <p>Quantity: {demand.quantity}</p>
+                <strong>{demand.crop_name}</strong>
+                <p>Quantity: {demand.quantity} {demand.unit}</p>
                 <p>Delivery location: {demand.location}</p>
                 <p>Status: {demand.status}</p>
               </div>
 
               <div className="booking-meta">
-                <p>Required: {demand.requiredDate}</p>
+                <p>Required: {demand.required_date}</p>
                 <Link href={`/buyer/demands/${demand.id}`} className="secondary-button">View</Link>
                 <Link href={`/buyer/demands/${demand.id}/matches`} className="secondary-button">Find Matches</Link>
               </div>
