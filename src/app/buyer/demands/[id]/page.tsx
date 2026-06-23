@@ -1,75 +1,134 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import DashboardCard from "../../../../components/DashboardCard";
 import PageHeader from "../../../../components/PageHeader";
 
-const demands = [
-  {
-    id: "1",
-    crop: "Tomatoes",
-    quantity: "300 kg",
-    location: "Nairobi",
-    requiredDate: "2026-07-15",
-    status: "Open",
-    budget: "KES 12,000",
-    notes: "Delivery before school reopening",
-  },
-  {
-    id: "2",
-    crop: "Maize",
-    quantity: "800 kg",
-    location: "Mombasa",
-    requiredDate: "2026-08-05",
-    status: "Matching",
-    budget: "KES 20,000",
-    notes: "Prefer dry maize packed in bags",
-  },
-  {
-    id: "3",
-    crop: "Potatoes",
-    quantity: "400 kg",
-    location: "Nakuru",
-    requiredDate: "2026-07-28",
-    status: "Booked",
-    budget: "KES 15,000",
-    notes: "Can be delivered in crates",
-  },
-];
+type Demand = {
+  id: number;
+  crop_name: string;
+  quantity: number;
+  unit: string;
+  location: string;
+  required_date: string;
+  status: string;
+  notes: string | null;
+};
 
-export default async function BuyerDemandDetailsPage({params}: {params: Promise<{id: string}>}) {
-  const {id} = await params;
-  const demand = demands.find((item) => item.id === id) || demands[0];
+export default function BuyerDemandDetailsPage() {
+  const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const [demand, setDemand] = useState<Demand | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    async function loadDemand() {
+      try {
+        const response = await fetch(`/api/demands/${params.id}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load demand");
+        }
+
+        setDemand(data.demand);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load demand");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadDemand();
+  }, [params.id]);
+
+  async function deleteDemand() {
+    const confirmed = window.confirm("Are you sure you want to delete this demand request?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const response = await fetch(`/api/demands/${params.id}`, { method: "DELETE" });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete demand");
+      }
+
+      setMessage("Demand deleted successfully.");
+      router.push("/buyer/demands");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete demand");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <main className="dashboard-page">
       <PageHeader
         eyebrow="Demand details"
-        title={demand.crop}
-        description="View demand request details before this page connects to the backend API"
+        title={demand ? demand.crop_name : "Demand request"}
+        description="View demand request details from the backend API"
       />
 
       <DashboardCard title="Demand information">
-        <div className="booking-list">
-          <article className="booking-card">
-            <div>
-              <strong>{demand.crop}</strong>
-              <p>Quantity: {demand.quantity}</p>
-              <p>Delivery location: {demand.location}</p>
-              <p>Status: {demand.status}</p>
-            </div>
+        {isLoading && <p>Loading demand details...</p>}
+        {error && <p className="error-message">{error}</p>}
+        {message && <p className="success-message">{message}</p>}
+        {!isLoading && !error && !demand && <p>Demand request not found.</p>}
 
-            <div className="booking-meta">
-              <p>Required: {demand.requiredDate}</p>
-              <p>Budget: {demand.budget}</p>
-              <p>Notes: {demand.notes}</p>
-            </div>
-          </article>
-        </div>
+        {!isLoading && !error && demand && (
+          <div className="booking-list">
+            <article className="booking-card">
+              <div>
+                <strong>{demand.crop_name}</strong>
+                <p>
+                  Quantity: {demand.quantity} {demand.unit}
+                </p>
+                <p>Delivery location: {demand.location}</p>
+                <p>Status: {demand.status}</p>
+              </div>
+
+              <div className="booking-meta">
+                <p>Required: {demand.required_date}</p>
+                <p>Notes: {demand.notes || "No notes added"}</p>
+              </div>
+            </article>
+          </div>
+        )}
       </DashboardCard>
 
-      <div>
-        <Link href={`/buyer/demands/${demand.id}/matches`} className="primary-button">Find Matches</Link>
-        <Link href="/buyer/demands" className="secondary-button">Back to demands</Link>
-      </div>
+      {demand && (
+        <div>
+          <Link href={`/buyer/demands/${demand.id}/matches`} className="primary-button">
+            Find Matches
+          </Link>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={deleteDemand}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete demand"}
+          </button>
+          <Link href="/buyer/demands" className="secondary-button">
+            Back to demands
+          </Link>
+        </div>
+      )}
     </main>
   );
 }
