@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DashboardCard from "../../../../components/DashboardCard";
 import PageHeader from "../../../../components/PageHeader";
+import DashboardSidebar from "../../../../components/DashboardSidebar";
 
 export default function NewBuyerDemandPage() {
   const router = useRouter();
@@ -63,7 +64,10 @@ export default function NewBuyerDemandPage() {
   }
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="buyer" />
+
+      <section className="dashboard-main">
       <PageHeader
         eyebrow="New demand"
         title="Create demand request"
@@ -173,6 +177,7 @@ export default function NewBuyerDemandPage() {
       <Link href="/buyer/demands" className="secondary-button">
         Back to demands
       </Link>
+          </section>
     </main>
   );
 }

@@ -3,6 +3,7 @@ import {useState,useEffect} from "react";
 import Link from "next/link";
 import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
+import DashboardSidebar from "../../../components/DashboardSidebar";
 
 type Demand = {
   id: number;
@@ -43,7 +44,10 @@ export default function BuyerDemandsPage() {
   },[]); 
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="buyer" />
+
+      <section className="dashboard-main">
       <PageHeader
         eyebrow="Buyer demands"
         title="My demand requests"
@@ -83,6 +87,7 @@ export default function BuyerDemandsPage() {
           ))}
         </div>}
       </DashboardCard>
+          </section>
     </main>
   );
 }

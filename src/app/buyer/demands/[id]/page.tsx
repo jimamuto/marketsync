@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import DashboardCard from "../../../../components/DashboardCard";
 import PageHeader from "../../../../components/PageHeader";
+import DashboardSidebar from "../../../../components/DashboardSidebar";
 
 type Demand = {
   id: number;
@@ -77,7 +78,10 @@ export default function BuyerDemandDetailsPage() {
   }
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="buyer" />
+
+      <section className="dashboard-main">
       <PageHeader
         eyebrow="Demand details"
         title={demand ? demand.crop_name : "Demand request"}
@@ -124,11 +128,9 @@ export default function BuyerDemandDetailsPage() {
           >
             {isDeleting ? "Deleting..." : "Delete demand"}
           </button>
-          <Link href="/buyer/demands" className="secondary-button">
-            Back to demands
-          </Link>
         </div>
       )}
+          </section>
     </main>
   );
 }
