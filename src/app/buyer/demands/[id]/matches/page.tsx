@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"; //reads route parameters from the u
 import Link from "next/link";
 import DashboardCard from "../../../../../components/DashboardCard";
 import PageHeader from "../../../../../components/PageHeader";
+import DashboardSidebar from "../../../../../components/DashboardSidebar";
 
 type Demand = {
   id: number;
@@ -98,7 +99,10 @@ export default function BuyerDemandMatchesPage() {
   }
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="buyer" />
+
+      <section className="dashboard-main">
       <PageHeader
         eyebrow="Demand matches"
         title={demand ? `Matches for ${demand.crop_name}` : "Demand matches"}
@@ -148,6 +152,7 @@ export default function BuyerDemandMatchesPage() {
       <Link href={`/buyer/demands/${params.id}`} className="secondary-button">
         Back to demand
       </Link>
+          </section>
     </main>
   );
 }

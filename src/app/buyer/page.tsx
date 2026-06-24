@@ -4,6 +4,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
+import DashboardSidebar from "../../components/DashboardSidebar";
 import DashboardCard from "../../components/DashboardCard";
 
 type Demand = {
@@ -127,7 +128,10 @@ export default function BuyerPage() {
   }
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="buyer" />
+
+      <section className="dashboard-main">
       <PageHeader
         eyebrow="Institutional Buyer"
         title="Procurement Demand Dashboard"
@@ -279,6 +283,7 @@ export default function BuyerPage() {
           </div>
         )}
       </DashboardCard>
+          </section>
     </main>
   );
 }

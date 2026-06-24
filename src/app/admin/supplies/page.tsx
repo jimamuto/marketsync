@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
+import DashboardSidebar from "../../../components/DashboardSidebar";
 
 type Supply = {
   id: number;
@@ -45,7 +46,10 @@ export default function AdminSuppliesPage() {
   }, []);
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="admin" />
+
+      <section className="dashboard-main">
       <PageHeader eyebrow="Admin" title="Crop supplies" description="View all farmer supply records" />
 
       <DashboardCard title="Supplies">
@@ -83,9 +87,7 @@ export default function AdminSuppliesPage() {
         )}
       </DashboardCard>
 
-      <Link href="/admin" className="secondary-button">
-        Back to admin
-      </Link>
+          </section>
     </main>
   );
 }

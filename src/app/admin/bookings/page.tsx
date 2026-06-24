@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
+import DashboardSidebar from "../../../components/DashboardSidebar";
 
 type Booking = {
   id: number;
@@ -45,7 +46,10 @@ export default function AdminBookingsPage() {
   }, []);
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="admin" />
+
+      <section className="dashboard-main">
       <PageHeader eyebrow="Admin" title="Bookings" description="View all buyer and farmer booking activity" />
 
       <DashboardCard title="Bookings">
@@ -83,9 +87,7 @@ export default function AdminBookingsPage() {
         )}
       </DashboardCard>
 
-      <Link href="/admin" className="secondary-button">
-        Back to admin
-      </Link>
+          </section>
     </main>
   );
 }

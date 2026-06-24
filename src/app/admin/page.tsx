@@ -13,14 +13,6 @@ type Summary = {
   bookings: number;
 };
 
-const adminLinks = [
-  { label: "Users", href: "/admin/users" },
-  { label: "Supplies", href: "/admin/supplies" },
-  { label: "Demands", href: "/admin/demands" },
-  { label: "Bookings", href: "/admin/bookings" },
-  { label: "Reports", href: "/admin/reports" },
-];
-
 export default function AdminPage() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,10 +40,10 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <main className="admin-page">
-      <DashboardSidebar title="Navigation" links={adminLinks} />
+    <main className="dashboard-shell">
+      <DashboardSidebar role="admin" />
 
-      <section className="admin-content">
+      <section className="dashboard-main">
         <PageHeader
           eyebrow="Admin Dashboard"
           title="System overview"

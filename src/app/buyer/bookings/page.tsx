@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
+import DashboardSidebar from "../../../components/DashboardSidebar";
 
 type Booking = {
   id: number;
@@ -47,7 +48,10 @@ export default function BuyerBookingsPage() {
   }, []);
 
   return (
-    <main className="dashboard-page">
+    <main className="dashboard-shell">
+      <DashboardSidebar role="buyer" />
+
+      <section className="dashboard-main">
       <PageHeader
         eyebrow="Buyer bookings"
         title="My booking history"
@@ -86,6 +90,7 @@ export default function BuyerBookingsPage() {
           </div>
         )}
       </DashboardCard>
+          </section>
     </main>
   );
 }
