@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import DashboardCard from "../../../components/DashboardCard";
+import DashboardSidebar from "../../../components/DashboardSidebar";
 import PageHeader from "../../../components/PageHeader";
 
 type Supply = {
@@ -66,20 +67,23 @@ export default function FarmerSuppliesPage() {
   }, []);
 
   return (
-    <main className="dashboard-page">
-      <PageHeader
-        eyebrow="Farmer supplies"
-        title="My crop supplies"
-        description="Manage crops you have planted, harvested, or made available to buyers."
-      />
+    <main className="dashboard-shell">
+      <DashboardSidebar role="farmer" />
 
-      <div>
-        <Link href="/farmer/supplies/new" className="primary-button">
-          Add new supply
-        </Link>
-      </div>
+      <section className="dashboard-main">
+        <PageHeader
+          eyebrow="Farmer supplies"
+          title="My crop supplies"
+          description="Manage crops you have planted, harvested, or made available to buyers."
+        />
 
-      <DashboardCard title="Supply records">
+        <div>
+          <Link href="/farmer/supplies/new" className="primary-button">
+            Add new supply
+          </Link>
+        </div>
+
+        <DashboardCard title="Supply records">
         {loading ? (
           <p>Loading supplies...</p>
         ) : error ? (
@@ -111,7 +115,8 @@ export default function FarmerSuppliesPage() {
             ))}
           </div>
         )}
-      </DashboardCard>
+        </DashboardCard>
+      </section>
     </main>
   );
 }

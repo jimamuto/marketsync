@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import DashboardCard from "../../../../components/DashboardCard";
+import DashboardSidebar from "../../../../components/DashboardSidebar";
 import PageHeader from "../../../../components/PageHeader";
 
 type Supply = {
@@ -191,14 +192,17 @@ export default function FarmerSupplyDetailsPage() {
   }
 
   return (
-    <main className="dashboard-page">
-      <PageHeader
-        eyebrow="Supply details"
-        title={supply ? supply.crop_name : "Crop supply"}
-        description="View, edit, or delete a crop supply from the backend."
-      />
+    <main className="dashboard-shell">
+      <DashboardSidebar role="farmer" />
 
-      <DashboardCard title="Crop information">
+      <section className="dashboard-main">
+        <PageHeader
+          eyebrow="Supply details"
+          title={supply ? supply.crop_name : "Crop supply"}
+          description="View, edit, or delete a crop supply from the backend."
+        />
+
+        <DashboardCard title="Crop information">
         {loading ? (
           <p>Loading crop supply...</p>
         ) : error && !supply ? (
@@ -304,13 +308,14 @@ export default function FarmerSupplyDetailsPage() {
         ) : (
           <p>Crop supply not found.</p>
         )}
-      </DashboardCard>
+        </DashboardCard>
 
-      <div>
-        <Link href="/farmer/supplies" className="secondary-button">
-          Back to supplies
-        </Link>
-      </div>
+        <div>
+          <Link href="/farmer/supplies" className="secondary-button">
+            Back to supplies
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

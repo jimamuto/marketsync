@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DashboardCard from "../../../components/DashboardCard";
+import DashboardSidebar from "../../../components/DashboardSidebar";
 import PageHeader from "../../../components/PageHeader";
 
 type Booking = {
@@ -96,14 +97,17 @@ export default function FarmerBookingsPage() {
   }
 
   return (
-    <main className="dashboard-page">
-      <PageHeader
-        eyebrow="Farmer bookings"
-        title="Buyer booking requests"
-        description="Review buyer requests for your crop supplies."
-      />
+    <main className="dashboard-shell">
+      <DashboardSidebar role="farmer" />
 
-      <DashboardCard title="Booking requests">
+      <section className="dashboard-main">
+        <PageHeader
+          eyebrow="Farmer bookings"
+          title="Buyer booking requests"
+          description="Review buyer requests for your crop supplies."
+        />
+
+        <DashboardCard title="Booking requests">
         {loading ? (
           <p>Loading bookings...</p>
         ) : actionError ? (
@@ -155,7 +159,8 @@ export default function FarmerBookingsPage() {
             ))}
           </div>
         )}
-      </DashboardCard>
+        </DashboardCard>
+      </section>
     </main>
   );
 }
