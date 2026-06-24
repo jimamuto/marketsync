@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DashboardCard from "../../../components/DashboardCard";
+import DashboardSidebar from "../../../components/DashboardSidebar";
 import PageHeader from "../../../components/PageHeader";
 
 type Supply = {
@@ -69,14 +70,17 @@ export default function FarmerCalendarPage() {
   );
 
   return (
-    <main className="dashboard-page">
-      <PageHeader
-        eyebrow="Crop calendar"
-        title="Harvest timeline"
-        description="Track planting and harvest dates for your crop supplies."
-      />
+    <main className="dashboard-shell">
+      <DashboardSidebar role="farmer" />
 
-      <DashboardCard title="Upcoming crop activities">
+      <section className="dashboard-main">
+        <PageHeader
+          eyebrow="Crop calendar"
+          title="Harvest timeline"
+          description="Track planting and harvest dates for your crop supplies."
+        />
+
+        <DashboardCard title="Upcoming crop activities">
         {loading ? (
           <p>Loading crop timeline...</p>
         ) : error ? (
@@ -105,7 +109,8 @@ export default function FarmerCalendarPage() {
             ))}
           </div>
         )}
-      </DashboardCard>
+        </DashboardCard>
+      </section>
     </main>
   );
 }

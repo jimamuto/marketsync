@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import DashboardCard from "../../components/DashboardCard";
+import DashboardSidebar from "../../components/DashboardSidebar";
 import PageHeader from "../../components/PageHeader";
 
 type SupplySummary = {
@@ -96,57 +97,50 @@ export default function FarmerPage() {
     .slice(0, 3);
 
   return (
-    <main className="dashboard-page">
-      <PageHeader
-        eyebrow="Farmer dashboard"
-        title="Crop planning dashboard"
-        description="Track planting cycles, upcoming harvests, and active buyer bookings."
-      />
+    <main className="dashboard-shell">
+      <DashboardSidebar role="farmer" />
 
-      <section className="dashboard-grid">
-        <DashboardCard title="Quick actions">
-          <div className="booking-meta">
-            <Link href="/farmer/supplies/new" className="primary-button">
-              Log new crop
-            </Link>
-            <Link href="/farmer/supplies" className="secondary-button">
-              View supplies
-            </Link>
+      <section className="dashboard-main">
+        <PageHeader
+          eyebrow="Farmer dashboard"
+          title="Crop planning dashboard"
+          description="Track planting cycles, upcoming harvests, and active buyer bookings."
+        />
+
+        <section className="dashboard-overview" aria-label="Farmer dashboard summary">
+          {loading ? (
+            <p>Loading dashboard summary...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            <>
+              <div>
+                <span>Total supplies</span>
+                <strong>{supplies.length}</strong>
+              </div>
+              <div>
+                <span>Ready for market</span>
+                <strong>{readySupplies.length}</strong>
+              </div>
+              <div>
+                <span>Pending bookings</span>
+                <strong>{pendingBookings.length}</strong>
+              </div>
+            </>
+          )}
+        </section>
+
+        <section className="section-title-row">
+          <div>
+            <h2>Upcoming harvests</h2>
+            <p>Review the next crop supplies from your planting calendar.</p>
           </div>
-        </DashboardCard>
+          <Link href="/farmer/supplies/new" className="primary-button">
+            Log new crop
+          </Link>
+        </section>
 
-        <DashboardCard title="Supply summary">
-          {loading ? (
-            <p>Loading supply data...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : (
-            <>
-              <p>Total supplies: {supplies.length}</p>
-              <p>Ready for market: {readySupplies.length}</p>
-              <p>Upcoming harvests: {upcomingHarvests.length}</p>
-            </>
-          )}
-        </DashboardCard>
-
-        <DashboardCard title="Booking summary">
-          {loading ? (
-            <p>Loading booking data...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : (
-            <>
-              <p>Total bookings: {bookings.length}</p>
-              <p>Pending requests: {pendingBookings.length}</p>
-              <Link href="/farmer/bookings" className="secondary-button">
-                Manage bookings
-              </Link>
-            </>
-          )}
-        </DashboardCard>
-      </section>
-
-      <DashboardCard title="Upcoming harvests">
+        <DashboardCard>
         {loading ? (
           <p>Loading harvest timeline...</p>
         ) : upcomingHarvests.length === 0 ? (
@@ -173,9 +167,19 @@ export default function FarmerPage() {
             ))}
           </div>
         )}
-      </DashboardCard>
+        </DashboardCard>
 
-      <DashboardCard title="Recent buyer bookings">
+        <section className="section-title-row">
+          <div>
+            <h2>Recent buyer bookings</h2>
+            <p>Track buyer interest, request status, and delivery locations.</p>
+          </div>
+          <Link href="/farmer/bookings" className="secondary-button">
+            Manage bookings
+          </Link>
+        </section>
+
+        <DashboardCard>
         {loading ? (
           <p>Loading recent bookings...</p>
         ) : bookings.length === 0 ? (
@@ -202,7 +206,8 @@ export default function FarmerPage() {
             ))}
           </div>
         )}
-      </DashboardCard>
+        </DashboardCard>
+      </section>
     </main>
   );
 }

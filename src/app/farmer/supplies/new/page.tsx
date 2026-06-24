@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import DashboardCard from "../../../../components/DashboardCard";
+import DashboardSidebar from "../../../../components/DashboardSidebar";
 import PageHeader from "../../../../components/PageHeader";
 
 type FormState = {
@@ -72,14 +73,17 @@ export default function NewFarmerSupplyPage() {
   }
 
   return (
-    <main className="dashboard-page">
-      <PageHeader
-        eyebrow="New crop supply"
-        title="Log a new crop"
-        description="Add crop details and save them to the supply table."
-      />
+    <main className="dashboard-shell">
+      <DashboardSidebar role="farmer" />
 
-      <DashboardCard title="Crop details">
+      <section className="dashboard-main">
+        <PageHeader
+          eyebrow="New crop supply"
+          title="Log a new crop"
+          description="Add crop details and save them to the supply table."
+        />
+
+        <DashboardCard title="Crop details">
         <form className="auth-form" onSubmit={handleSubmit}>
           <label>
             Crop name
@@ -188,11 +192,12 @@ export default function NewFarmerSupplyPage() {
             {loading ? "Saving..." : "Save crop supply"}
           </button>
         </form>
-      </DashboardCard>
+        </DashboardCard>
 
-      <Link href="/farmer/supplies" className="secondary-button">
-        Back to supplies
-      </Link>
+        <Link href="/farmer/supplies" className="secondary-button">
+          Back to supplies
+        </Link>
+      </section>
     </main>
   );
 }
