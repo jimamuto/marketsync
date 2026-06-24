@@ -46,7 +46,7 @@ export default function Home() {
 
           <div className="landing-actions" aria-label="Primary actions">
             <Link href="/register" className="primary-button landing-cta">
-              Create account
+             Get Started 
             </Link>
             <Link href="/login" className="secondary-button landing-cta">
               Log in
