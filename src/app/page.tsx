@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import {cookies} from "next/headers";
 
 const benefits = [
   {
@@ -23,7 +24,16 @@ const steps = [
   "Booking requests, approvals, delivery schedules, and reports are tracked",
 ];
 
-export default function Home() {
+export default async function Home() {
+
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("session_user_id")?.value;
+  const role = cookieStore.get("session_role")?.value;
+  const isLoggedIn= Boolean(userId);
+
+  const dashboardHref = role === "farmer" ? "/farmer" : role ==="buyer" ? "/buyer" : role === "admin" ? "/admin" : "/";
+
+
   return (
     <main className="landing-page">
       <section className="landing-hero" aria-labelledby="landing-title">
@@ -45,12 +55,20 @@ export default function Home() {
           </p>
 
           <div className="landing-actions" aria-label="Primary actions">
+            {isLoggedIn ?(
+            <Link href={dashboardHref} className="primary-button landing-cta">
+            Dashboard 
+            </Link>
+            ):(
+            <>
             <Link href="/register" className="primary-button landing-cta">
              Get Started 
             </Link>
             <Link href="/login" className="secondary-button landing-cta">
               Log in
             </Link>
+            </>
+            )}
           </div>
         </div>
       </section>
@@ -105,9 +123,17 @@ export default function Home() {
         <p>
           Create an account or log in to access crop calendars, procurement demand, booking workflows, reports, and admin oversight.
         </p>
+        {isLoggedIn ? (
+        <Link href={dashboardHref} className="primary-button landing-cta">
+         Go back to dashboard 
+        </Link>
+        ):(
+        <>        
         <Link href="/register" className="primary-button landing-cta">
           Get started
         </Link>
+        </>
+        )}
       </section>
     </main>
   );
