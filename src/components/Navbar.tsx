@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
-import LogoutButton from "./LogoutButton";
+import { getDb } from "../lib/database";
+import NavbarAccountMenu from "./NavbarAccountMenu";
 
 const dashboardRoutes = {
   farmer: "/farmer",
@@ -16,6 +17,19 @@ export default async function Navbar() {
   const role = cookieStore.get("session_role")?.value;
 
   const isLoggedIn = Boolean(userId);
+  let userName: string | null = null;
+
+  if (userId) {
+    try {
+      const result = await getDb().query(
+        `select name from users where id = $1 limit 1`,
+        [Number(userId)],
+      );
+      userName = result.rows[0]?.name ?? null;
+    } catch {
+      userName = null;
+    }
+  }
 
   // Send logged-in users to the dashboard that matches their saved database role.
   const dashboardHref =
@@ -35,7 +49,7 @@ export default async function Navbar() {
         {isLoggedIn ? (
           <>
             <Link href={dashboardHref}>Dashboard</Link>
-            <LogoutButton />
+            <NavbarAccountMenu name={userName} role={role} />
           </>
         ) : (
           <>
