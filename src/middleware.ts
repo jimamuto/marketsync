@@ -7,6 +7,8 @@ const protectedRoutes = {
   "/admin": "admin",
 } as const;
 
+const authenticatedRoutes = ["/account"];
+
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;//gets the page type the user is trying to type
 
@@ -15,6 +17,17 @@ export function middleware(request: NextRequest) {
     pathname === routePrefix || pathname.startsWith(`${routePrefix}/`),
   );
 
+  const needsAuthentication = authenticatedRoutes.some((routePrefix) =>
+    pathname === routePrefix || pathname.startsWith(`${routePrefix}/`),
+  );
+
+  const sessionUserId = request.cookies.get("session_user_id")?.value;
+  const sessionRole = request.cookies.get("session_role")?.value;
+
+  if (needsAuthentication && !sessionUserId) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   //if not protected proceed normally
   if (!matchedRoute) {
     return NextResponse.next();
@@ -22,8 +35,6 @@ export function middleware(request: NextRequest) {
 
   //gets required role from matched route
   const requiredRole = matchedRoute[1];
-  const sessionUserId = request.cookies.get("session_user_id")?.value;
-  const sessionRole = request.cookies.get("session_role")?.value;
 
   if (!sessionUserId || !sessionRole) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -38,5 +49,5 @@ export function middleware(request: NextRequest) {
 
 //telling nextjs which routes should run middleware
 export const config = {
-  matcher: ["/farmer/:path*", "/buyer/:path*", "/admin/:path*"], //including nested routes
+  matcher: ["/farmer/:path*", "/buyer/:path*", "/admin/:path*", "/account/:path*"], //including nested routes
 };
