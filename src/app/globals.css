@@ -1796,3 +1796,339 @@ h1 {
   align-items:center;
   justify-content:center;
 }
+
+.crop-calendar-page {
+  gap: 1.25rem;
+}
+
+.crop-calendar-board {
+  display: grid;
+  gap: 1.25rem;
+  border: 1px solid #2c3a29;
+  background: #fbfcf8;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  box-shadow: 0 18px 45px rgba(22, 32, 21, 0.08);
+}
+
+.crop-calendar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid #2c3a29;
+  padding-bottom: 1rem;
+}
+
+.crop-calendar-toolbar h2,
+.crop-calendar-inspector h3 {
+  margin: 0.15rem 0 0;
+  text-transform: uppercase;
+}
+
+.wireframe-label {
+  margin: 0;
+  color: #53624f;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.calendar-actions button,
+.crop-calendar-day {
+  font: inherit;
+}
+
+.calendar-actions button {
+  border: 1px solid #2c3a29;
+  background: #ffffff;
+  color: #162015;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0.65rem 0.9rem;
+}
+
+.calendar-actions button:hover,
+.calendar-actions button:focus-visible {
+  background: #edf5ea;
+}
+
+.crop-calendar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.crop-calendar-frame,
+.crop-calendar-inspector,
+.active-contracts-panel {
+  border: 1px solid #2c3a29;
+  background: #ffffff;
+}
+
+.crop-calendar-weekdays,
+.crop-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.crop-calendar-weekdays span {
+  border-right: 1px solid #9fac99;
+  border-bottom: 1px solid #2c3a29;
+  padding: 0.85rem 0.5rem;
+  color: #53624f;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.crop-calendar-weekdays span:last-child {
+  border-right: 0;
+}
+
+.crop-calendar-day {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  min-height: 118px;
+  border: 0;
+  border-right: 1px solid #9fac99;
+  border-bottom: 1px solid #9fac99;
+  background: #ffffff;
+  color: #162015;
+  cursor: pointer;
+  padding: 0.65rem;
+  text-align: left;
+}
+
+.crop-calendar-day:nth-child(7n) {
+  border-right: 0;
+}
+
+.crop-calendar-day:hover:not(:disabled),
+.crop-calendar-day:focus-visible:not(:disabled) {
+  outline: 2px solid #2f7d32;
+  outline-offset: -2px;
+}
+
+.crop-calendar-day-empty {
+  background: #f4f7f1;
+  cursor: default;
+}
+
+.crop-calendar-day.is-today .calendar-date-number {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #2f7d32;
+  color: #ffffff;
+}
+
+.crop-calendar-day.is-selected {
+  background: #f1f7ec;
+  box-shadow: inset 0 0 0 2px #2f7d32;
+}
+
+.calendar-date-number {
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.calendar-event-stack {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.calendar-event {
+  display: grid;
+  gap: 0.05rem;
+  border: 1px solid currentColor;
+  padding: 0.35rem 0.45rem;
+  font-size: 0.68rem;
+  line-height: 1.2;
+}
+
+.calendar-event strong {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+.calendar-event small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-event-planting {
+  background: #eaf7ea;
+  color: #2f7d32;
+}
+
+.calendar-event-harvest {
+  background: #fff4df;
+  color: #966313;
+}
+
+.calendar-more {
+  color: #53624f;
+  font-weight: 800;
+}
+
+.crop-calendar-inspector {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.crop-calendar-inspector p {
+  margin: 0;
+  color: #53624f;
+}
+
+.selected-event-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.selected-event-list article {
+  display: grid;
+  gap: 0.35rem;
+  border: 1px solid #d7e3d1;
+  padding: 0.85rem;
+}
+
+.selected-event-list strong,
+.selected-event-list small {
+  display: block;
+}
+
+.calendar-summary-box {
+  display: grid;
+  gap: 0.25rem;
+  border: 1px solid #2c3a29;
+  margin-top: 0.5rem;
+  padding: 1rem;
+}
+
+.calendar-summary-box span {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.calendar-system-message {
+  border: 1px solid #2c3a29;
+  margin: 0;
+  padding: 1rem;
+}
+
+.crop-calendar-lower-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.calendar-log-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #2c3a29;
+  background: #ffffff;
+  color: #162015;
+  font-weight: 900;
+  padding: 1rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.calendar-log-button:hover,
+.calendar-log-button:focus-visible {
+  background: #2f7d32;
+  color: #ffffff;
+}
+
+.active-contracts-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.active-contracts-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.active-contracts-heading a {
+  color: #2f7d32;
+  font-weight: 900;
+}
+
+.contract-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.contract-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid #9fac99;
+  padding: 0.85rem;
+}
+
+.contract-card p {
+  margin: 0.25rem 0 0;
+  color: #53624f;
+}
+
+.contract-card span {
+  align-self: start;
+  border: 1px solid #2f7d32;
+  color: #2f7d32;
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0.35rem 0.55rem;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1100px) {
+  .crop-calendar-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .crop-calendar-toolbar,
+  .active-contracts-heading,
+  .contract-card {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .crop-calendar-frame {
+    overflow-x: auto;
+  }
+
+  .crop-calendar-weekdays,
+  .crop-calendar-grid {
+    min-width: 720px;
+  }
+
+  .contract-grid {
+    grid-template-columns: 1fr;
+  }
+}
