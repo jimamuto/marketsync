@@ -43,27 +43,27 @@ Use this file as the living checklist for confirming whether each system require
 | FR-10 | Buyer submits procurement demand request | Implemented | `src/app/buyer/page.tsx`, `src/app/buyer/demands/new/page.tsx`, `src/app/api/demands/route.ts` | Manual buyer demand test. |
 | FR-12 | Authenticate credentials | Implemented | `src/app/api/auth/login/route.ts`, `src/lib/auth.ts` | None. |
 | FR-13 | Assign RBAC role | Implemented | `src/middleware.ts`, `src/lib/session.ts`, role column in users table | Confirm wrong-role redirects. |
-| FR-16 | Calculate demand-supply gap | Partially implemented | Demand matching/reporting logic exists through demand match and admin summary flows. | Confirm whether current summary/match output satisfies expected gap calculation. |
+| FR-16 | Calculate demand-supply gap | Partially implemented | Demand matching/reporting logic exists through demand match and admin summary flows. | Christine will own confirming/closing this FR gap. |
 | FR-18 | Match harvest to buyer demand | Implemented | `src/app/api/demands/[id]/matches/route.ts`, `src/app/buyer/demands/[id]/matches/page.tsx` | Manual match flow test with seeded data. |
 | FR-24 | Store buyer profile and credentials | Implemented | `database/migrations/001_create_users.sql` | None. |
 | FR-24 | Store procurement request records | Implemented, documentation issue | `database/migrations/003_create_demand_requests.sql` | Requirement source duplicates FR-24; consider renumbering in final documentation. |
 | FR-26 | Store booking transaction records | Implemented | `database/migrations/004_create_bookings.sql`, booking APIs | None. |
 | FR-29 | View matched harvest listings | Implemented | `src/app/buyer/demands/[id]/matches/page.tsx` | Manual buyer match flow test. |
-| FR-31 | Receive booking confirmation/rejection | Partially implemented | Buyer booking history/status exists. | Decide whether status display is enough or active notification delivery is required. |
+| FR-31 | Receive booking confirmation/rejection | Partially implemented | Buyer booking history/status exists and in-app notification support has been added. | Christine will own confirming whether this fully satisfies the FR. |
 | FR-37 | View procurement history and delivery schedule | Implemented | `src/app/buyer/bookings/page.tsx` | Confirm delivery schedule wording/data in UI. |
 
 ### Admin Requirements
 
 | ID | Requirement | Status | Current implementation evidence | Follow-up |
 |---|---|---|---|---|
-| FR-03 | Verify farmer account | Needs decision | Email verification exists; admin users page lists verification state. | Decide if email verification satisfies this or if admin approval action is required. |
-| FR-04 | Verify institutional buyer account | Needs decision | Email verification exists; admin users page lists verification state. | Decide if email verification satisfies this or if admin approval action is required. |
+| FR-03 | Verify farmer account | Needs decision | Email verification exists; admin users page lists verification state. | Christine will own deciding if email verification satisfies this or if admin approval action is required. |
+| FR-04 | Verify institutional buyer account | Needs decision | Email verification exists; admin users page lists verification state. | Christine will own deciding if email verification satisfies this or if admin approval action is required. |
 | FR-07 | System admin logs in to admin dashboard | Implemented | `src/app/admin/page.tsx`, middleware role protection | Manual admin login test. |
-| FR-15 | Synchronise supply and demand | Partially implemented | Matching APIs and buyer match pages exist. | Confirm business definition of synchronisation. |
+| FR-15 | Synchronise supply and demand | Partially implemented | Matching APIs and buyer match pages exist. | Christine will own confirming the business definition of synchronisation. |
 | FR-27 | Store RBAC roles and permissions | Implemented | `users.role`, `src/lib/session.ts`, `src/middleware.ts` | None. |
 | FR-33 | View demand-supply summary dashboard | Implemented | `src/app/admin/page.tsx`, `src/app/api/admin/summary/route.ts` | Manual admin dashboard test. |
-| FR-34 | Generate harvest projection reports | Partially implemented | `src/app/admin/reports/page.tsx`, `src/app/api/admin/summary/route.ts` | Confirm whether summary reports satisfy projection reporting. Add projection metrics if required. |
-| FR-35 | Monitor system logs and user activity | Not clearly implemented | Admin pages show users/supplies/demands/bookings, but no audit log table/API was identified. | Decide whether MVP needs explicit audit logs. |
+| FR-34 | Generate harvest projection reports | Partially implemented | `src/app/admin/reports/page.tsx`, `src/app/api/admin/summary/route.ts` | Christine will own confirming whether summary reports satisfy projection reporting and add projection metrics if required. |
+| FR-35 | Monitor system logs and user activity | Not clearly implemented | Admin pages show users/supplies/demands/bookings, but no audit log table/API was identified. | Christine will own deciding whether MVP needs explicit audit logs. |
 
 ### Restriction / Negative Requirements
 
@@ -98,11 +98,14 @@ The source documents reference requirements up to `FR-37`, but these IDs were no
 
 ## High-Priority Open Decisions
 
+Christine will work on the remaining FR requirement gaps and final requirement decisions, including:
+
 1. Does email verification satisfy `FR-03` and `FR-04`, or is admin approval required?
 2. Are in-app booking notifications enough, or should email notifications also be added?
 3. Does the admin reports page satisfy harvest projection reporting, or should projection-specific metrics be added?
 4. Is explicit audit logging required for `FR-35`?
 5. Should the duplicated `FR-24` ID in the source requirement list be corrected in final documentation?
+6. Does buyer demand-supply gap output need clearer UI/data on the buyer matches page?
 
 ## Verification Checklist
 
