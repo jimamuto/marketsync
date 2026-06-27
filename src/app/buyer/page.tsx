@@ -103,24 +103,6 @@ export default function BuyerPage() {
         )}
       </section>
 
-      <section className="buyer-info-section" aria-labelledby="buyer-actions-heading">
-        <div className="buyer-section-heading">
-          <h2 id="buyer-actions-heading">Workspace actions</h2>
-          <p>Use the sidebar for full navigation, or jump directly into the core procurement tasks.</p>
-        </div>
-
-        <div className="buyer-action-row">
-          <Link href="/buyer/demands/new" className="primary-button">
-            Create demand
-          </Link>
-          <Link href="/buyer/demands" className="secondary-button">
-            View demands
-          </Link>
-          <Link href="/buyer/bookings" className="secondary-button">
-            View bookings
-          </Link>
-        </div>
-      </section>
 
       <section className="buyer-info-section" aria-labelledby="procurement-history-heading">
         <div className="buyer-section-heading">

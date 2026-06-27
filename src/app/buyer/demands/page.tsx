@@ -53,9 +53,6 @@ export default function BuyerDemandsPage() {
         description="Manage the produce your institution needs from farmers"
       />
 
-      <div>
-        <Link href="/buyer/demands/new" className="primary-button">New Demand</Link>
-      </div>
 
 
       <section className="buyer-info-section" aria-labelledby="demand-records-heading">

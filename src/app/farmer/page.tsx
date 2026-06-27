@@ -134,7 +134,7 @@ export default function FarmerPage() {
             <h2>Upcoming harvests</h2>
             <p>Review the next crop supplies from your planting calendar.</p>
           </div>
-          <Link href="/farmer/supplies/new" className="primary-button">
+          <Link href="/farmer/supplies/new" className="secondary-button">
             Log new crop
           </Link>
         </section>
