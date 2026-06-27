@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardCard from "../../../components/DashboardCard";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 import PageHeader from "../../../components/PageHeader";
 
@@ -107,59 +106,71 @@ export default function FarmerBookingsPage() {
           description="Review buyer requests for your crop supplies."
         />
 
-        <DashboardCard title="Booking requests">
-        {loading ? (
-          <p>Loading bookings...</p>
-        ) : actionError ? (
-          <p>{actionError}</p>
-        ) : bookings.length === 0 ? (
-          <p>No booking requests yet. Buyers will appear here once they place a booking.</p>
-        ) : (
-          <div className="booking-list">
-            {bookings.map((booking) => (
-              <article key={booking.id} className="booking-card">
-                <div>
-                  <strong>Booking #{booking.id}</strong>
-                  <p>Buyer ID: {booking.buyer_id}</p>
-                  <p>Crop: {booking.crop_name}</p>
-                  <p>
-                    Quantity: {booking.quantity} {booking.unit}
-                  </p>
-                  <p>Status: {booking.status}</p>
-                </div>
+        <section className="farmer-info-section" aria-label="Booking requests">
+          {loading ? (
+            <p className="section-empty-state">Loading bookings...</p>
+          ) : actionError ? (
+            <p className="section-empty-state">{actionError}</p>
+          ) : bookings.length === 0 ? (
+            <p className="section-empty-state">No booking requests yet. Buyers will appear here once they place a booking.</p>
+          ) : (
+            <div className="farmer-info-list">
+              {bookings.map((booking) => (
+                <article key={booking.id} className="farmer-info-row">
+                  <div className="farmer-info-primary">
+                    <strong>Booking #{booking.id}</strong>
+                    <p>Buyer ID: {booking.buyer_id}</p>
+                    <p>Crop: {booking.crop_name}</p>
+                    <p>
+                      Quantity: {booking.quantity} {booking.unit}
+                    </p>
+                    <p>Status: {booking.status}</p>
+                  </div>
 
-                <div className="booking-meta">
-                  <p>Created: {formatDate(booking.created_at)}</p>
-                  <p>Supply location: {booking.supply_location}</p>
-                  <p>Demand location: {booking.demand_location}</p>
-                  {booking.message ? <p>Message: {booking.message}</p> : null}
+                  <div className="farmer-info-side">
+                    <dl className="farmer-info-details">
+                      <div>
+                        <dt>Created</dt>
+                        <dd>{formatDate(booking.created_at)}</dd>
+                      </div>
+                      <div>
+                        <dt>Supply location</dt>
+                        <dd>{booking.supply_location}</dd>
+                      </div>
+                      <div>
+                        <dt>Demand location</dt>
+                        <dd>{booking.demand_location}</dd>
+                      </div>
+                    </dl>
 
-                  {booking.status === "pending" ? (
-                    <>
-                      <button
-                        className="secondary-button"
-                        type="button"
-                        onClick={() => updateBookingStatus(booking.id, "accepted")}
-                        disabled={busyBookingId === booking.id}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="secondary-button"
-                        type="button"
-                        onClick={() => updateBookingStatus(booking.id, "rejected")}
-                        disabled={busyBookingId === booking.id}
-                      >
-                        Reject
-                      </button>
-                    </>
-                  ) : null}
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-        </DashboardCard>
+                    {booking.message ? <p className="farmer-info-note">Message: {booking.message}</p> : null}
+
+                    {booking.status === "pending" ? (
+                      <div className="farmer-action-row">
+                        <button
+                          className="secondary-button"
+                          type="button"
+                          onClick={() => updateBookingStatus(booking.id, "accepted")}
+                          disabled={busyBookingId === booking.id}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="secondary-button"
+                          type="button"
+                          onClick={() => updateBookingStatus(booking.id, "rejected")}
+                          disabled={busyBookingId === booking.id}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </section>
     </main>
   );

@@ -3,7 +3,6 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import DashboardCard from "../../../../components/DashboardCard";
 import PageHeader from "../../../../components/PageHeader";
 import DashboardSidebar from "../../../../components/DashboardSidebar";
 
@@ -74,8 +73,13 @@ export default function NewBuyerDemandPage() {
         description="Add what produce your institution needs"
       />
 
-      <DashboardCard title="Demand details">
-        <form className="auth-form" onSubmit={handleSubmit}>
+      <section className="buyer-form-section" aria-labelledby="demand-details-heading">
+        <div className="buyer-section-heading">
+          <h2 id="demand-details-heading">Demand details</h2>
+          <p>Define exactly what your institution needs so farmer matches stay useful.</p>
+        </div>
+
+        <form className="auth-form buyer-form" onSubmit={handleSubmit}>
           <label>
             Crop Name
             <input
@@ -172,7 +176,7 @@ export default function NewBuyerDemandPage() {
             {isSubmitting ? "Saving..." : "Save demand request"}
           </button>
         </form>
-      </DashboardCard>
+      </section>
 
       <Link href="/buyer/demands" className="secondary-button">
         Back to demands

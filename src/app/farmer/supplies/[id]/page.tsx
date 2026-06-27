@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import DashboardCard from "../../../../components/DashboardCard";
 import DashboardSidebar from "../../../../components/DashboardSidebar";
 import PageHeader from "../../../../components/PageHeader";
 
@@ -202,13 +201,18 @@ export default function FarmerSupplyDetailsPage() {
           description="View, edit, or delete a crop supply from the backend."
         />
 
-        <DashboardCard title="Crop information">
-        {loading ? (
-          <p>Loading crop supply...</p>
-        ) : error && !supply ? (
-          <p>{error}</p>
-        ) : supply ? (
-          <form className="auth-form" onSubmit={handleSubmit}>
+        <section className="farmer-form-section" aria-labelledby="crop-information-heading">
+          <div className="farmer-section-heading">
+            <h2 id="crop-information-heading">Crop information</h2>
+            <p>Update the supply record buyers and planning tools rely on.</p>
+          </div>
+
+          {loading ? (
+            <p className="section-empty-state">Loading crop supply...</p>
+          ) : error && !supply ? (
+            <p className="section-empty-state">{error}</p>
+          ) : supply ? (
+            <form className="auth-form farmer-form" onSubmit={handleSubmit}>
             <label>
               Crop name
               <input
@@ -289,14 +293,20 @@ export default function FarmerSupplyDetailsPage() {
               </select>
             </label>
 
-            <div className="booking-meta">
-              <p>Supply ID: {supply.id}</p>
-              <p>Farmer ID: {supply.farmer_id}</p>
-            </div>
+            <dl className="farmer-record-meta">
+              <div>
+                <dt>Supply ID</dt>
+                <dd>{supply.id}</dd>
+              </div>
+              <div>
+                <dt>Farmer ID</dt>
+                <dd>{supply.farmer_id}</dd>
+              </div>
+            </dl>
 
             {error ? <p>{error}</p> : null}
 
-            <div className="booking-meta">
+            <div className="farmer-action-row">
               <button type="submit" className="primary-button" disabled={saving}>
                 {saving ? "Saving..." : "Save changes"}
               </button>
@@ -306,9 +316,9 @@ export default function FarmerSupplyDetailsPage() {
             </div>
           </form>
         ) : (
-          <p>Crop supply not found.</p>
-        )}
-        </DashboardCard>
+            <p className="section-empty-state">Crop supply not found.</p>
+          )}
+        </section>
 
         <div>
           <Link href="/farmer/supplies" className="secondary-button">

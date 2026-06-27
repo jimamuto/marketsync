@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; //reads route parameters from the url
 import Link from "next/link";
-import DashboardCard from "../../../../../components/DashboardCard";
 import PageHeader from "../../../../../components/PageHeader";
 import DashboardSidebar from "../../../../../components/DashboardSidebar";
 
@@ -109,18 +108,23 @@ export default function BuyerDemandMatchesPage() {
         description="View farmer supplies that may satisfy this demand request"
       />
 
-      <DashboardCard title="Matched farmer supplies">
-        {isLoading && <p>Loading matches...</p>}
+      <section className="buyer-info-section" aria-labelledby="matched-supplies-heading">
+        <div className="buyer-section-heading">
+          <h2 id="matched-supplies-heading">Matched farmer supplies</h2>
+          <p>Compare available harvests and create a booking from the best fit.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading matches...</p>}
         {message && <p className="success-message">{message}</p>}
         {error && <p className="error-message">{error}</p>}
 
-        {!isLoading && !error && matches.length === 0 && <p>No matches found for this demand yet.</p>}
+        {!isLoading && !error && matches.length === 0 && <p className="section-empty-state">No matches found for this demand yet.</p>}
 
         {!isLoading && !error && matches.length > 0 && (
-          <div className="booking-list">
+          <div className="buyer-info-list">
             {matches.map((match) => (
-              <article key={match.id} className="booking-card">
-                <div>
+              <article key={match.id} className="buyer-info-row">
+                <div className="buyer-info-primary">
                   <strong>{match.crop_name}</strong>
                   <p>
                     Available quantity: {match.quantity} {match.unit}
@@ -129,25 +133,38 @@ export default function BuyerDemandMatchesPage() {
                   <p>Status: {match.status}</p>
                 </div>
 
-                <div className="booking-meta">
-                  <p>Harvest: {match.expected_harvest_date}</p>
-                  <p>Match score: {match.match_score}</p>
-                  <p>Harvest gap: {match.harvest_gap_days} days</p>
-                  <p>Reason: {match.match_reasons.join(", ")}</p>
-                  <button
-                    className="secondary-button"
-                    type="button"
-                    onClick={() => createBooking(match)}
-                    disabled={bookingId === match.id}
-                  >
-                    {bookingId === match.id ? "Creating..." : "Create booking"}
-                  </button>
+                <div className="buyer-info-side">
+                  <dl className="buyer-info-details">
+                    <div>
+                      <dt>Harvest</dt>
+                      <dd>{match.expected_harvest_date}</dd>
+                    </div>
+                    <div>
+                      <dt>Match score</dt>
+                      <dd>{match.match_score}</dd>
+                    </div>
+                    <div>
+                      <dt>Harvest gap</dt>
+                      <dd>{match.harvest_gap_days} days</dd>
+                    </div>
+                  </dl>
+                  <p className="buyer-info-note">Reason: {match.match_reasons.join(", ")}</p>
+                  <div className="buyer-action-row">
+                    <button
+                      className="secondary-button"
+                      type="button"
+                      onClick={() => createBooking(match)}
+                      disabled={bookingId === match.id}
+                    >
+                      {bookingId === match.id ? "Creating..." : "Create booking"}
+                    </button>
+                  </div>
                 </div>
               </article>
             ))}
           </div>
         )}
-      </DashboardCard>
+      </section>
 
       <Link href={`/buyer/demands/${params.id}`} className="secondary-button">
         Back to demand

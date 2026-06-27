@@ -2,7 +2,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 
@@ -58,19 +57,24 @@ export default function BuyerBookingsPage() {
         description="Track the produce bookings made with farmers"
       />
 
-      <DashboardCard title="Bookings">
-        {isLoading && <p>Loading bookings...</p>}
+      <section className="buyer-info-section" aria-labelledby="bookings-heading">
+        <div className="buyer-section-heading">
+          <h2 id="bookings-heading">Bookings</h2>
+          <p>Review every booking made from matched farmer supply.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading bookings...</p>}
         {error && <p className="error-message">{error}</p>}
         {/*if there is no loading no error and the bookings array is empty show the message*/}
         {!isLoading && !error && bookings.length === 0 && (
-          <p>No bookings yet. Create one from a matched demand.</p>
+          <p className="section-empty-state">No bookings yet. Create one from a matched demand.</p>
         )}
 
         {!isLoading && !error && bookings.length > 0 && (
-          <div className="booking-list">
+          <div className="buyer-info-list">
             {bookings.map((booking) => (
-              <article key={booking.id} className="booking-card">
-                <div>
+              <article key={booking.id} className="buyer-info-row">
+                <div className="buyer-info-primary">
                   <strong>Booking #{booking.id}</strong>
                   <p>Crop: {booking.crop_name}</p>
                   <p>
@@ -80,16 +84,24 @@ export default function BuyerBookingsPage() {
                   <p>Demand location: {booking.demand_location}</p>
                 </div>
 
-                <div className="booking-meta">
-                  <p>Status: {booking.status}</p>
-                  <p>Created: {booking.created_at}</p>
-                  <p>Message: {booking.message || "No message"}</p>
+                <div className="buyer-info-side">
+                  <dl className="buyer-info-details">
+                    <div>
+                      <dt>Status</dt>
+                      <dd>{booking.status}</dd>
+                    </div>
+                    <div>
+                      <dt>Created</dt>
+                      <dd>{booking.created_at}</dd>
+                    </div>
+                  </dl>
+                  <p className="buyer-info-note">Message: {booking.message || "No message"}</p>
                 </div>
               </article>
             ))}
           </div>
         )}
-      </DashboardCard>
+      </section>
           </section>
     </main>
   );

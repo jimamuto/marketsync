@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import DashboardCard from "../../components/DashboardCard";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import PageHeader from "../../components/PageHeader";
 
@@ -140,34 +139,43 @@ export default function FarmerPage() {
           </Link>
         </section>
 
-        <DashboardCard>
-        {loading ? (
-          <p>Loading harvest timeline...</p>
-        ) : upcomingHarvests.length === 0 ? (
-          <p>No crop supplies yet. Add your first crop to start tracking harvests.</p>
-        ) : (
-          <div className="booking-list">
-            {upcomingHarvests.map((supply) => (
-              <article key={supply.id} className="booking-card">
-                <div>
-                  <strong>{supply.crop_name}</strong>
-                  <p>
-                    {supply.crop_variety ? `${supply.crop_variety} - ` : ""}
-                    {supply.quantity} {supply.unit}
-                  </p>
-                  <p>Location: {supply.location}</p>
-                </div>
+        <section className="farmer-info-section" aria-label="Upcoming harvests list">
+          {loading ? (
+            <p className="section-empty-state">Loading harvest timeline...</p>
+          ) : upcomingHarvests.length === 0 ? (
+            <p className="section-empty-state">No crop supplies yet. Add your first crop to start tracking harvests.</p>
+          ) : (
+            <div className="farmer-info-list">
+              {upcomingHarvests.map((supply) => (
+                <article key={supply.id} className="farmer-info-row">
+                  <div className="farmer-info-primary">
+                    <strong>{supply.crop_name}</strong>
+                    <p>
+                      {supply.crop_variety ? `${supply.crop_variety} - ` : ""}
+                      {supply.quantity} {supply.unit}
+                    </p>
+                    <p>Location: {supply.location}</p>
+                  </div>
 
-                <div className="booking-meta">
-                  <p>Planting: {formatDate(supply.planting_date)}</p>
-                  <p>Harvest: {formatDate(supply.expected_harvest_date)}</p>
-                  <p>Status: {supply.status}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-        </DashboardCard>
+                  <dl className="farmer-info-details">
+                    <div>
+                      <dt>Planting</dt>
+                      <dd>{formatDate(supply.planting_date)}</dd>
+                    </div>
+                    <div>
+                      <dt>Harvest</dt>
+                      <dd>{formatDate(supply.expected_harvest_date)}</dd>
+                    </div>
+                    <div>
+                      <dt>Status</dt>
+                      <dd>{supply.status}</dd>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
 
         <section className="section-title-row">
           <div>
@@ -179,34 +187,43 @@ export default function FarmerPage() {
           </Link>
         </section>
 
-        <DashboardCard>
-        {loading ? (
-          <p>Loading recent bookings...</p>
-        ) : bookings.length === 0 ? (
-          <p>No bookings yet. Buyers will appear here once they reserve your supply.</p>
-        ) : (
-          <div className="booking-list">
-            {bookings.slice(0, 3).map((booking) => (
-              <article key={booking.id} className="booking-card">
-                <div>
-                  <strong>Booking #{booking.id}</strong>
-                  <p>Buyer ID: {booking.buyer_id}</p>
-                  <p>Crop: {booking.crop_name}</p>
-                  <p>
-                    Quantity: {booking.quantity} {booking.unit}
-                  </p>
-                </div>
+        <section className="farmer-info-section" aria-label="Recent buyer bookings list">
+          {loading ? (
+            <p className="section-empty-state">Loading recent bookings...</p>
+          ) : bookings.length === 0 ? (
+            <p className="section-empty-state">No bookings yet. Buyers will appear here once they reserve your supply.</p>
+          ) : (
+            <div className="farmer-info-list">
+              {bookings.slice(0, 3).map((booking) => (
+                <article key={booking.id} className="farmer-info-row">
+                  <div className="farmer-info-primary">
+                    <strong>Booking #{booking.id}</strong>
+                    <p>Buyer ID: {booking.buyer_id}</p>
+                    <p>Crop: {booking.crop_name}</p>
+                    <p>
+                      Quantity: {booking.quantity} {booking.unit}
+                    </p>
+                  </div>
 
-                <div className="booking-meta">
-                  <p>Status: {booking.status}</p>
-                  <p>Supply location: {booking.supply_location}</p>
-                  <p>Demand location: {booking.demand_location}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-        </DashboardCard>
+                  <dl className="farmer-info-details">
+                    <div>
+                      <dt>Status</dt>
+                      <dd>{booking.status}</dd>
+                    </div>
+                    <div>
+                      <dt>Supply location</dt>
+                      <dd>{booking.supply_location}</dd>
+                    </div>
+                    <div>
+                      <dt>Demand location</dt>
+                      <dd>{booking.demand_location}</dd>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </section>
     </main>
   );

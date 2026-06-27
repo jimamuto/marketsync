@@ -32,6 +32,8 @@ Planned first migrations:
 007_create_password_reset_tokens.sql
 008_create_email_verification_tokens.sql
 009_seed_demo_data.sql
+010_create_notifications.sql
+011_seed_showcase_demo_data.sql
 ```
 
 ### 001_create_users.sql
@@ -72,7 +74,15 @@ Creates email verification token storage for account verification flows.
 
 ### 009_seed_demo_data.sql
 
-Adds sample demo data for presentation.
+Adds only reusable demo login users and passwords for farmers and buyers.
+
+### 010_create_notifications.sql
+
+Adds in-app notification storage for booking and status updates.
+
+### 011_seed_showcase_demo_data.sql
+
+Adds resettable showcase supplies, demands, bookings, and notifications for presentation walkthroughs. This is separate from `009_seed_demo_data.sql` so demo credentials stay stable while showcase records can be recreated quickly.
 
 ---
 
