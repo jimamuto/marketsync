@@ -24,7 +24,9 @@ Run migrations in order because later tables depend on earlier tables.
 | `006_seed_admin_user.sql` | Adds a default admin user for review and demo access. |
 | `007_create_password_reset_tokens.sql` | Adds password reset token storage for recovery flows. |
 | `008_create_email_verification_tokens.sql` | Adds email verification token storage for signup flows. |
-| `009_seed_demo_data.sql` | Adds sample demo farmers, buyers, supplies, and demand requests. |
+| `009_seed_demo_data.sql` | Adds demo farmer and buyer users with shared presentation credentials. |
+| `010_create_notifications.sql` | Creates in-app notifications for booking and status updates. |
+| `011_seed_showcase_demo_data.sql` | Adds resettable showcase supplies, demands, bookings, and notifications for presentation walkthroughs. |
 
 ---
 
@@ -252,6 +254,8 @@ docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/mig
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/007_create_password_reset_tokens.sql
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/008_create_email_verification_tokens.sql
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/009_seed_demo_data.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/010_create_notifications.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/011_seed_showcase_demo_data.sql
 ```
 
 Check the tables:

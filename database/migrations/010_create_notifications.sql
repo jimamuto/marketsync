@@ -1,4 +1,4 @@
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title VARCHAR(150) NOT NULL,
@@ -8,5 +8,5 @@ CREATE TABLE notifications (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_notifications_user_read_created
+CREATE INDEX IF NOT EXISTS idx_notifications_user_read_created
   ON notifications (user_id, is_read, created_at DESC);
