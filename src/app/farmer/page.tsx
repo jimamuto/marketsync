@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import DashboardCard from "../../components/DashboardCard";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import PageHeader from "../../components/PageHeader";
 
@@ -106,27 +107,41 @@ export default function FarmerPage() {
           description="Track planting cycles, upcoming harvests, and active buyer bookings."
         />
 
-        <section className="dashboard-overview" aria-label="Farmer dashboard summary">
-          {loading ? (
-            <p>Loading dashboard summary...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : (
-            <>
-              <div>
-                <span>Total supplies</span>
-                <strong>{supplies.length}</strong>
-              </div>
-              <div>
-                <span>Ready for market</span>
-                <strong>{readySupplies.length}</strong>
-              </div>
-              <div>
-                <span>Pending bookings</span>
-                <strong>{pendingBookings.length}</strong>
-              </div>
-            </>
-          )}
+        {error && <p className="error-message">{error}</p>}
+
+        <section className="dashboard-priority-grid" aria-label="Farmer next steps and summary">
+          <DashboardCard title="Today’s priority" variant="primary">
+            <p>Keep your harvest calendar current so buyers can reserve produce before it reaches market.</p>
+            <div className="dashboard-card-actions">
+              <Link href="/farmer/supplies/new" className="primary-button">
+                Log new crop
+              </Link>
+              <Link href="/farmer/bookings" className="secondary-button">
+                Review bookings
+              </Link>
+            </div>
+          </DashboardCard>
+
+          <section className="dashboard-overview" aria-label="Farmer dashboard summary">
+            {loading ? (
+              <p>Loading dashboard summary...</p>
+            ) : (
+              <>
+                <div>
+                  <span>Total supplies</span>
+                  <strong>{supplies.length}</strong>
+                </div>
+                <div>
+                  <span>Ready for market</span>
+                  <strong>{readySupplies.length}</strong>
+                </div>
+                <div>
+                  <span>Pending bookings</span>
+                  <strong>{pendingBookings.length}</strong>
+                </div>
+              </>
+            )}
+          </section>
         </section>
 
         <section className="section-title-row">
