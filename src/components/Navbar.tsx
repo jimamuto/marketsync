@@ -1,7 +1,9 @@
+// Adds the bell notification button beside the dashboard link and avatar for logged-in users.
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getDb } from "../lib/database";
 import NavbarAccountMenu from "./NavbarAccountMenu";
+import NavbarNotifications from "./NavbarNotifications";
 
 const dashboardRoutes = {
   farmer: "/farmer",
@@ -49,6 +51,7 @@ export default async function Navbar() {
         {isLoggedIn ? (
           <>
             <Link href={dashboardHref}>Dashboard</Link>
+            <NavbarNotifications />
             <NavbarAccountMenu name={userName} role={role} />
           </>
         ) : (

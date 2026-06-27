@@ -1,4 +1,5 @@
 //updates the status of a booking
+//when booking status changes, the other party receives a notification
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDb } from "../../../../../lib/database";
@@ -105,6 +106,20 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
        returning id, supply_id, demand_request_id, buyer_id, farmer_id, quantity, unit, status, message, created_at, updated_at`,
       [status, bookingId],
     );
+
+    if (["accepted", "rejected", "cancelled", "completed"].includes(status)) {
+      const recipientId = role === "buyer" ? booking.farmer_id : booking.buyer_id;
+      await getDb().query(
+        `insert into notifications (user_id, title, message, type)
+         values ($1, $2, $3, $4)`,
+        [
+          recipientId,
+          "Booking status updated",
+          `Booking #${bookingId} was marked as ${status}.`,
+          "booking_status_updated",
+        ],
+      );
+    }
 
     if (status === "accepted") {
       await getDb().query(
