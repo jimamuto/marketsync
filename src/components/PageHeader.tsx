@@ -1,18 +1,15 @@
-type PageHeaderprops ={
-  eyebrow : string;
+type PageHeaderProps = {
+  eyebrow: string;
   title: string;
-  description : string;
+  description: string;
 };
 
-export default function PageHeader({eyebrow,title,description}:PageHeaderprops) {
-  return(
-  <section className="dashboard-header">
-    <p className="eyebrow">{eyebrow}</p>
-    <h1>
-      {title}
-      </h1>
+export default function PageHeader({ eyebrow, title, description }: PageHeaderProps) {
+  return (
+    <section className="dashboard-header">
+      <p className="eyebrow">{eyebrow}</p>
+      <h1 className="page-title">{title}</h1>
       <p className="dashboard-intro">{description}</p>
     </section>
   );
-  
 }

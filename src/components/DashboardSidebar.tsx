@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type DashboardRole = "farmer" | "buyer" | "admin";
 
@@ -50,9 +53,11 @@ const sidebarTitles: Record<DashboardRole, string> = {
 };
 
 export default function DashboardSidebar(props: DashboardSidebarProps) {
+  const pathname = usePathname();
   const links = props.role ? sidebarLinks[props.role] : props.links;
   const title = props.role ? props.title ?? sidebarTitles[props.role] : props.title;
   const eyebrow = props.role ?? "Navigation";
+  const exactActiveHref = links.find((link) => pathname === link.href)?.href;
 
   return (
     <aside className="dashboard-sidebar">
@@ -62,11 +67,18 @@ export default function DashboardSidebar(props: DashboardSidebarProps) {
       </div>
 
       <nav className="sidebar-nav" aria-label={`${title} navigation`}>
-        {links.map((link) => (
-          <Link key={link.href} href={link.href}>
-            {link.label}
-          </Link>
-        ))}
+        {links.map((link) => {
+          const isOverview = ["/farmer", "/buyer", "/admin"].includes(link.href);
+          const isActive = exactActiveHref
+            ? exactActiveHref === link.href
+            : !isOverview && pathname.startsWith(`${link.href}/`);
+
+          return (
+            <Link key={link.href} href={link.href} aria-current={isActive ? "page" : undefined}>
+              {link.label}
+            </Link>
+          );
+        })}
       </nav>
     </aside>
   );

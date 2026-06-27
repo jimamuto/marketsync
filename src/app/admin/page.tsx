@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
+import DashboardCard from "../../components/DashboardCard";
 import DashboardSidebar from "../../components/DashboardSidebar";
 
 type Summary = {
@@ -49,33 +50,48 @@ export default function AdminPage() {
           description="Monitor users, supplies, demands, bookings, and reports"
         />
 
-        <section className="admin-overview" aria-label="Admin system summary">
-          {isLoading && <p className="section-empty-state">Loading summary...</p>}
-          {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message">{error}</p>}
 
-          {!isLoading && !error && summary && (
-            <>
-              <Link href="/admin/users">
-                <span>Users</span>
-                <strong>{summary.users}</strong>
+        <section className="dashboard-priority-grid" aria-label="Admin next steps and summary">
+          <DashboardCard title="Today’s priority" variant="primary">
+            <p>Start with demand, supply, and booking health before drilling into individual user records.</p>
+            <div className="dashboard-card-actions">
+              <Link href="/admin/reports" className="primary-button">
+                View reports
               </Link>
+              <Link href="/admin/bookings" className="secondary-button">
+                Check bookings
+              </Link>
+            </div>
+          </DashboardCard>
 
-              <Link href="/admin/supplies">
-                <span>Supplies</span>
-                <strong>{summary.supplies}</strong>
-              </Link>
+          <section className="admin-overview" aria-label="Admin system summary">
+            {isLoading && <p className="section-empty-state">Loading summary...</p>}
 
-              <Link href="/admin/demands">
-                <span>Demands</span>
-                <strong>{summary.demands}</strong>
-              </Link>
+            {!isLoading && !error && summary && (
+              <>
+                <Link href="/admin/users">
+                  <span>Users</span>
+                  <strong>{summary.users}</strong>
+                </Link>
 
-              <Link href="/admin/bookings">
-                <span>Bookings</span>
-                <strong>{summary.bookings}</strong>
-              </Link>
-            </>
-          )}
+                <Link href="/admin/supplies">
+                  <span>Supplies</span>
+                  <strong>{summary.supplies}</strong>
+                </Link>
+
+                <Link href="/admin/demands">
+                  <span>Demands</span>
+                  <strong>{summary.demands}</strong>
+                </Link>
+
+                <Link href="/admin/bookings">
+                  <span>Bookings</span>
+                  <strong>{summary.bookings}</strong>
+                </Link>
+              </>
+            )}
+          </section>
         </section>
       </section>
     </main>

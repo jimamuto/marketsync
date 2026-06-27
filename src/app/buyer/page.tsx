@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
+import DashboardCard from "../../components/DashboardCard";
 import DashboardSidebar from "../../components/DashboardSidebar";
 
 type Demand = {
@@ -82,25 +83,39 @@ export default function BuyerPage() {
 
       {error && <p className="error-message">{error}</p>}
 
-      <section className="dashboard-overview" aria-label="Buyer dashboard summary">
-        {isLoading ? (
-          <p>Loading procurement summary...</p>
-        ) : (
-          <>
-            <div>
-              <span>Total demands</span>
-              <strong>{demands.length}</strong>
-            </div>
-            <div>
-              <span>Open demands</span>
-              <strong>{openDemands.length}</strong>
-            </div>
-            <div>
-              <span>Active bookings</span>
-              <strong>{activeBookings.length}</strong>
-            </div>
-          </>
-        )}
+      <section className="dashboard-priority-grid" aria-label="Buyer next steps and summary">
+        <DashboardCard title="Today’s priority" variant="primary">
+          <p>Submit or update procurement demand so farmers can match upcoming harvests against real buyer need.</p>
+          <div className="dashboard-card-actions">
+            <Link href="/buyer/demands/new" className="primary-button">
+              Create demand request
+            </Link>
+            <Link href="/buyer/demands" className="secondary-button">
+              Review demands
+            </Link>
+          </div>
+        </DashboardCard>
+
+        <section className="dashboard-overview" aria-label="Buyer dashboard summary">
+          {isLoading ? (
+            <p>Loading procurement summary...</p>
+          ) : (
+            <>
+              <div>
+                <span>Total demands</span>
+                <strong>{demands.length}</strong>
+              </div>
+              <div>
+                <span>Open demands</span>
+                <strong>{openDemands.length}</strong>
+              </div>
+              <div>
+                <span>Active bookings</span>
+                <strong>{activeBookings.length}</strong>
+              </div>
+            </>
+          )}
+        </section>
       </section>
 
 
