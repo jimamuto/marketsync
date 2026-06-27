@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import DashboardCard from "../../../components/DashboardCard";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 import PageHeader from "../../../components/PageHeader";
 
@@ -83,39 +82,52 @@ export default function FarmerSuppliesPage() {
           </Link>
         </div>
 
-        <DashboardCard title="Supply records">
-        {loading ? (
-          <p>Loading supplies...</p>
-        ) : error ? (
-          <p>{error}</p>
-        ) : supplies.length === 0 ? (
-          <p>No crop supplies yet. Add your first supply to start matching buyers.</p>
-        ) : (
-          <div className="booking-list">
-            {supplies.map((supply) => (
-              <article key={supply.id} className="booking-card">
-                <div>
-                  <strong>{supply.crop_name}</strong>
-                  <p>
-                    Quantity: {supply.quantity} {supply.unit}
-                  </p>
-                  <p>Location: {supply.location}</p>
-                  <p>Status: {supply.status}</p>
-                </div>
+        <section className="farmer-info-section" aria-label="Supply records">
+          {loading ? (
+            <p className="section-empty-state">Loading supplies...</p>
+          ) : error ? (
+            <p className="section-empty-state">{error}</p>
+          ) : supplies.length === 0 ? (
+            <p className="section-empty-state">No crop supplies yet. Add your first supply to start matching buyers.</p>
+          ) : (
+            <div className="farmer-info-list">
+              {supplies.map((supply) => (
+                <article key={supply.id} className="farmer-info-row">
+                  <div className="farmer-info-primary">
+                    <strong>{supply.crop_name}</strong>
+                    <p>
+                      Quantity: {supply.quantity} {supply.unit}
+                    </p>
+                    <p>Location: {supply.location}</p>
+                    <p>Status: {supply.status}</p>
+                  </div>
 
-                <div className="booking-meta">
-                  <p>Variety: {supply.crop_variety || "Not set"}</p>
-                  <p>Planting: {formatDate(supply.planting_date)}</p>
-                  <p>Harvest: {formatDate(supply.expected_harvest_date)}</p>
-                  <Link href={`/farmer/supplies/${supply.id}`} className="secondary-button">
-                    View / Edit
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-        </DashboardCard>
+                  <div className="farmer-info-side">
+                    <dl className="farmer-info-details">
+                      <div>
+                        <dt>Variety</dt>
+                        <dd>{supply.crop_variety || "Not set"}</dd>
+                      </div>
+                      <div>
+                        <dt>Planting</dt>
+                        <dd>{formatDate(supply.planting_date)}</dd>
+                      </div>
+                      <div>
+                        <dt>Harvest</dt>
+                        <dd>{formatDate(supply.expected_harvest_date)}</dd>
+                      </div>
+                    </dl>
+                    <div className="farmer-action-row">
+                      <Link href={`/farmer/supplies/${supply.id}`} className="secondary-button">
+                        View / Edit
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </section>
     </main>
   );

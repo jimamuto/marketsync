@@ -1063,6 +1063,139 @@ h1 {
      margin: 0.5rem 0 0;
    }
 
+   .farmer-info-section {
+     border-top: 1px solid #d7e3d1;
+     padding-top: 1rem;
+   }
+
+   .farmer-info-list {
+     display: grid;
+   }
+
+   .farmer-info-row {
+     display: grid;
+     grid-template-columns: minmax(220px, 1fr) minmax(360px, 1.2fr);
+     gap: 1.5rem;
+     padding: 1.25rem 0;
+   }
+
+   .farmer-info-row + .farmer-info-row {
+     border-top: 1px solid #d7e3d1;
+   }
+
+   .farmer-info-primary {
+     display: grid;
+     align-content: start;
+     gap: 0.35rem;
+   }
+
+   .farmer-info-primary strong {
+     font-size: 1.1rem;
+   }
+
+   .farmer-info-primary p,
+   .farmer-info-details,
+   .farmer-info-note,
+   .section-empty-state {
+     color: var(--muted);
+     margin: 0;
+   }
+
+   .farmer-info-side {
+     display: grid;
+     gap: 1rem;
+   }
+
+   .farmer-info-details {
+     display: grid;
+     grid-template-columns: repeat(3, minmax(0, 1fr));
+     gap: 1rem;
+   }
+
+   .farmer-info-details div {
+     border-left: 1px solid #d7e3d1;
+     padding-left: 1rem;
+   }
+
+   .farmer-info-details dt {
+     color: var(--muted);
+     font-size: 0.8rem;
+     font-weight: 800;
+     letter-spacing: 0.08em;
+     text-transform: uppercase;
+   }
+
+   .farmer-info-details dd {
+     color: var(--foreground);
+     font-weight: 800;
+     margin: 0.35rem 0 0;
+   }
+
+   .farmer-action-row {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 0.75rem;
+   }
+
+   .farmer-form-section {
+     border-top: 1px solid #d7e3d1;
+     display: grid;
+     gap: 1.25rem;
+     padding-top: 1.25rem;
+   }
+
+   .farmer-section-heading {
+     display: grid;
+     gap: 0.4rem;
+     max-width: 65ch;
+   }
+
+   .farmer-section-heading h2 {
+     font-size: clamp(1.35rem, 2.4vw, 2rem);
+     line-height: 1;
+     margin: 0;
+   }
+
+   .farmer-section-heading p {
+     color: var(--muted);
+     line-height: 1.6;
+     margin: 0;
+   }
+
+   .farmer-form {
+     max-width: 760px;
+   }
+
+   .farmer-record-meta {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     gap: 1rem;
+     margin: 0;
+   }
+
+   .farmer-record-meta div {
+     border-top: 1px solid #d7e3d1;
+     padding-top: 0.85rem;
+   }
+
+   .farmer-record-meta dt {
+     color: var(--muted);
+     font-size: 0.8rem;
+     font-weight: 800;
+     letter-spacing: 0.08em;
+     text-transform: uppercase;
+   }
+
+   .farmer-record-meta dd {
+     color: var(--foreground);
+     font-weight: 800;
+     margin: 0.35rem 0 0;
+   }
+
+   .section-empty-state {
+     padding: 1.25rem 0;
+   }
+
    .bar-chart {
      display: grid;
      gap: 2rem;
@@ -1124,6 +1257,19 @@ h1 {
 
      .booking-card {
        flex-direction: column;
+     }
+
+     .farmer-info-row,
+     .farmer-info-details,
+     .farmer-record-meta {
+       grid-template-columns: 1fr;
+     }
+
+     .farmer-info-details div {
+       border-left: 0;
+       border-top: 1px solid #d7e3d1;
+       padding-left: 0;
+       padding-top: 0.85rem;
      }
 
      .booking-meta {

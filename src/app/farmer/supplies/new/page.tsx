@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import DashboardCard from "../../../../components/DashboardCard";
 import DashboardSidebar from "../../../../components/DashboardSidebar";
 import PageHeader from "../../../../components/PageHeader";
 
@@ -83,8 +82,13 @@ export default function NewFarmerSupplyPage() {
           description="Add crop details and save them to the supply table."
         />
 
-        <DashboardCard title="Crop details">
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <section className="farmer-form-section" aria-labelledby="crop-details-heading">
+          <div className="farmer-section-heading">
+            <h2 id="crop-details-heading">Crop details</h2>
+            <p>Keep the record specific enough for matching, harvest planning, and buyer confidence.</p>
+          </div>
+
+          <form className="auth-form farmer-form" onSubmit={handleSubmit}>
           <label>
             Crop name
             <input
@@ -191,8 +195,8 @@ export default function NewFarmerSupplyPage() {
           <button type="submit" disabled={loading}>
             {loading ? "Saving..." : "Save crop supply"}
           </button>
-        </form>
-        </DashboardCard>
+          </form>
+        </section>
 
         <Link href="/farmer/supplies" className="secondary-button">
           Back to supplies
