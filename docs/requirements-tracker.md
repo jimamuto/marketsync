@@ -31,7 +31,7 @@ Use this file as the living checklist for confirming whether each system require
 | FR-23 | Store farmer profile and credentials | Implemented | `database/migrations/001_create_users.sql`, auth API routes | Passwords are hashed. |
 | FR-25 | Store planting cycle records | Implemented | `database/migrations/002_create_crop_supplies.sql` | None. |
 | FR-28 | View crop planning calendar | Implemented | `src/app/farmer/calendar/page.tsx` | Manual farmer role check. |
-| FR-30 | Receive booking notification | Partially implemented | Booking status/history pages exist. | Decide whether in-app status/history is enough or real notification delivery is required. |
+| FR-30 | Receive booking notification | Implemented | In-app notifications table, notification APIs, navbar notification dropdown, and booking-created notification for farmers. | Run migration `010_create_notifications.sql` and manually test buyer booking creates farmer notification. |
 | FR-36 | View booking history and status | Implemented | `src/app/farmer/bookings/page.tsx`, `src/app/api/bookings/route.ts` | Manual farmer booking walkthrough. |
 
 ### Institutional Buyer Requirements
@@ -99,7 +99,7 @@ The source documents reference requirements up to `FR-37`, but these IDs were no
 ## High-Priority Open Decisions
 
 1. Does email verification satisfy `FR-03` and `FR-04`, or is admin approval required?
-2. Does booking status/history satisfy booking notification requirements, or are active notifications required?
+2. Are in-app booking notifications enough, or should email notifications also be added?
 3. Does the admin reports page satisfy harvest projection reporting, or should projection-specific metrics be added?
 4. Is explicit audit logging required for `FR-35`?
 5. Should the duplicated `FR-24` ID in the source requirement list be corrected in final documentation?

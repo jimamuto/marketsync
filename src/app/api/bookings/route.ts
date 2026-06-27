@@ -1,5 +1,6 @@
 //manages booking requests from farmers that matches their demands
 //buyers can create and fetch bookings
+//when a buyer creates a booking, the farmer receives a "New booking request" notification
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getDb } from "../../../lib/database";
@@ -109,6 +110,17 @@ export async function POST(request: NextRequest) {
        values ($1, $2, $3, $4, $5, $6, 'pending', $7)
        returning id, supply_id, demand_request_id, buyer_id, farmer_id, quantity, unit, status, message, created_at, updated_at`,
       [supplyId, demandRequestId, userId, supply.farmer_id, quantity, unit, message],
+    );
+
+    await getDb().query(
+      `insert into notifications (user_id, title, message, type)
+       values ($1, $2, $3, $4)`,
+      [
+        supply.farmer_id,
+        "New booking request",
+        `A buyer requested ${quantity} ${unit} of ${supply.crop_name}.`,
+        "booking_created",
+      ],
     );
 //set booked status
     await getDb().query(
