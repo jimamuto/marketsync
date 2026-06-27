@@ -66,16 +66,19 @@ body {
 }
 
 h1 {
+  font-family: var(--font-source-serif), Georgia, serif;
   font-size: clamp(2.4rem, 6vw, 5rem);
+  font-weight: 650;
   line-height: 0.95;
   margin: 0;
   max-width: 12ch;
 }
 
 .landing-hero h1 {
+  font-family: var(--font-source-serif), Georgia, serif;
   font-size: clamp(3rem, 6vw, 5.7rem);
-  font-weight: 700;
-  letter-spacing: -0.052em;
+  font-weight: 650;
+  letter-spacing: -0.035em;
   line-height: 0.98;
   max-width: 15ch;
 }
@@ -182,8 +185,10 @@ h1 {
 }
 
 .landing-section h2 {
+  font-family: var(--font-source-serif), Georgia, serif;
   font-size: clamp(2rem, 4vw, 3.75rem);
-  letter-spacing: -0.045em;
+  font-weight: 650;
+  letter-spacing: -0.035em;
   line-height: 1;
   margin: 0;
 }
@@ -2348,8 +2353,10 @@ h1 {
 /* Visual hierarchy refinement pass: app UI scale, priority panels, active nav, scan-friendly tables. */
 .page-title {
   max-width: 16ch;
+  font-family: var(--font-source-serif), Georgia, serif;
   font-size: clamp(2.05rem, 4vw, 3.25rem);
-  letter-spacing: -0.045em;
+  font-weight: 650;
+  letter-spacing: -0.035em;
   line-height: 1;
 }
 
