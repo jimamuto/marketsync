@@ -1,7 +1,6 @@
 "use client"
 import {useState,useEffect} from "react";
 import Link from "next/link";
-import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 
@@ -59,34 +58,48 @@ export default function BuyerDemandsPage() {
       </div>
 
 
-      <DashboardCard title="Demand records">
+      <section className="buyer-info-section" aria-labelledby="demand-records-heading">
+        <div className="buyer-section-heading">
+          <h2 id="demand-records-heading">Demand records</h2>
+          <p>Scan request status and continue into details or matching.</p>
+        </div>
 
-        {isLoading && <p>Loading demand requests...</p>}
+        {isLoading && <p className="section-empty-state">Loading demand requests...</p>}
         {error && <p className="error-text">{error}</p>}
         {!isLoading && !error && demands.length === 0 && (
-             <p>No demand requests yet. Create your first demand request.</p>
+             <p className="section-empty-state">No demand requests yet. Create your first demand request.</p>
            )}
 
         {!isLoading && !error && demands.length>0 && 
-        <div className="booking-list">
+        <div className="buyer-info-list">
           {demands.map((demand) => (
-            <article key={demand.id} className="booking-card">
-              <div>
+            <article key={demand.id} className="buyer-info-row">
+              <div className="buyer-info-primary">
                 <strong>{demand.crop_name}</strong>
                 <p>Quantity: {demand.quantity} {demand.unit}</p>
                 <p>Delivery location: {demand.location}</p>
-                <p>Status: {demand.status}</p>
               </div>
 
-              <div className="booking-meta">
-                <p>Required: {demand.required_date}</p>
-                <Link href={`/buyer/demands/${demand.id}`} className="secondary-button">View</Link>
-                <Link href={`/buyer/demands/${demand.id}/matches`} className="secondary-button">Find Matches</Link>
+              <div className="buyer-info-side">
+                <dl className="buyer-info-details">
+                  <div>
+                    <dt>Status</dt>
+                    <dd>{demand.status}</dd>
+                  </div>
+                  <div>
+                    <dt>Required</dt>
+                    <dd>{demand.required_date}</dd>
+                  </div>
+                </dl>
+                <div className="buyer-action-row">
+                  <Link href={`/buyer/demands/${demand.id}`} className="secondary-button">View</Link>
+                  <Link href={`/buyer/demands/${demand.id}/matches`} className="secondary-button">Find Matches</Link>
+                </div>
               </div>
             </article>
           ))}
         </div>}
-      </DashboardCard>
+      </section>
           </section>
     </main>
   );

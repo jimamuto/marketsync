@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import DashboardCard from "../../../../components/DashboardCard";
 import PageHeader from "../../../../components/PageHeader";
 import DashboardSidebar from "../../../../components/DashboardSidebar";
 
@@ -88,35 +87,48 @@ export default function BuyerDemandDetailsPage() {
         description="View demand request details from the backend API"
       />
 
-      <DashboardCard title="Demand information">
-        {isLoading && <p>Loading demand details...</p>}
+      <section className="buyer-info-section" aria-labelledby="demand-information-heading">
+        <div className="buyer-section-heading">
+          <h2 id="demand-information-heading">Demand information</h2>
+          <p>Confirm request details before matching or deletion.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading demand details...</p>}
         {error && <p className="error-message">{error}</p>}
         {message && <p className="success-message">{message}</p>}
-        {!isLoading && !error && !demand && <p>Demand request not found.</p>}
+        {!isLoading && !error && !demand && <p className="section-empty-state">Demand request not found.</p>}
 
         {!isLoading && !error && demand && (
-          <div className="booking-list">
-            <article className="booking-card">
-              <div>
+          <div className="buyer-info-list">
+            <article className="buyer-info-row">
+              <div className="buyer-info-primary">
                 <strong>{demand.crop_name}</strong>
                 <p>
                   Quantity: {demand.quantity} {demand.unit}
                 </p>
                 <p>Delivery location: {demand.location}</p>
-                <p>Status: {demand.status}</p>
               </div>
 
-              <div className="booking-meta">
-                <p>Required: {demand.required_date}</p>
-                <p>Notes: {demand.notes || "No notes added"}</p>
+              <div className="buyer-info-side">
+                <dl className="buyer-info-details">
+                  <div>
+                    <dt>Status</dt>
+                    <dd>{demand.status}</dd>
+                  </div>
+                  <div>
+                    <dt>Required</dt>
+                    <dd>{demand.required_date}</dd>
+                  </div>
+                </dl>
+                <p className="buyer-info-note">Notes: {demand.notes || "No notes added"}</p>
               </div>
             </article>
           </div>
         )}
-      </DashboardCard>
+      </section>
 
       {demand && (
-        <div>
+        <div className="buyer-action-row">
           <Link href={`/buyer/demands/${demand.id}/matches`} className="primary-button">
             Find Matches
           </Link>

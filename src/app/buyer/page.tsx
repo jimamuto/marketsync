@@ -1,11 +1,10 @@
 "use client";
 //shows buyers booking history
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
 import DashboardSidebar from "../../components/DashboardSidebar";
-import DashboardCard from "../../components/DashboardCard";
 
 type Demand = {
   id: number;
@@ -31,17 +30,7 @@ export default function BuyerPage() {
   const [demands, setDemands] = useState<Demand[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [form, setForm] = useState({
-    cropName: "",
-    quantity: "",
-    unit: "kgs",
-    location: "",
-    requiredDate: "",
-    notes: "",
-  });
 
   async function loadDashboardData() {
     setIsLoading(true);
@@ -77,55 +66,8 @@ export default function BuyerPage() {
   useEffect(() => {
     loadDashboardData();
   }, []);
-//updates one field in the form and keeps the rest of the fields using ...current
-  function updateField(name: string, value: string) {
-    setForm((current) => ({ ...current, [name]: value }));
-  }
-
-  async function submitDemand(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); //prevent browser refresh when form is submitted
-    setMessage("");
-    setError("");
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch("/api/demands", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cropName: form.cropName,
-          quantity: Number(form.quantity),
-          unit: form.unit,
-          location: form.location,
-          requiredDate: form.requiredDate,
-          notes: form.notes,
-          status: "open",
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to submit demand");
-      }
-
-      setMessage("Demand submitted successfully.");
-      setForm({
-        cropName: "",
-        quantity: "",
-        unit: "kgs",
-        location: "",
-        requiredDate: "",
-        notes: "",
-      });
-
-      await loadDashboardData();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to submit demand");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  const openDemands = demands.filter((demand) => demand.status === "open");
+  const activeBookings = bookings.filter((booking) => booking.status !== "cancelled");
 
   return (
     <main className="dashboard-shell">
@@ -135,122 +77,62 @@ export default function BuyerPage() {
       <PageHeader
         eyebrow="Institutional Buyer"
         title="Procurement Demand Dashboard"
-        description="Submit demand, review matched harvest listings, and track procurement history"
+        description="Review procurement status, delivery activity, and workspace shortcuts."
       />
 
-      {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
 
-      <section className="buyer-layout">
-        <DashboardCard title="Submit procurement demand">
-          <form className="demand-form" onSubmit={submitDemand}>
-            <label>
-              Crop Required
-              <input
-                type="text"
-                placeholder="Irish potatoes"
-                value={form.cropName}
-                onChange={(event) => updateField("cropName", event.target.value)}
-                required
-              />
-            </label>
-
-            <label>
-              Demand Quantity
-              <input
-                type="number"
-                placeholder="1200"
-                value={form.quantity}
-                onChange={(event) => updateField("quantity", event.target.value)}
-                required
-              />
-            </label>
-
-            <label>
-              Unit
-              <select value={form.unit} onChange={(event) => updateField("unit", event.target.value)}>
-                <option value="kgs">KGS</option>
-                <option value="bags">Bags</option>
-                <option value="crates">Crates</option>
-                <option value="tons">Tons</option>
-              </select>
-            </label>
-
-            <label>
-              Delivery Location
-              <input
-                type="text"
-                placeholder="Nairobi"
-                value={form.location}
-                onChange={(event) => updateField("location", event.target.value)}
-                required
-              />
-            </label>
-
-            <label>
-              Target Delivery Window
-              <input
-                type="date"
-                value={form.requiredDate}
-                onChange={(event) => updateField("requiredDate", event.target.value)}
-                required
-              />
-            </label>
-
-            <label>
-              Special Delivery Instructions
-              <textarea
-                placeholder="Must be packaged in 50kg bags"
-                value={form.notes}
-                onChange={(event) => updateField("notes", event.target.value)}
-              />
-            </label>
-
-            <button className="primary-button" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit Requirements"}
-            </button>
-          </form>
-        </DashboardCard>
-
-        <DashboardCard title="Recent Demand Requests">
-          {isLoading && <p>Loading demands...</p>}
-          {!isLoading && demands.length === 0 && <p>No demand requests yet.</p>}
-
-          {!isLoading && demands.length > 0 && (
-            <div className="match-grid">
-              {demands.slice(0, 3).map((demand) => (
-                <article key={demand.id} className="match-card">
-                  <div className="match-card-content">
-                    <p>
-                      <strong>Crop:</strong> {demand.crop_name}
-                    </p>
-                    <p>
-                      <strong>Quantity:</strong> {demand.quantity} {demand.unit}
-                    </p>
-                    <p>
-                      <strong>Location:</strong> {demand.location}
-                    </p>
-                    <p>
-                      <strong>Status:</strong> {demand.status}
-                    </p>
-                  </div>
-
-                  <Link href={`/buyer/demands/${demand.id}/matches`} className="secondary-button">
-                    View Matches
-                  </Link>
-                </article>
-              ))}
+      <section className="dashboard-overview" aria-label="Buyer dashboard summary">
+        {isLoading ? (
+          <p>Loading procurement summary...</p>
+        ) : (
+          <>
+            <div>
+              <span>Total demands</span>
+              <strong>{demands.length}</strong>
             </div>
-          )}
-        </DashboardCard>
+            <div>
+              <span>Open demands</span>
+              <strong>{openDemands.length}</strong>
+            </div>
+            <div>
+              <span>Active bookings</span>
+              <strong>{activeBookings.length}</strong>
+            </div>
+          </>
+        )}
       </section>
 
-      <DashboardCard title="Procurement History & Delivery Schedule">
-        {isLoading && <p>Loading procurement history...</p>}
-        {!isLoading && bookings.length === 0 && <p>No bookings yet.</p>}
+      <section className="buyer-info-section" aria-labelledby="buyer-actions-heading">
+        <div className="buyer-section-heading">
+          <h2 id="buyer-actions-heading">Workspace actions</h2>
+          <p>Use the sidebar for full navigation, or jump directly into the core procurement tasks.</p>
+        </div>
+
+        <div className="buyer-action-row">
+          <Link href="/buyer/demands/new" className="primary-button">
+            Create demand
+          </Link>
+          <Link href="/buyer/demands" className="secondary-button">
+            View demands
+          </Link>
+          <Link href="/buyer/bookings" className="secondary-button">
+            View bookings
+          </Link>
+        </div>
+      </section>
+
+      <section className="buyer-info-section" aria-labelledby="procurement-history-heading">
+        <div className="buyer-section-heading">
+          <h2 id="procurement-history-heading">Procurement history & delivery schedule</h2>
+          <p>Track booking status, crop volume, and delivery destination.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading procurement history...</p>}
+        {!isLoading && bookings.length === 0 && <p className="section-empty-state">No bookings yet.</p>}
 
         {!isLoading && bookings.length > 0 && (
-          <div className="table-wrap">
+          <div className="buyer-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -282,7 +164,7 @@ export default function BuyerPage() {
             </table>
           </div>
         )}
-      </DashboardCard>
+      </section>
           </section>
     </main>
   );
