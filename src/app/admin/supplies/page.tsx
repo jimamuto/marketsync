@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 
@@ -52,13 +50,18 @@ export default function AdminSuppliesPage() {
       <section className="dashboard-main">
       <PageHeader eyebrow="Admin" title="Crop supplies" description="View all farmer supply records" />
 
-      <DashboardCard title="Supplies">
-        {isLoading && <p>Loading supplies...</p>}
+      <section className="admin-info-section" aria-labelledby="admin-supplies-heading">
+        <div className="admin-section-heading">
+          <h2 id="admin-supplies-heading">Supplies</h2>
+          <p>Monitor farmer supply records by crop, volume, location, harvest date, and status.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading supplies...</p>}
         {error && <p className="error-message">{error}</p>}
-        {!isLoading && !error && supplies.length === 0 && <p>No supplies found.</p>}
+        {!isLoading && !error && supplies.length === 0 && <p className="section-empty-state">No supplies found.</p>}
 
         {!isLoading && !error && supplies.length > 0 && (
-          <div className="table-wrap">
+          <div className="admin-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -85,7 +88,7 @@ export default function AdminSuppliesPage() {
             </table>
           </div>
         )}
-      </DashboardCard>
+      </section>
 
           </section>
     </main>

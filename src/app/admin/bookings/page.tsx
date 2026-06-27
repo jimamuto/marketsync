@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 
@@ -52,13 +50,18 @@ export default function AdminBookingsPage() {
       <section className="dashboard-main">
       <PageHeader eyebrow="Admin" title="Bookings" description="View all buyer and farmer booking activity" />
 
-      <DashboardCard title="Bookings">
-        {isLoading && <p>Loading bookings...</p>}
+      <section className="admin-info-section" aria-labelledby="admin-bookings-heading">
+        <div className="admin-section-heading">
+          <h2 id="admin-bookings-heading">Bookings</h2>
+          <p>Audit buyer, farmer, crop, quantity, and booking status in one table.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading bookings...</p>}
         {error && <p className="error-message">{error}</p>}
-        {!isLoading && !error && bookings.length === 0 && <p>No bookings found.</p>}
+        {!isLoading && !error && bookings.length === 0 && <p className="section-empty-state">No bookings found.</p>}
 
         {!isLoading && !error && bookings.length > 0 && (
-          <div className="table-wrap">
+          <div className="admin-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -85,7 +88,7 @@ export default function AdminBookingsPage() {
             </table>
           </div>
         )}
-      </DashboardCard>
+      </section>
 
           </section>
     </main>

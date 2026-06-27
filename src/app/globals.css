@@ -1172,6 +1172,89 @@ h1 {
      margin: 0.5rem 0 0;
    }
 
+   .admin-overview {
+     display: grid;
+     gap: 1rem;
+     grid-template-columns: repeat(4, minmax(0, 1fr));
+   }
+
+   .admin-overview a {
+     border-bottom: 1px solid #d7e3d1;
+     color: inherit;
+     padding-bottom: 1rem;
+     text-decoration: none;
+   }
+
+   .admin-overview a:hover span,
+   .admin-report-row:hover span {
+     color: var(--accent);
+   }
+
+   .admin-overview span,
+   .admin-report-row span {
+     color: var(--muted);
+     display: block;
+     font-weight: 700;
+   }
+
+   .admin-overview strong {
+     display: block;
+     font-size: 2rem;
+     margin-top: 0.35rem;
+   }
+
+   .admin-info-section {
+     border-top: 1px solid #d7e3d1;
+     display: grid;
+     gap: 1.25rem;
+     padding-top: 1.25rem;
+   }
+
+   .admin-section-heading {
+     display: grid;
+     gap: 0.4rem;
+     max-width: 65ch;
+   }
+
+   .admin-section-heading h2 {
+     font-size: clamp(1.35rem, 2.4vw, 2rem);
+     line-height: 1;
+     margin: 0;
+   }
+
+   .admin-section-heading p {
+     color: var(--muted);
+     line-height: 1.6;
+     margin: 0;
+   }
+
+   .admin-table-wrap {
+     border-top: 1px solid #d7e3d1;
+     overflow-x: auto;
+   }
+
+   .admin-report-list {
+     display: grid;
+   }
+
+   .admin-report-row {
+     align-items: center;
+     color: inherit;
+     display: flex;
+     justify-content: space-between;
+     gap: 1rem;
+     padding: 1.15rem 0;
+     text-decoration: none;
+   }
+
+   .admin-report-row + .admin-report-row {
+     border-top: 1px solid #d7e3d1;
+   }
+
+   .admin-report-row strong {
+     font-size: 1.35rem;
+   }
+
    .farmer-info-section {
      border-top: 1px solid #d7e3d1;
      padding-top: 1rem;
@@ -1352,7 +1435,8 @@ h1 {
        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
      }
 
-     .dashboard-overview {
+     .dashboard-overview,
+     .admin-overview {
        grid-template-columns: 1fr;
      }
 

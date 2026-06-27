@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 
@@ -50,13 +48,18 @@ export default function AdminUsersPage() {
       <section className="dashboard-main">
       <PageHeader eyebrow="Admin" title="Users" description="View registered farmers, buyers, and admins" />
 
-      <DashboardCard title="User accounts">
-        {isLoading && <p>Loading users...</p>}
+      <section className="admin-info-section" aria-labelledby="admin-users-heading">
+        <div className="admin-section-heading">
+          <h2 id="admin-users-heading">User accounts</h2>
+          <p>Review registered account roles, contact details, locations, and verification status.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading users...</p>}
         {error && <p className="error-message">{error}</p>}
-        {!isLoading && !error && users.length === 0 && <p>No users found.</p>}
+        {!isLoading && !error && users.length === 0 && <p className="section-empty-state">No users found.</p>}
 
         {!isLoading && !error && users.length > 0 && (
-          <div className="table-wrap">
+          <div className="admin-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -83,7 +86,7 @@ export default function AdminUsersPage() {
             </table>
           </div>
         )}
-      </DashboardCard>
+      </section>
 
           </section>
     </main>

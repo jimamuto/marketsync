@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import DashboardCard from "../../../components/DashboardCard";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 
@@ -46,34 +45,39 @@ export default function AdminReportsPage() {
       <section className="dashboard-main">
       <PageHeader eyebrow="Admin" title="Reports" description="Report summary" />
 
-      <DashboardCard title="System report">
-        {isLoading && <p>Loading report...</p>}
+      <section className="admin-info-section" aria-labelledby="admin-report-heading">
+        <div className="admin-section-heading">
+          <h2 id="admin-report-heading">System report</h2>
+          <p>High-level operational totals across accounts, supply, demand, and booking activity.</p>
+        </div>
+
+        {isLoading && <p className="section-empty-state">Loading report...</p>}
         {error && <p className="error-message">{error}</p>}
 
         {!isLoading && !error && summary && (
-          <div className="booking-list">
-            <article className="booking-card">
-              <strong>Total users</strong>
-              <p>{summary.users}</p>
-            </article>
+          <div className="admin-report-list">
+            <Link href="/admin/users" className="admin-report-row">
+              <span>Total users</span>
+              <strong>{summary.users}</strong>
+            </Link>
 
-            <article className="booking-card">
-              <strong>Total supplies</strong>
-              <p>{summary.supplies}</p>
-            </article>
+            <Link href="/admin/supplies" className="admin-report-row">
+              <span>Total supplies</span>
+              <strong>{summary.supplies}</strong>
+            </Link>
 
-            <article className="booking-card">
-              <strong>Total demands</strong>
-              <p>{summary.demands}</p>
-            </article>
+            <Link href="/admin/demands" className="admin-report-row">
+              <span>Total demands</span>
+              <strong>{summary.demands}</strong>
+            </Link>
 
-            <article className="booking-card">
-              <strong>Total bookings</strong>
-              <p>{summary.bookings}</p>
-            </article>
+            <Link href="/admin/bookings" className="admin-report-row">
+              <span>Total bookings</span>
+              <strong>{summary.bookings}</strong>
+            </Link>
           </div>
         )}
-      </DashboardCard>
+      </section>
 
           </section>
     </main>

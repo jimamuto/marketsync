@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
-import DashboardCard from "../../components/DashboardCard";
 import DashboardSidebar from "../../components/DashboardSidebar";
 
 type Summary = {
@@ -50,34 +49,34 @@ export default function AdminPage() {
           description="Monitor users, supplies, demands, bookings, and reports"
         />
 
-        <DashboardCard title="System summary">
-          {isLoading && <p>Loading summary...</p>}
+        <section className="admin-overview" aria-label="Admin system summary">
+          {isLoading && <p className="section-empty-state">Loading summary...</p>}
           {error && <p className="error-message">{error}</p>}
 
           {!isLoading && !error && summary && (
-            <div className="match-grid">
-              <Link href="/admin/users" className="match-card">
-                <strong>Users</strong>
-                <p>{summary.users}</p>
+            <>
+              <Link href="/admin/users">
+                <span>Users</span>
+                <strong>{summary.users}</strong>
               </Link>
 
-              <Link href="/admin/supplies" className="match-card">
-                <strong>Supplies</strong>
-                <p>{summary.supplies}</p>
+              <Link href="/admin/supplies">
+                <span>Supplies</span>
+                <strong>{summary.supplies}</strong>
               </Link>
 
-              <Link href="/admin/demands" className="match-card">
-                <strong>Demands</strong>
-                <p>{summary.demands}</p>
+              <Link href="/admin/demands">
+                <span>Demands</span>
+                <strong>{summary.demands}</strong>
               </Link>
 
-              <Link href="/admin/bookings" className="match-card">
-                <strong>Bookings</strong>
-                <p>{summary.bookings}</p>
+              <Link href="/admin/bookings">
+                <span>Bookings</span>
+                <strong>{summary.bookings}</strong>
               </Link>
-            </div>
+            </>
           )}
-        </DashboardCard>
+        </section>
       </section>
     </main>
   );
