@@ -2132,3 +2132,114 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.farmer-form-board {
+  display: grid;
+  gap: 1.25rem;
+  border: 1px solid #2c3a29;
+  background: #fbfcf8;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  box-shadow: 0 18px 45px rgba(22, 32, 21, 0.08);
+}
+
+.farmer-form-board-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 1rem;
+  align-items: stretch;
+  border-bottom: 1px solid #2c3a29;
+  padding-bottom: 1rem;
+}
+
+.form-planning-note {
+  display: grid;
+  align-content: center;
+  gap: 0.35rem;
+  border: 1px solid #2c3a29;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+.form-planning-note span {
+  color: #2f7d32;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.form-planning-note p {
+  color: #53624f;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.structured-farmer-form {
+  max-width: none;
+}
+
+.structured-farmer-form fieldset {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid #2c3a29;
+  background: #ffffff;
+  margin: 0;
+  padding: 1rem;
+}
+
+.structured-farmer-form legend {
+  padding: 0 0.4rem;
+  color: #53624f;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.form-grid-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.structured-farmer-form input,
+.structured-farmer-form select {
+  border-radius: 0;
+}
+
+.form-error-message {
+  border: 1px solid #b42318;
+  background: #fff4f2;
+  color: #b42318;
+  font-weight: 800;
+  margin: 0;
+  padding: 0.85rem 1rem;
+}
+
+.form-action-box {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 0.75rem;
+  border: 1px solid #2c3a29;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+.structured-farmer-form .form-action-box button {
+  border: 1px solid #2c3a29;
+  border-radius: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.form-back-button {
+  padding: 1rem 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .farmer-form-board-header,
+  .form-grid-two,
+  .form-action-box {
+    grid-template-columns: 1fr;
+  }
+}
