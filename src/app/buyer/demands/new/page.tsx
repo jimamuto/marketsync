@@ -67,121 +67,143 @@ export default function NewBuyerDemandPage() {
       <DashboardSidebar role="buyer" />
 
       <section className="dashboard-main">
-      <PageHeader
-        eyebrow="New demand"
-        title="Create demand request"
-        description="Add what produce your institution needs"
-      />
+        <PageHeader
+          eyebrow="New demand"
+          title="Create demand request"
+          description="Add what produce your institution needs."
+        />
 
-      <section className="buyer-form-section" aria-labelledby="demand-details-heading">
-        <div className="buyer-section-heading">
-          <h2 id="demand-details-heading">Demand details</h2>
-          <p>Define exactly what your institution needs so farmer matches stay useful.</p>
-        </div>
+        <section className="buyer-demand-board" aria-labelledby="demand-details-heading">
+          <div className="buyer-demand-board-header">
+            <div className="buyer-section-heading">
+              <p className="wireframe-label">PROCUREMENT DEMAND</p>
+              <h2 id="demand-details-heading">Demand details</h2>
+              <p>Define exactly what your institution needs so farmer matches stay useful.</p>
+            </div>
 
-        <form className="auth-form buyer-form" onSubmit={handleSubmit}>
-          <label>
-            Crop Name
-            <input
-              name="cropName"
-              type="text"
-              placeholder="e.g tomatoes"
-              value={form.cropName}
-              onChange={(event) => updateField("cropName", event.target.value)}
-              required
-            />
-          </label>
+            <div className="form-planning-note" aria-label="Matching connection note">
+              <span>Matching linked</span>
+              <p>Crop, quantity, location, and delivery date power farmer match recommendations.</p>
+            </div>
+          </div>
 
-          <label>
-            Quantity
-            <input
-              name="quantity"
-              type="number"
-              placeholder="e.g 300"
-              value={form.quantity}
-              onChange={(event) => updateField("quantity", event.target.value)}
-              required
-            />
-          </label>
+          <form className="auth-form buyer-form structured-buyer-form" onSubmit={handleSubmit}>
+            <fieldset>
+              <legend>Crop requirement</legend>
+              <label>
+                Crop name
+                <input
+                  name="cropName"
+                  type="text"
+                  placeholder="e.g. tomatoes"
+                  value={form.cropName}
+                  onChange={(event) => updateField("cropName", event.target.value)}
+                  required
+                />
+              </label>
+            </fieldset>
 
-          <label>
-            Unit
-            <select
-              name="unit"
-              value={form.unit}
-              onChange={(event) => updateField("unit", event.target.value)}
-              required
-            >
-              <option value="">Select unit</option>
-              <option value="kgs">KGS</option>
-              <option value="bags">Bags</option>
-              <option value="crates">Crates</option>
-              <option value="tons">Tons</option>
-            </select>
-          </label>
+            <fieldset>
+              <legend>Quantity and delivery</legend>
+              <div className="form-grid-two">
+                <label>
+                  Quantity
+                  <input
+                    name="quantity"
+                    type="number"
+                    placeholder="e.g. 300"
+                    value={form.quantity}
+                    onChange={(event) => updateField("quantity", event.target.value)}
+                    required
+                  />
+                </label>
 
-          <label>
-            Delivery Location
-            <input
-              name="location"
-              type="text"
-              placeholder="Nairobi"
-              value={form.location}
-              onChange={(event) => updateField("location", event.target.value)}
-              required
-            />
-          </label>
+                <label>
+                  Unit
+                  <select
+                    name="unit"
+                    value={form.unit}
+                    onChange={(event) => updateField("unit", event.target.value)}
+                    required
+                  >
+                    <option value="">Select unit</option>
+                    <option value="kgs">KGS</option>
+                    <option value="bags">Bags</option>
+                    <option value="crates">Crates</option>
+                    <option value="tons">Tons</option>
+                  </select>
+                </label>
+              </div>
 
-          <label>
-            Required Date
-            <input
-              type="date"
-              name="requiredDate"
-              value={form.requiredDate}
-              onChange={(event) => updateField("requiredDate", event.target.value)}
-              required
-            />
-          </label>
+              <div className="form-grid-two">
+                <label>
+                  Delivery location
+                  <input
+                    name="location"
+                    type="text"
+                    placeholder="Nairobi"
+                    value={form.location}
+                    onChange={(event) => updateField("location", event.target.value)}
+                    required
+                  />
+                </label>
 
-          <label>
-            Notes
-            <input
-              name="notes"
-              type="text"
-              placeholder="Any delivery instructions"
-              value={form.notes}
-              onChange={(event) => updateField("notes", event.target.value)}
-            />
-          </label>
+                <label>
+                  Required date
+                  <input
+                    type="date"
+                    name="requiredDate"
+                    value={form.requiredDate}
+                    onChange={(event) => updateField("requiredDate", event.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+            </fieldset>
 
-          <label>
-            Status
-            <select
-              name="status"
-              value={form.status}
-              onChange={(event) => updateField("status", event.target.value)}
-            >
-              <option value="open">Open</option>
-              <option value="matched">Matched</option>
-              <option value="booked">Booked</option>
-              <option value="cancelled">Cancelled</option>
-              <option value="fulfilled">Fulfilled</option>
-            </select>
-          </label>
+            <fieldset>
+              <legend>Instructions and status</legend>
+              <label>
+                Notes
+                <input
+                  name="notes"
+                  type="text"
+                  placeholder="Any delivery instructions"
+                  value={form.notes}
+                  onChange={(event) => updateField("notes", event.target.value)}
+                />
+              </label>
 
-          {message && <p className="success-message">{message}</p>}
-          {error && <p className="error-message">{error}</p>}
+              <label>
+                Status
+                <select
+                  name="status"
+                  value={form.status}
+                  onChange={(event) => updateField("status", event.target.value)}
+                >
+                  <option value="open">Open</option>
+                  <option value="matched">Matched</option>
+                  <option value="booked">Booked</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="fulfilled">Fulfilled</option>
+                </select>
+              </label>
+            </fieldset>
 
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Save demand request"}
-          </button>
-        </form>
+            {message && <p className="success-message form-success-message">{message}</p>}
+            {error && <p className="error-message form-error-message">{error}</p>}
+
+            <div className="form-action-box">
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save demand request"}
+              </button>
+              <Link href="/buyer/demands" className="calendar-log-button form-back-button">
+                Back to demands
+              </Link>
+            </div>
+          </form>
+        </section>
       </section>
-
-      <Link href="/buyer/demands" className="secondary-button">
-        Back to demands
-      </Link>
-          </section>
     </main>
   );
 }
