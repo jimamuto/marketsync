@@ -1131,25 +1131,40 @@ h1 {
 
    .dashboard-overview {
      display: grid;
-     gap: 1rem;
+     gap: 0;
      grid-template-columns: repeat(3, minmax(0, 1fr));
+     border: 1px solid #2c3a29;
+     background: #fbfcf8;
+     box-shadow: 0 18px 45px rgba(22, 32, 21, 0.08);
+     padding: 1rem;
    }
 
    .dashboard-overview div {
-     border-bottom: 1px solid #d7e3d1;
-     padding-bottom: 1rem;
+     display: grid;
+     gap: 0.45rem;
+     border: 1px solid #2c3a29;
+     border-right: 0;
+     background: #ffffff;
+     padding: 1rem;
+   }
+
+   .dashboard-overview div:last-child {
+     border-right: 1px solid #2c3a29;
    }
 
    .dashboard-overview span {
      color: var(--muted);
      display: block;
-     font-weight: 700;
+     font-size: 0.78rem;
+     font-weight: 900;
+     letter-spacing: 0.08em;
+     text-transform: uppercase;
    }
 
    .dashboard-overview strong {
      display: block;
-     font-size: 2rem;
-     margin-top: 0.35rem;
+     font-size: clamp(2rem, 4vw, 3rem);
+     line-height: 1;
    }
 
    .section-title-row {
@@ -2308,5 +2323,16 @@ h1 {
 @media (max-width: 900px) {
   .buyer-demand-board-header {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-overview div {
+    border-right: 1px solid #2c3a29;
+    border-bottom: 0;
+  }
+
+  .dashboard-overview div:last-child {
+    border-bottom: 1px solid #2c3a29;
   }
 }
