@@ -55,14 +55,8 @@ export default function LoginPage() {
         return;
       }
 
-      setMessage("Logged in successfully.");
-      setForm({
-        email: "",
-        password: "",
-      });
-      //redirect to the respective role dashboards but fallbacks to home
-      router.push(roleRoutes[data.user.role as keyof typeof roleRoutes] ?? "/");
-      router.refresh(); //so as to save the session of the user
+      const redirectTo = roleRoutes[data.user.role as keyof typeof roleRoutes] ?? "/";
+      router.replace(redirectTo);
 
     } catch {
       setError("Something went wrong. Please try again.");
