@@ -46,10 +46,6 @@ export default function AdminReportsPage() {
       <PageHeader eyebrow="Admin" title="Reports" description="Report summary" />
 
       <section className="admin-info-section" aria-labelledby="admin-report-heading">
-        <div className="admin-section-heading">
-          <h2 id="admin-report-heading">System report</h2>
-          <p>High-level operational totals across accounts, supply, demand, and booking activity.</p>
-        </div>
 
         {isLoading && <p className="section-empty-state">Loading report...</p>}
         {error && <p className="error-message">{error}</p>}

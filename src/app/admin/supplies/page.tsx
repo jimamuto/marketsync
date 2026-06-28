@@ -51,10 +51,6 @@ export default function AdminSuppliesPage() {
       <PageHeader eyebrow="Admin" title="Crop supplies" description="View all farmer supply records" />
 
       <section className="admin-info-section" aria-labelledby="admin-supplies-heading">
-        <div className="admin-section-heading">
-          <h2 id="admin-supplies-heading">Supplies</h2>
-          <p>Monitor farmer supply records by crop, volume, location, harvest date, and status.</p>
-        </div>
 
         {isLoading && <p className="section-empty-state">Loading supplies...</p>}
         {error && <p className="error-message">{error}</p>}

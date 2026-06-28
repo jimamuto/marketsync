@@ -50,10 +50,6 @@ export default function AdminDemandsPage() {
       <PageHeader eyebrow="Admin" title="Demand requests" description="View all buyer demand requests" />
 
       <section className="admin-info-section" aria-labelledby="admin-demands-heading">
-        <div className="admin-section-heading">
-          <h2 id="admin-demands-heading">Demands</h2>
-          <p>Review buyer requests by crop, volume, delivery location, required date, and status.</p>
-        </div>
 
         {isLoading && <p className="section-empty-state">Loading demands...</p>}
         {error && <p className="error-message">{error}</p>}

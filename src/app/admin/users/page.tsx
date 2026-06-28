@@ -49,10 +49,6 @@ export default function AdminUsersPage() {
       <PageHeader eyebrow="Admin" title="Users" description="View registered farmers, buyers, and admins" />
 
       <section className="admin-info-section" aria-labelledby="admin-users-heading">
-        <div className="admin-section-heading">
-          <h2 id="admin-users-heading">User accounts</h2>
-          <p>Review registered account roles, contact details, locations, and verification status.</p>
-        </div>
 
         {isLoading && <p className="section-empty-state">Loading users...</p>}
         {error && <p className="error-message">{error}</p>}

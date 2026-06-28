@@ -51,10 +51,6 @@ export default function AdminBookingsPage() {
       <PageHeader eyebrow="Admin" title="Bookings" description="View all buyer and farmer booking activity" />
 
       <section className="admin-info-section" aria-labelledby="admin-bookings-heading">
-        <div className="admin-section-heading">
-          <h2 id="admin-bookings-heading">Bookings</h2>
-          <p>Audit buyer, farmer, crop, quantity, and booking status in one table.</p>
-        </div>
 
         {isLoading && <p className="section-empty-state">Loading bookings...</p>}
         {error && <p className="error-message">{error}</p>}
