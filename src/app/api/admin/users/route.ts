@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { PRIVATE_CACHE_HEADERS } from "../../../../lib/cache";
 import { getDb } from "../../../../lib/database";
 import { getSessionRole, hasAdminAccess } from "../../../../lib/session";
 
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { users: result.rows },
-      { status: 200 },
+      { status: 200, headers: PRIVATE_CACHE_HEADERS },
     );
   } catch (error) {
     return NextResponse.json(

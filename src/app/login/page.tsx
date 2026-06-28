@@ -54,7 +54,7 @@ export default function LoginPage() {
         setError(data.message || "Failed to log in.");
         return;
       }
-
+//automatically redirect to the dashboard depending on the user role
       const redirectTo = roleRoutes[data.user.role as keyof typeof roleRoutes] ?? "/";
       router.replace(redirectTo);
 
