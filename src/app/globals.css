@@ -1142,6 +1142,30 @@ h1 {
      color: var(--foreground);
    }
 
+   .sidebar-footer {
+     margin-top: auto;
+     padding-top: 1rem;
+   }
+
+   .sidebar-logout-button {
+     width: 100%;
+     border: 1px solid transparent;
+     border-radius: 0.8rem;
+     background: transparent;
+     color: var(--muted);
+     cursor: pointer;
+     font: inherit;
+     font-weight: 800;
+     padding: 0.8rem 0.9rem;
+     text-align: left;
+   }
+
+   .sidebar-logout-button:hover {
+     border-color: #d7e3d1;
+     background: #edf5ea;
+     color: var(--foreground);
+   }
+
    .dashboard-overview {
      display: grid;
      gap: 0;

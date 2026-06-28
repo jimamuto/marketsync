@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LogoutButton from "./LogoutButton";
 
 type DashboardRole = "farmer" | "buyer" | "admin";
 
@@ -80,6 +81,10 @@ export default function DashboardSidebar(props: DashboardSidebarProps) {
           );
         })}
       </nav>
+
+      <div className="sidebar-footer">
+        <LogoutButton className="sidebar-logout-button" />
+      </div>
     </aside>
   );
 }
