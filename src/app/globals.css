@@ -1332,6 +1332,24 @@ h1 {
      padding-top: 1.5rem;
    }
 
+   .report-heading-row {
+     align-items: flex-start;
+     display: flex;
+     justify-content: space-between;
+     gap: 1rem;
+   }
+
+   .report-actions {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 0.75rem;
+     justify-content: flex-end;
+   }
+
+   .report-actions .secondary-button {
+     white-space: nowrap;
+   }
+
    .report-metric-grid {
      display: grid;
      grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1633,6 +1651,14 @@ h1 {
      .report-metric-grid,
      .projection-row {
        grid-template-columns: 1fr;
+     }
+
+     .report-heading-row {
+       flex-direction: column;
+     }
+
+     .report-actions {
+       justify-content: flex-start;
      }
 
      .report-bar-line {
