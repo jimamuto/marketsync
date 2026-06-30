@@ -1289,6 +1289,11 @@ h1 {
      display: grid;
    }
 
+   .admin-report-list--summary {
+     grid-template-columns: repeat(4, minmax(0, 1fr));
+     gap: 1rem;
+   }
+
    .admin-report-row {
      align-items: center;
      color: inherit;
@@ -1299,12 +1304,147 @@ h1 {
      text-decoration: none;
    }
 
+   .admin-report-list--summary .admin-report-row {
+     align-items: flex-start;
+     flex-direction: column;
+     border: 1px solid #d7e3d1;
+     border-radius: 1rem;
+     background: #fbfcf8;
+     padding: 1rem;
+   }
+
    .admin-report-row + .admin-report-row {
+     border-top: 1px solid #d7e3d1;
+   }
+
+   .admin-report-list--summary .admin-report-row + .admin-report-row {
      border-top: 1px solid #d7e3d1;
    }
 
    .admin-report-row strong {
      font-size: 1.35rem;
+   }
+
+   .report-panel {
+     border-top: 1px solid #d7e3d1;
+     display: grid;
+     gap: 1.25rem;
+     padding-top: 1.5rem;
+   }
+
+   .report-metric-grid {
+     display: grid;
+     grid-template-columns: repeat(3, minmax(0, 1fr));
+     gap: 1rem;
+   }
+
+   .report-metric-grid div {
+     border: 1px solid #d7e3d1;
+     border-radius: 1rem;
+     background: #fbfcf8;
+     padding: 1rem;
+   }
+
+   .report-metric-grid span,
+   .report-chart-heading span,
+   .projection-row span {
+     color: var(--muted);
+     display: block;
+     font-size: 0.8rem;
+     font-weight: 800;
+     letter-spacing: 0.08em;
+     text-transform: uppercase;
+   }
+
+   .report-metric-grid strong {
+     display: block;
+     font-size: 1.8rem;
+     line-height: 1;
+     margin-top: 0.45rem;
+   }
+
+   .report-chart-list,
+   .projection-chart {
+     display: grid;
+     gap: 1rem;
+   }
+
+   .report-chart-row,
+   .projection-row {
+     border: 1px solid #d7e3d1;
+     border-radius: 1rem;
+     background: #ffffff;
+     padding: 1rem;
+   }
+
+   .report-chart-heading {
+     align-items: flex-start;
+     display: flex;
+     justify-content: space-between;
+     gap: 1rem;
+     margin-bottom: 1rem;
+   }
+
+   .report-chart-heading strong,
+   .projection-row strong {
+     display: block;
+     font-size: 1.05rem;
+   }
+
+   .report-chart-heading small,
+   .projection-row small {
+     color: var(--muted);
+     font-weight: 800;
+   }
+
+   .report-bars {
+     display: grid;
+     gap: 0.65rem;
+   }
+
+   .report-bar-line {
+     align-items: center;
+     display: grid;
+     grid-template-columns: 82px minmax(0, 1fr) minmax(110px, auto);
+     gap: 0.75rem;
+   }
+
+   .report-bar-line span {
+     color: var(--muted);
+     font-weight: 800;
+   }
+
+   .report-bar-line > div,
+   .projection-bar {
+     overflow: hidden;
+     border-radius: 999px;
+     background: #edf5ea;
+   }
+
+   .report-bar-line i,
+   .projection-bar i {
+     display: block;
+     min-width: 0.4rem;
+     height: 0.85rem;
+     border-radius: 999px;
+     background: #2f3e46;
+   }
+
+   .report-bar-line--supply i,
+   .projection-bar i {
+     background: #7fb069;
+   }
+
+   .report-bar-line strong {
+     font-size: 0.9rem;
+     text-align: right;
+   }
+
+   .projection-row {
+     align-items: center;
+     display: grid;
+     grid-template-columns: minmax(150px, 0.8fr) minmax(220px, 1.4fr) minmax(150px, auto);
+     gap: 1rem;
    }
 
    .farmer-info-section {
@@ -1488,8 +1628,19 @@ h1 {
      }
 
      .dashboard-overview,
-     .admin-overview {
+     .admin-overview,
+     .admin-report-list--summary,
+     .report-metric-grid,
+     .projection-row {
        grid-template-columns: 1fr;
+     }
+
+     .report-bar-line {
+       grid-template-columns: 1fr;
+     }
+
+     .report-bar-line strong {
+       text-align: left;
      }
 
      .section-title-row {
