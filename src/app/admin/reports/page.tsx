@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Papa from "papaparse";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 
@@ -33,6 +34,18 @@ type Summary = {
 
 function formatQuantity(value: number, unit: string) {
   return `${Number(value).toLocaleString()} ${unit}`;
+}
+
+function downloadCsv(filename: string, rows: Record<string, string | number>[]) {
+  const csv = Papa.unparse(rows);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 export default function AdminReportsPage() {
@@ -85,6 +98,41 @@ export default function AdminReportsPage() {
     ...(summary?.harvestProjection.map((item) => item.projected_quantity) ?? []),
   );
 
+  function exportDemandSupplyGap() {
+    if (!summary) {
+      return;
+    }
+
+    downloadCsv(
+      "demand-supply-gap-report.csv",
+      summary.demandSupplyGap.map((item) => ({
+        Crop: item.crop_name,
+        Unit: item.unit,
+        "Requested Quantity": item.requested_quantity,
+        "Available Supply": item.available_quantity,
+        "Gap Quantity": item.gap_quantity,
+        Status: item.status,
+      })),
+    );
+  }
+
+  function exportHarvestProjection() {
+    if (!summary) {
+      return;
+    }
+
+    downloadCsv(
+      "harvest-projection-report.csv",
+      summary.harvestProjection.map((item) => ({
+        Month: item.harvest_month,
+        Crop: item.crop_name,
+        Unit: item.unit,
+        "Projected Quantity": item.projected_quantity,
+        "Farmer Count": item.farmer_count,
+      })),
+    );
+  }
+
   return (
     <main className="dashboard-shell">
       <DashboardSidebar role="admin" />
@@ -125,9 +173,19 @@ export default function AdminReportsPage() {
               </div>
 
               <section className="report-panel" aria-labelledby="gap-report-heading">
-                <div className="admin-section-heading">
-                  <h2 id="gap-report-heading">Demand vs supply gap</h2>
-                  <p>Compares non-cancelled buyer demand against active farmer supply by crop and unit.</p>
+                <div className="report-heading-row">
+                  <div className="admin-section-heading">
+                    <h2 id="gap-report-heading">Demand vs supply gap</h2>
+                    <p>Compares non-cancelled buyer demand against active farmer supply by crop and unit.</p>
+                  </div>
+                  <div className="report-actions">
+                    <button type="button" className="secondary-button" onClick={exportDemandSupplyGap}>
+                      Export CSV
+                    </button>
+                    <button type="button" className="secondary-button" onClick={() => window.print()}>
+                      Print / PDF
+                    </button>
+                  </div>
                 </div>
 
                 <div className="report-metric-grid" aria-label="Demand supply gap totals">
@@ -182,9 +240,19 @@ export default function AdminReportsPage() {
               </section>
 
               <section className="report-panel" aria-labelledby="projection-report-heading">
-                <div className="admin-section-heading">
-                  <h2 id="projection-report-heading">Harvest projections</h2>
-                  <p>Shows upcoming active harvest quantities by month, crop, and contributing farmer records.</p>
+                <div className="report-heading-row">
+                  <div className="admin-section-heading">
+                    <h2 id="projection-report-heading">Harvest projections</h2>
+                    <p>Shows upcoming active harvest quantities by month, crop, and contributing farmer records.</p>
+                  </div>
+                  <div className="report-actions">
+                    <button type="button" className="secondary-button" onClick={exportHarvestProjection}>
+                      Export CSV
+                    </button>
+                    <button type="button" className="secondary-button" onClick={() => window.print()}>
+                      Print / PDF
+                    </button>
+                  </div>
                 </div>
 
                 <div className="report-metric-grid" aria-label="Harvest projection totals">
