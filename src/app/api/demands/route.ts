@@ -64,9 +64,10 @@ export async function POST(request: NextRequest) {
 
     const result = await getDb().query(
       `insert into demand_requests
-       (buyer_id, crop_name, quantity, unit, required_date, location, notes, status)
-       values ($1, $2, $3, $4, $5, $6, $7, $8)
-       returning id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status, created_at, updated_at`,
+       (buyer_id, crop_name, quantity, unit, required_date, location, notes, status, moderation_status)
+       values ($1, $2, $3, $4, $5, $6, $7, $8, 'pending')
+       returning id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status,
+                moderation_status, moderation_note, reviewed_at, created_at, updated_at`,
       [userId, cropName, quantity, unit, requiredDate, location, notes, status],
     );
 
@@ -102,6 +103,7 @@ export async function GET(request: NextRequest) {
         ? await getDb().query(
             `select dr.id, dr.buyer_id, dr.crop_name, dr.quantity, dr.unit,
                     dr.required_date, dr.location, dr.notes, dr.status,
+                    dr.moderation_status, dr.moderation_note, dr.reviewed_at,
                     dr.created_at, dr.updated_at,
                     u.name as buyer_name, u.email as buyer_email
              from demand_requests dr
@@ -110,7 +112,8 @@ export async function GET(request: NextRequest) {
           )
         : await getDb().query(
             `select id, buyer_id, crop_name, quantity, unit, required_date,
-                    location, notes, status, created_at, updated_at
+                    location, notes, status, moderation_status, moderation_note, reviewed_at,
+                    created_at, updated_at
              from demand_requests
              where buyer_id = $1
              order by created_at desc`,

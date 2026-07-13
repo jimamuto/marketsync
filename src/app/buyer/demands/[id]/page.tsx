@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import PageHeader from "../../../../components/PageHeader";
 import DashboardSidebar from "../../../../components/DashboardSidebar";
+import ModerationStatus, { type ModerationStatus as ModerationStatusValue } from "../../../../components/ModerationStatus";
 
 type Demand = {
   id: number;
@@ -15,6 +16,8 @@ type Demand = {
   required_date: string;
   status: string;
   notes: string | null;
+  moderation_status: ModerationStatusValue;
+  moderation_note: string | null;
 };
 
 export default function BuyerDemandDetailsPage() {
@@ -112,7 +115,7 @@ export default function BuyerDemandDetailsPage() {
               <div className="buyer-info-side">
                 <dl className="buyer-info-details">
                   <div>
-                    <dt>Status</dt>
+                    <dt>Business status</dt>
                     <dd>{demand.status}</dd>
                   </div>
                   <div>
@@ -120,6 +123,10 @@ export default function BuyerDemandDetailsPage() {
                     <dd>{demand.required_date}</dd>
                   </div>
                 </dl>
+                <ModerationStatus
+                  status={demand.moderation_status}
+                  note={demand.moderation_note}
+                />
                 <p className="buyer-info-note">Notes: {demand.notes || "No notes added"}</p>
               </div>
             </article>

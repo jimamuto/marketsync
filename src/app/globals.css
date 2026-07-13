@@ -2816,12 +2816,45 @@ td:nth-child(2) {
 }
 
 .status-pill {
+  display: inline-block;
   border: 1px solid #b9d4b2;
+  border-radius: 999px;
   background: #eaf7ea;
   color: #256628;
   font-size: 0.78rem;
+  font-weight: 800;
   letter-spacing: 0.03em;
+  padding: 0.35rem 0.75rem;
   text-transform: uppercase;
+}
+
+.actor-moderation-status {
+  display: grid;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.actor-moderation-status-line {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.moderation-note {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.form-review-note {
+  border: 1px solid #e6c37e;
+  border-radius: var(--radius-md);
+  background: #fff8e8;
+  color: #6f4b00;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0.85rem 1rem;
 }
 
 .section-empty-state {

@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import DashboardSidebar from "../../../../components/DashboardSidebar";
 import PageHeader from "../../../../components/PageHeader";
+import ModerationStatus, { type ModerationStatus as ModerationStatusValue } from "../../../../components/ModerationStatus";
 
 type Supply = {
   id: number;
@@ -17,6 +18,8 @@ type Supply = {
   expected_harvest_date: string;
   location: string;
   status: string;
+  moderation_status: ModerationStatusValue;
+  moderation_note: string | null;
 };
 
 type FormState = {
@@ -48,6 +51,8 @@ function toInputDate(value: string | null | undefined) {
 export default function FarmerSupplyDetailsPage() {
   const params = useParams<{ id?: string | string[] }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const submitted = searchParams.get("submitted") === "1";
   const supplyId = useMemo(() => {
     const value = params?.id;
     return Array.isArray(value) ? value[0] : value;
@@ -293,6 +298,11 @@ export default function FarmerSupplyDetailsPage() {
               </select>
             </label>
 
+            <ModerationStatus
+              status={supply.moderation_status}
+              note={supply.moderation_note}
+            />
+
             <dl className="farmer-record-meta">
               <div>
                 <dt>Supply ID</dt>
@@ -304,6 +314,11 @@ export default function FarmerSupplyDetailsPage() {
               </div>
             </dl>
 
+            {submitted ? (
+              <p className="success-message form-success-message">
+                Supply submitted for administrator review. Buyers can match it after approval.
+              </p>
+            ) : null}
             {error ? <p>{error}</p> : null}
 
             <div className="farmer-action-row">

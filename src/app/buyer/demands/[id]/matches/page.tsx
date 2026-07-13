@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"; //reads route parameters from the u
 import Link from "next/link";
 import PageHeader from "../../../../../components/PageHeader";
 import DashboardSidebar from "../../../../../components/DashboardSidebar";
+import ModerationStatus, { type ModerationStatus as ModerationStatusValue } from "../../../../../components/ModerationStatus";
 
 type Demand = {
   id: number;
@@ -13,6 +14,8 @@ type Demand = {
   unit: string;
   location: string;
   required_date: string;
+  moderation_status: ModerationStatusValue;
+  moderation_note: string | null;
 };
 
 type Match = {
@@ -24,6 +27,8 @@ type Match = {
   location: string;
   expected_harvest_date: string;
   status: string;
+  moderation_status: ModerationStatusValue;
+  moderation_note: string | null;
   match_score: number;
   match_reasons: string[];
   harvest_gap_days: number;
@@ -111,14 +116,27 @@ export default function BuyerDemandMatchesPage() {
       <section className="buyer-info-section" aria-labelledby="matched-supplies-heading">
         <div className="buyer-section-heading">
           <h2 id="matched-supplies-heading">Matched farmer supplies</h2>
-          <p>Compare available harvests and create a booking from the best fit.</p>
+          <p>Compare approved harvests and create a booking from the best fit.</p>
+          {demand ? (
+            <ModerationStatus
+              status={demand.moderation_status}
+              note={demand.moderation_note}
+            />
+          ) : null}
         </div>
 
         {isLoading && <p className="section-empty-state">Loading matches...</p>}
         {message && <p className="success-message">{message}</p>}
         {error && <p className="error-message">{error}</p>}
 
-        {!isLoading && !error && matches.length === 0 && <p className="section-empty-state">No matches found for this demand yet.</p>}
+        {!isLoading && !error && demand && demand.moderation_status !== "approved" && (
+          <p className="section-empty-state">
+            Matches will appear after this demand request is approved by an administrator.
+          </p>
+        )}
+        {!isLoading && !error && demand?.moderation_status === "approved" && matches.length === 0 && (
+          <p className="section-empty-state">No approved matches found for this demand yet.</p>
+        )}
 
         {!isLoading && !error && matches.length > 0 && (
           <div className="buyer-info-list">
@@ -130,7 +148,11 @@ export default function BuyerDemandMatchesPage() {
                     Available quantity: {match.quantity} {match.unit}
                   </p>
                   <p>Location: {match.location}</p>
-                  <p>Status: {match.status}</p>
+                  <p>Business status: {match.status}</p>
+                  <ModerationStatus
+                    status={match.moderation_status}
+                    note={match.moderation_note}
+                  />
                 </div>
 
                 <div className="buyer-info-side">

@@ -52,8 +52,8 @@ export default function NewBuyerDemandPage() {
         throw new Error(data.message || "Failed to create demand request");
       }
 
-      setMessage("Demand request created successfully.");
-      router.push("/buyer/demands");
+      setMessage("Demand request submitted for administrator review.");
+      router.push("/buyer/demands?submitted=1");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create demand request");
@@ -189,6 +189,10 @@ export default function NewBuyerDemandPage() {
                 </select>
               </label>
             </fieldset>
+
+            <p className="form-review-note">
+              New demand requests are submitted for administrator review before they can be matched or booked.
+            </p>
 
             {message && <p className="success-message form-success-message">{message}</p>}
             {error && <p className="error-message form-error-message">{error}</p>}

@@ -20,6 +20,8 @@ type DemandRow = {
   location: string;
   notes: string | null;
   status: string;
+  moderation_status: "pending" | "approved" | "rejected";
+  moderation_note: string | null;
 };
 
 type SupplyRow = {
@@ -33,6 +35,8 @@ type SupplyRow = {
   expected_harvest_date: string;
   location: string;
   status: string;
+  moderation_status: "pending" | "approved" | "rejected";
+  moderation_note: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -113,13 +117,15 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const demandResult =
       role === "admin"
         ? await getDb().query<DemandRow>(
-            `select id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status
+            `select id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status,
+                    moderation_status, moderation_note
              from demand_requests
              where id = $1`,
             [demandId],
           )
         : await getDb().query<DemandRow>(
-            `select id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status
+            `select id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status,
+                    moderation_status, moderation_note
              from demand_requests
              where id = $1 and buyer_id = $2`,
             [demandId, userId],
@@ -137,9 +143,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const supplyResult = await getDb().query<SupplyRow>(
       `select id, farmer_id, crop_name, crop_variety, quantity, unit,
               planting_date, expected_harvest_date, location, status,
-              created_at, updated_at
+              moderation_status, moderation_note, created_at, updated_at
        from crop_supplies
-       where lower(crop_name) = lower($1)
+       where moderation_status = 'approved'
+         and lower(crop_name) = lower($1)
          and lower(location) = lower($2)
          and quantity >= $3
          and status in ('planned', 'growing', 'ready')

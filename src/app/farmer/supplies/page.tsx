@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import DashboardSidebar from "../../../components/DashboardSidebar";
 import PageHeader from "../../../components/PageHeader";
+import ModerationStatus, { type ModerationStatus as ModerationStatusValue } from "../../../components/ModerationStatus";
 
 type Supply = {
   id: number;
@@ -15,7 +16,9 @@ type Supply = {
   expected_harvest_date: string;
   location: string;
   status: string;
-};
+  moderation_status: ModerationStatusValue;
+  moderation_note: string | null;
+}
 
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString("en-KE", {
@@ -99,7 +102,11 @@ export default function FarmerSuppliesPage() {
                       Quantity: {supply.quantity} {supply.unit}
                     </p>
                     <p>Location: {supply.location}</p>
-                    <p>Status: {supply.status}</p>
+                    <p>Business status: {supply.status}</p>
+                    <ModerationStatus
+                      status={supply.moderation_status}
+                      note={supply.moderation_note}
+                    />
                   </div>
 
                   <div className="farmer-info-side">

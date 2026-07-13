@@ -74,9 +74,10 @@ export async function POST(request: NextRequest) {
 
     const result = await getDb().query(
       `insert into crop_supplies
-       (farmer_id, crop_name, crop_variety, quantity, unit, planting_date, expected_harvest_date, location, status)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       returning id, farmer_id, crop_name, crop_variety, quantity, unit, planting_date, expected_harvest_date, location, status, created_at, updated_at`,
+       (farmer_id, crop_name, crop_variety, quantity, unit, planting_date, expected_harvest_date, location, status, moderation_status)
+       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'pending')
+       returning id, farmer_id, crop_name, crop_variety, quantity, unit, planting_date, expected_harvest_date, location, status,
+                moderation_status, moderation_note, reviewed_at, created_at, updated_at`,
       [
         userId,
         cropName,
@@ -122,6 +123,7 @@ export async function GET(request: NextRequest) {
         ? await getDb().query(
             `select cs.id, cs.farmer_id, cs.crop_name, cs.crop_variety, cs.quantity, cs.unit,
                     cs.planting_date, cs.expected_harvest_date, cs.location, cs.status,
+                    cs.moderation_status, cs.moderation_note, cs.reviewed_at,
                     cs.created_at, cs.updated_at,
                     u.name as farmer_name, u.email as farmer_email
              from crop_supplies cs
@@ -131,6 +133,7 @@ export async function GET(request: NextRequest) {
         : await getDb().query(
             `select id, farmer_id, crop_name, crop_variety, quantity, unit,
                     planting_date, expected_harvest_date, location, status,
+                    moderation_status, moderation_note, reviewed_at,
                     created_at, updated_at
              from crop_supplies
              where farmer_id = $1

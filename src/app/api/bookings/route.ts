@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 //find supplies from database
     const supplyResult = await getDb().query(
-      `select id, farmer_id, crop_name, quantity, unit, location, status
+      `select id, farmer_id, crop_name, quantity, unit, location, status, moderation_status
        from crop_supplies
        where id = $1 and status in ('planned', 'growing', 'ready')`,
       [supplyId],
@@ -60,9 +60,16 @@ export async function POST(request: NextRequest) {
     }
 // extract the first row
     const supply = supplyResult.rows[0];
+
+    if (supply.moderation_status !== "approved") {
+      return NextResponse.json(
+        { message: "This supply must be approved before it can be booked." },
+        { status: 409 },
+      );
+    }
 //extract demand requests from database
     const demandResult = await getDb().query(
-      `select id, buyer_id, crop_name, quantity, unit, location, status
+      `select id, buyer_id, crop_name, quantity, unit, location, status, moderation_status
        from demand_requests
        where id = $1 and buyer_id = $2`,
       [demandRequestId, userId],
@@ -76,6 +83,13 @@ export async function POST(request: NextRequest) {
     }
 
     const demand = demandResult.rows[0];
+
+    if (demand.moderation_status !== "approved") {
+      return NextResponse.json(
+        { message: "This demand request must be approved before it can be booked." },
+        { status: 409 },
+      );
+    }
 
     if (String(supply.crop_name).toLowerCase() !== String(demand.crop_name).toLowerCase()) {
       return NextResponse.json(

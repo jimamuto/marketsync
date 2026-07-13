@@ -39,6 +39,7 @@ async function getOwnedSupply(request: NextRequest, supplyId: number) {
       ? await getDb().query(
           `select cs.id, cs.farmer_id, cs.crop_name, cs.crop_variety, cs.quantity, cs.unit,
                   cs.planting_date, cs.expected_harvest_date, cs.location, cs.status,
+                  cs.moderation_status, cs.moderation_note, cs.reviewed_at,
                   cs.created_at, cs.updated_at,
                   u.name as farmer_name, u.email as farmer_email
            from crop_supplies cs
@@ -49,6 +50,7 @@ async function getOwnedSupply(request: NextRequest, supplyId: number) {
       : await getDb().query(
           `select id, farmer_id, crop_name, crop_variety, quantity, unit,
                   planting_date, expected_harvest_date, location, status,
+                  moderation_status, moderation_note, reviewed_at,
                   created_at, updated_at
            from crop_supplies
            where id = $1 and farmer_id = $2`,
@@ -205,7 +207,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       `update crop_supplies
        set ${updates.join(", ")}
        where id = $${values.length + 1}
-       returning id, farmer_id, crop_name, crop_variety, quantity, unit, planting_date, expected_harvest_date, location, status, created_at, updated_at`,
+       returning id, farmer_id, crop_name, crop_variety, quantity, unit, planting_date, expected_harvest_date, location, status,
+                moderation_status, moderation_note, reviewed_at, created_at, updated_at`,
       [...values, supplyId],
     );
 //return updated supply

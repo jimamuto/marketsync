@@ -40,6 +40,7 @@ async function getOwnedDemand(request: NextRequest, demandId: number) {
       ? await getDb().query(
           `select dr.id, dr.buyer_id, dr.crop_name, dr.quantity, dr.unit,
                   dr.required_date, dr.location, dr.notes, dr.status,
+                  dr.moderation_status, dr.moderation_note, dr.reviewed_at,
                   dr.created_at, dr.updated_at,
                   u.name as buyer_name, u.email as buyer_email
            from demand_requests dr
@@ -49,7 +50,8 @@ async function getOwnedDemand(request: NextRequest, demandId: number) {
         )
       : await getDb().query(
           `select id, buyer_id, crop_name, quantity, unit, required_date,
-                  location, notes, status, created_at, updated_at
+                  location, notes, status, moderation_status, moderation_note, reviewed_at,
+                  created_at, updated_at
            from demand_requests
            where id = $1 and buyer_id = $2`,
           [demandId, userId],
@@ -197,7 +199,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       `update demand_requests
        set ${updates.join(", ")}
        where id = $${values.length + 1}
-       returning id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status, created_at, updated_at`,
+       returning id, buyer_id, crop_name, quantity, unit, required_date, location, notes, status,
+                moderation_status, moderation_note, reviewed_at, created_at, updated_at`,
       [...values, demandId],
     );
 

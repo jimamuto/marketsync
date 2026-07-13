@@ -64,7 +64,7 @@ export default function NewFarmerSupplyPage() {
 
       const supplyId = data.supply?.id;
       setForm(initialState);
-      router.push(supplyId ? `/farmer/supplies/${supplyId}` : "/farmer/supplies");
+      router.push(supplyId ? `/farmer/supplies/${supplyId}?submitted=1` : "/farmer/supplies?submitted=1");
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Failed to create crop supply");
       setLoading(false);
@@ -215,6 +215,10 @@ export default function NewFarmerSupplyPage() {
                 </select>
               </label>
             </fieldset>
+
+            <p className="form-review-note">
+              New crop supplies are submitted for administrator review before buyers can match or book them.
+            </p>
 
             {error ? <p className="form-error-message">{error}</p> : null}
 
