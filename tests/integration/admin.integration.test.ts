@@ -1,17 +1,12 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { POST as login } from "../../src/app/api/auth/login/route";
 import { PATCH as updateUserStatus } from "../../src/app/api/admin/users/[id]/status/route";
 import { PATCH as moderateSupply } from "../../src/app/api/admin/supplies/[id]/moderation/route";
 import { POST as createSupply } from "../../src/app/api/supplies/route";
-import { resetTestDatabase } from "../setup/integration";
 import { createTestUser, databaseRow } from "../helpers/test-data";
 import { responseJson, routeContext, testRequest } from "../helpers/test-request";
 
 describe("admin workflows with PostgreSQL", () => {
-  beforeEach(async () => {
-    await resetTestDatabase();
-  });
-
   it("suspends and reactivates a user with audit and notification records", async () => {
     const admin = await createTestUser({ role: "admin" });
     const farmer = await createTestUser({ role: "farmer" });

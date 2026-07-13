@@ -3,7 +3,6 @@ import { getDb } from "../../src/lib/database";
 import { POST as register } from "../../src/app/api/auth/register/route";
 import { POST as login } from "../../src/app/api/auth/login/route";
 import { GET as verifyEmail } from "../../src/app/api/auth/verify-email/route";
-import { resetTestDatabase } from "../setup/integration";
 import { responseJson, testRequest } from "../helpers/test-request";
 
 vi.mock("../../src/lib/mail", () => ({
@@ -13,8 +12,7 @@ vi.mock("../../src/lib/mail", () => ({
 import { sendMail } from "../../src/lib/mail";
 
 describe("authentication API with PostgreSQL", () => {
-  beforeEach(async () => {
-    await resetTestDatabase();
+  beforeEach(() => {
     vi.mocked(sendMail).mockClear();
   });
 

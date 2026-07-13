@@ -59,5 +59,18 @@ for (const file of files) {
   }
 }
 
+await client.query(
+  `truncate table
+     admin_audit_logs,
+     notifications,
+     bookings,
+     crop_supplies,
+     demand_requests,
+     email_verification_tokens,
+     password_reset_tokens,
+     users
+   restart identity cascade`,
+);
+
 await client.end();
-console.log(`Prepared isolated PostgreSQL database: ${TEST_DATABASE}`);
+console.log(`Prepared and reset isolated PostgreSQL database: ${TEST_DATABASE}`);

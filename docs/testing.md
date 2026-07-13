@@ -5,10 +5,10 @@
 MarketSync uses [Vitest](https://vitest.dev/) for automated testing. The initial suite contains:
 
 - **6 unit tests** for authentication and session helpers
-- **10 integration tests** for complete API and PostgreSQL workflows
-- **16 tests total**
+- **47 integration tests** for API, validation, security, moderation, booking, and PostgreSQL workflows
+- **53 tests total**
 
-Although the suite has 16 named tests, each integration test performs several API, authorization, and database assertions.
+Each integration test performs API, authorization, and direct database assertions.
 
 ## Test safety and isolation
 
@@ -95,7 +95,10 @@ Integration tests call the actual Next.js route handlers and verify results in t
 
 ### Authentication workflow
 
-File: `tests/integration/auth.integration.test.ts`
+Files:
+
+- `tests/integration/auth.integration.test.ts`
+- `tests/integration/auth-validation.integration.test.ts`
 
 The authentication tests verify that:
 
@@ -110,10 +113,19 @@ The authentication tests verify that:
 9. Session cookies are returned.
 10. Public registration cannot create administrator accounts.
 11. Invalid login credentials are rejected.
+12. Missing registration fields and short passwords are rejected.
+13. Unsupported roles and duplicate emails are rejected.
+14. Incorrect passwords do not create sessions.
+15. Expired verification tokens are deleted without verifying users.
+16. Missing and unknown verification tokens return safely to login.
+17. Logout expires both session cookies.
 
 ### Farmer supply workflow
 
-File: `tests/integration/farmer.integration.test.ts`
+Files:
+
+- `tests/integration/farmer.integration.test.ts`
+- `tests/integration/farmer-validation.integration.test.ts`
 
 The farmer tests verify that:
 
@@ -127,10 +139,17 @@ The farmer tests verify that:
 - The deleted supply is removed from PostgreSQL.
 - Another farmer cannot access the supply.
 - Buyers cannot use farmer-only supply endpoints.
+- Unauthenticated users cannot create supplies.
+- Missing fields, invalid quantities, reversed harvest dates, and unsupported statuses are rejected.
+- Invalid identifiers, empty updates, invalid update quantities, and invalid update statuses are rejected.
+- Another farmer cannot delete an owned supply.
 
 ### Buyer demand workflow
 
-File: `tests/integration/buyer.integration.test.ts`
+Files:
+
+- `tests/integration/buyer.integration.test.ts`
+- `tests/integration/buyer-validation.integration.test.ts`
 
 The buyer tests verify that:
 
@@ -144,10 +163,17 @@ The buyer tests verify that:
 - The deleted demand is removed from PostgreSQL.
 - Another buyer cannot access the demand.
 - Farmers cannot use buyer-only demand endpoints.
+- Unauthenticated users cannot create demands.
+- Missing fields, invalid quantities, and unsupported statuses are rejected.
+- Invalid identifiers, empty updates, invalid update quantities, and invalid update statuses are rejected.
+- Another buyer cannot delete an owned demand.
 
 ### Administrator workflow
 
-File: `tests/integration/admin.integration.test.ts`
+Files:
+
+- `tests/integration/admin.integration.test.ts`
+- `tests/integration/admin-validation.integration.test.ts`
 
 The administrator tests verify that:
 
@@ -160,10 +186,18 @@ The administrator tests verify that:
 - An administrator can approve or reject a supply.
 - Moderation notes are stored in PostgreSQL.
 - Moderation decisions are recorded for accountability.
+- Administrators cannot suspend themselves or other administrator accounts.
+- Invalid account statuses, identifiers, and missing users are rejected.
+- Invalid moderation decisions and missing supplies or demands are rejected.
+- Reviewer identity and review timestamps are stored.
+- Audit metadata and notification content are checked, not only record counts.
 
 ### Moderated marketplace and booking workflow
 
-File: `tests/integration/marketplace.integration.test.ts`
+Files:
+
+- `tests/integration/marketplace.integration.test.ts`
+- `tests/integration/booking-validation.integration.test.ts`
 
 These tests cover the core MarketSync business workflow:
 
@@ -183,6 +217,15 @@ These tests cover the core MarketSync business workflow:
 14. Completion returns the supply status to `ready`.
 15. Notifications are created for affected users.
 16. Administrator actions are written to the audit log.
+17. Only buyers can create bookings.
+18. Missing booking fields and non-positive quantities are rejected.
+19. Rejected supplies and pending demands cannot be booked.
+20. Crop, location, unit, and quantity mismatches are rejected.
+21. Buyers cannot book demands owned by another buyer.
+22. Buyers and farmers are limited to their permitted booking transitions.
+23. Invalid booking identifiers and statuses are rejected.
+24. Buyer cancellation and farmer rejection reopen the demand.
+25. Completed bookings cannot return to another state.
 
 ## What the suite demonstrates
 
@@ -214,4 +257,4 @@ A successful run shows that all unit and integration test files pass while using
 
 ## Current scope
 
-This is the initial high-value regression suite. It covers principal workflows, permissions, moderation rules, and database mutations. Future additions can expand validation boundaries, expired-token handling, booking transition errors, malformed identifiers, and more detailed notification-content assertions.
+This suite covers principal workflows plus high-risk validation and authorization boundaries. Future additions can include concurrency testing, performance testing, SMTP transport integration, browser-level accessibility checks, and end-to-end UI automation.

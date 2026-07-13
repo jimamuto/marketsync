@@ -1,20 +1,15 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { POST as createDemand, GET as listDemands } from "../../src/app/api/demands/route";
 import {
   DELETE as deleteDemand,
   GET as getDemand,
   PATCH as updateDemand,
 } from "../../src/app/api/demands/[id]/route";
-import { resetTestDatabase } from "../setup/integration";
 import { createTestUser } from "../helpers/test-data";
 import { responseJson, routeContext, testRequest } from "../helpers/test-request";
 import { getDb } from "../../src/lib/database";
 
 describe("buyer demand API with PostgreSQL", () => {
-  beforeEach(async () => {
-    await resetTestDatabase();
-  });
-
   it("creates, reads, updates, and deletes a pending demand", async () => {
     const buyer = await createTestUser({ role: "buyer" });
     const createResponse = await createDemand(

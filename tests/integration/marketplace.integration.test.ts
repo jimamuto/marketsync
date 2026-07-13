@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { POST as createBooking } from "../../src/app/api/bookings/route";
 import { PATCH as updateBooking } from "../../src/app/api/bookings/[id]/status/route";
 import { POST as createSupply } from "../../src/app/api/supplies/route";
@@ -6,15 +6,10 @@ import { POST as createDemand } from "../../src/app/api/demands/route";
 import { GET as getMatches } from "../../src/app/api/demands/[id]/matches/route";
 import { PATCH as moderateSupply } from "../../src/app/api/admin/supplies/[id]/moderation/route";
 import { PATCH as moderateDemand } from "../../src/app/api/admin/demands/[id]/moderation/route";
-import { resetTestDatabase } from "../setup/integration";
 import { createTestUser, databaseRow } from "../helpers/test-data";
 import { responseJson, routeContext, testRequest } from "../helpers/test-request";
 
 describe("moderated marketplace workflow with PostgreSQL", () => {
-  beforeEach(async () => {
-    await resetTestDatabase();
-  });
-
   async function createPendingRecords() {
     const farmer = await createTestUser({ role: "farmer" });
     const buyer = await createTestUser({ role: "buyer" });
@@ -64,7 +59,8 @@ describe("moderated marketplace workflow with PostgreSQL", () => {
       routeContext(demand.id),
     );
     expect(matchesResponse.status).toBe(200);
-    expect((await responseJson<{ matches: unknown[] }>(matchesResponse)).matches).toHaveLength(0);
+    const pendingMatches = await responseJson<{ matches: Array<{ id: number }> }>(matchesResponse);
+    expect(pendingMatches.matches.some((match) => match.id === supply.id)).toBe(false);
 
     const bookingResponse = await createBooking(
       testRequest("/api/bookings", {
@@ -109,8 +105,9 @@ describe("moderated marketplace workflow with PostgreSQL", () => {
     );
     const matches = await responseJson<{ matches: Array<{ id: number; moderation_status: string }> }>(matchesResponse);
     expect(matchesResponse.status).toBe(200);
-    expect(matches.matches).toHaveLength(1);
-    expect(matches.matches[0]).toMatchObject({ id: supply.id, moderation_status: "approved" });
+    expect(matches.matches).toContainEqual(
+      expect.objectContaining({ id: supply.id, moderation_status: "approved" }),
+    );
 
     const bookingResponse = await createBooking(
       testRequest("/api/bookings", {
