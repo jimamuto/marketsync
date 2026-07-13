@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:integration": "npm run test:db:prepare && vitest run --config vitest.integration.config.ts",
+    "test:coverage": "vitest run --config vitest.unit.config.ts --coverage",
+    "test:db:prepare": "node scripts/test-db-prepare.mjs"
   },
   "dependencies": {
     "@types/pg": "^8.11.11",
@@ -26,8 +31,10 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^9.18.0",
     "eslint-config-next": "^15.1.6",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.10"
   }
 }

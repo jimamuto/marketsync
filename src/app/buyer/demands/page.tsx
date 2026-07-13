@@ -1,6 +1,5 @@
 "use client"
 import {useState,useEffect} from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageHeader from "../../../components/PageHeader";
 import DashboardSidebar from "../../../components/DashboardSidebar";
@@ -21,14 +20,15 @@ type Demand = {
 
 export default function BuyerDemandsPage() {
 
-  const searchParams = useSearchParams();
-  const submitted = searchParams.get("submitted") === "1";
+  const [submitted, setSubmitted] = useState(false);
   const [demands,setDemands] = useState<Demand[]>([]); //initial state of empty array
   const [isLoading,setIsLoading]= useState(true);
   const [error,setError] = useState("");
 //load the demands when the component is rendered
   //
  useEffect(()=>{
+    setSubmitted(new URLSearchParams(window.location.search).get("submitted") === "1");
+
     async function loadDemands(){
       try {
         const response = await fetch("/api/demands");

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import DashboardSidebar from "../../../../components/DashboardSidebar";
 import PageHeader from "../../../../components/PageHeader";
@@ -51,8 +51,7 @@ function toInputDate(value: string | null | undefined) {
 export default function FarmerSupplyDetailsPage() {
   const params = useParams<{ id?: string | string[] }>();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const submitted = searchParams.get("submitted") === "1";
+  const [submitted, setSubmitted] = useState(false);
   const supplyId = useMemo(() => {
     const value = params?.id;
     return Array.isArray(value) ? value[0] : value;
@@ -65,6 +64,7 @@ export default function FarmerSupplyDetailsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    setSubmitted(new URLSearchParams(window.location.search).get("submitted") === "1");
     let active = true;
 
     async function loadSupply() {
