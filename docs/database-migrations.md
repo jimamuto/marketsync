@@ -34,6 +34,11 @@ Planned first migrations:
 009_seed_demo_data.sql
 010_create_notifications.sql
 011_seed_showcase_demo_data.sql
+012_add_created_at_indexes.sql
+013_add_admin_moderation_fields.sql
+014_add_user_account_status.sql
+015_create_admin_audit_logs.sql
+016_seed_admin_action_center_demo_data.sql
 ```
 
 ### 001_create_users.sql
@@ -83,6 +88,26 @@ Adds in-app notification storage for booking and status updates.
 ### 011_seed_showcase_demo_data.sql
 
 Adds resettable showcase supplies, demands, bookings, and notifications for presentation walkthroughs. This is separate from `009_seed_demo_data.sql` so demo credentials stay stable while showcase records can be recreated quickly.
+
+### 012_add_created_at_indexes.sql
+
+Adds indexes for recent-record and dashboard queries.
+
+### 013_add_admin_moderation_fields.sql
+
+Adds separate moderation status, notes, reviewer, and review timestamp fields to supplies and demands.
+
+### 014_add_user_account_status.sql
+
+Adds active and suspended account states for administrative access control.
+
+### 015_create_admin_audit_logs.sql
+
+Creates the audit trail for administrator decisions and marketplace operations.
+
+### 016_seed_admin_action_center_demo_data.sql
+
+Adds repeatable presentation records for pending supply review, pending demand review, and overdue supply alerts.
 
 ---
 

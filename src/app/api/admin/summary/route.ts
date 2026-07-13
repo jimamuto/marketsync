@@ -24,8 +24,8 @@ export async function GET(request: NextRequest) {
       harvestProjectionResult,
     ] = await Promise.all([
       getDb().query("select count(*)::int as count from users"),
-      getDb().query("select count(*)::int as count from crop_supplies"),
-      getDb().query("select count(*)::int as count from demand_requests"),
+      getDb().query("select count(*)::int as count from crop_supplies where moderation_status = 'approved'"),
+      getDb().query("select count(*)::int as count from demand_requests where moderation_status = 'approved'"),
       getDb().query("select count(*)::int as count from bookings"),
       getDb().query(
         `with demand_totals as (
@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
                   coalesce(sum(quantity), 0)::numeric as requested_quantity
            from demand_requests
            where status <> 'cancelled'
+             and moderation_status = 'approved'
            group by lower(trim(crop_name)), unit
          ), supply_totals as (
            select lower(trim(crop_name)) as crop_key,
@@ -42,6 +43,7 @@ export async function GET(request: NextRequest) {
                   coalesce(sum(quantity), 0)::numeric as available_quantity
            from crop_supplies
            where status in ('planned', 'growing', 'ready', 'booked')
+             and moderation_status = 'approved'
            group by lower(trim(crop_name)), unit
          )
          select dt.crop_name,
@@ -67,6 +69,7 @@ export async function GET(request: NextRequest) {
                 count(distinct farmer_id)::int as farmer_count
          from crop_supplies
          where status in ('planned', 'growing', 'ready', 'booked')
+           and moderation_status = 'approved'
            and expected_harvest_date >= current_date
          group by date_trunc('month', expected_harvest_date), crop_name, unit
          order by date_trunc('month', expected_harvest_date), projected_quantity desc

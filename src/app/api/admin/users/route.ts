@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
 
     const result = await getDb().query(
-      `select id, name, email, role, phone, location, email_verified_at, created_at, updated_at
+      `select id, name, email, role, phone, location, email_verified_at, account_status, created_at, updated_at
        from users
        order by created_at desc`,
     );

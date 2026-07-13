@@ -2,6 +2,7 @@
 //when booking status changes, the other party receives a notification
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createNotification, writeAdminAuditLog } from "../../../../../lib/admin";
 import { getDb } from "../../../../../lib/database";
 import { getSessionRole, getSessionUserId } from "../../../../../lib/session";
 
@@ -50,14 +51,16 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const bookingResult =
       role === "admin"
         ? await getDb().query(
-            `select b.id, b.supply_id, b.buyer_id, b.farmer_id, b.status
+            `select b.id, b.supply_id, b.buyer_id, b.farmer_id, b.status,
+                    b.demand_request_id
              from bookings b
              where b.id = $1`,
             [bookingId],
           )
         : role === "farmer"
           ? await getDb().query(
-              `select b.id, b.supply_id, b.buyer_id, b.farmer_id, b.status
+              `select b.id, b.supply_id, b.buyer_id, b.farmer_id, b.status,
+                      b.demand_request_id
                from bookings b
                where b.id = $1 and b.farmer_id = $2`,
               [bookingId, userId],
@@ -108,17 +111,27 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     );
 
     if (["accepted", "rejected", "cancelled", "completed"].includes(status)) {
-      const recipientId = role === "buyer" ? booking.farmer_id : booking.buyer_id;
-      await getDb().query(
-        `insert into notifications (user_id, title, message, type)
-         values ($1, $2, $3, $4)`,
-        [
-          recipientId,
-          "Booking status updated",
-          `Booking #${bookingId} was marked as ${status}.`,
-          "booking_status_updated",
-        ],
+      const recipientIds = role === "admin"
+        ? [booking.buyer_id, booking.farmer_id]
+        : [role === "buyer" ? booking.farmer_id : booking.buyer_id];
+
+      await Promise.all(
+        [...new Set(recipientIds)].map((recipientId) =>
+          createNotification(
+            recipientId,
+            "Booking status updated",
+            `Booking #${bookingId} was marked as ${status}.`,
+            "booking_status_updated",
+          ),
+        ),
       );
+    }
+
+    if (role === "admin" && userId) {
+      await writeAdminAuditLog(userId, `booking_${status}`, "booking", bookingId, {
+        previous_status: booking.status,
+        status,
+      });
     }
 
     if (status === "accepted") {

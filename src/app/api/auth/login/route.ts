@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     // find user by email
     const result = await getDb().query(
-      "select id, name, email, password_hash, role, phone, location, email_verified_at from users where email = $1",
+      "select id, name, email, password_hash, role, phone, location, email_verified_at, account_status from users where email = $1",
       [email],
     );
 
@@ -44,9 +44,19 @@ export async function POST(request: Request) {
       );
     }
 
+    if (user.account_status === "suspended") {
+      return NextResponse.json(
+        { message: "This account has been suspended. Contact an administrator." },
+        { status: 403 },
+      );
+    }
+
     if (!user.email_verified_at && user.role!=="admin") {
       return NextResponse.json(
-        { message: "Please verify your email before logging in." },
+        {
+          message: "Please verify your email before logging in.",
+          verification_required: true,
+        },
         { status: 403 },
       );
     }

@@ -38,12 +38,13 @@ const sidebarLinks: Record<DashboardRole, DashboardSidebarLink[]> = {
     { label: "Bookings", href: "/buyer/bookings" },
   ],
   admin: [
-    { label: "Overview", href: "/admin" },
+    { label: "Action Center", href: "/admin" },
     { label: "Users", href: "/admin/users" },
-    { label: "Supplies", href: "/admin/supplies" },
-    { label: "Demands", href: "/admin/demands" },
-    { label: "Bookings", href: "/admin/bookings" },
+    { label: "Supplies to Review", href: "/admin/supplies" },
+    { label: "Demands to Review", href: "/admin/demands" },
+    { label: "Booking Operations", href: "/admin/bookings" },
     { label: "Reports", href: "/admin/reports" },
+    { label: "Audit Log", href: "/admin/audit" },
   ],
 };
 

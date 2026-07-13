@@ -378,6 +378,11 @@ Current admin route status:
 | `GET` | `/api/admin/supplies` | Implemented |
 | `GET` | `/api/admin/demands` | Implemented |
 | `GET` | `/api/admin/bookings` | Implemented |
+| `GET` | `/api/admin/action-center` | Implemented |
+| `GET` | `/api/admin/audit` | Implemented |
+| `PATCH` | `/api/admin/users/[id]/status` | Implemented |
+| `PATCH` | `/api/admin/supplies/[id]/moderation` | Implemented |
+| `PATCH` | `/api/admin/demands/[id]/moderation` | Implemented |
 
 ### Access Rules
 
@@ -441,9 +446,15 @@ Current admin route status:
 }
 ```
 
+### Admin Action Center
+
+`GET /api/admin/action-center` returns pending bookings, records awaiting moderation, unverified users, unmatched demands, overdue supplies, and recent admin activity.
+
+Admin write routes require an admin session and record changes in `admin_audit_logs`. Supply and demand moderation is separate from their business lifecycle status. Booking actions reuse `PATCH /api/bookings/[id]/status` and notify both marketplace participants when an admin changes a booking.
+
 ### Testing Note
 
-These routes are meant to be tested with an admin session cookie or an admin login flow. The routes are read-only reporting endpoints and do not change data.
+These routes are meant to be tested with an admin session cookie or an admin login flow. Non-admin users receive `403 Forbidden`. Suspended users receive `403 Forbidden` at login.
 
 ---
 

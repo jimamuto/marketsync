@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const result = await getDb().query(
       `select dr.id, dr.buyer_id, dr.crop_name, dr.quantity, dr.unit,
               dr.required_date, dr.location, dr.notes, dr.status,
-              dr.created_at, dr.updated_at,
+              dr.created_at, dr.updated_at, dr.moderation_status, dr.moderation_note,
               u.name as buyer_name, u.email as buyer_email
        from demand_requests dr
        join users u on u.id = dr.buyer_id

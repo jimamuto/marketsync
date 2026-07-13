@@ -51,12 +51,18 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
+        if (data.verification_required) {
+          router.push(`/check-email?email=${encodeURIComponent(form.email.trim())}`);
+          return;
+        }
+
         setError(data.message || "Failed to log in.");
         return;
       }
 //automatically redirect to the dashboard depending on the user role
       const redirectTo = roleRoutes[data.user.role as keyof typeof roleRoutes] ?? "/";
       router.replace(redirectTo);
+      router.refresh();
 
     } catch {
       setError("Something went wrong. Please try again.");

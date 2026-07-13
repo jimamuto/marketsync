@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const result = await getDb().query(
       `select cs.id, cs.farmer_id, cs.crop_name, cs.crop_variety, cs.quantity, cs.unit,
               cs.planting_date, cs.expected_harvest_date, cs.location, cs.status,
-              cs.created_at, cs.updated_at,
+              cs.created_at, cs.updated_at, cs.moderation_status, cs.moderation_note,
               u.name as farmer_name, u.email as farmer_email
        from crop_supplies cs
        join users u on u.id = cs.farmer_id

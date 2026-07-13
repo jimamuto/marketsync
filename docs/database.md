@@ -27,6 +27,11 @@ Run migrations in order because later tables depend on earlier tables.
 | `009_seed_demo_data.sql` | Adds demo farmer and buyer users with shared presentation credentials. |
 | `010_create_notifications.sql` | Creates in-app notifications for booking and status updates. |
 | `011_seed_showcase_demo_data.sql` | Adds resettable showcase supplies, demands, bookings, and notifications for presentation walkthroughs. |
+| `012_add_created_at_indexes.sql` | Adds indexes for recent-record and dashboard queries. |
+| `013_add_admin_moderation_fields.sql` | Adds moderation workflow fields to supplies and demands. |
+| `014_add_user_account_status.sql` | Adds active and suspended account states. |
+| `015_create_admin_audit_logs.sql` | Records administrator decisions and operational changes. |
+| `016_seed_admin_action_center_demo_data.sql` | Adds repeatable presentation records for admin review queues and overdue alerts. |
 
 ---
 
@@ -47,6 +52,7 @@ Stores all system users in one table.
 | `location` | Optional user location. |
 | `created_at` | When the user record was created. |
 | `updated_at` | When the user record was last updated. |
+| `account_status` | Access state: `active` or `suspended`. |
 
 Allowed roles:
 
@@ -71,7 +77,11 @@ Stores crop supply records created by farmers. This represents what a farmer has
 | `planting_date` | Date the crop was planted. |
 | `expected_harvest_date` | Expected harvest date. Must not be before `planting_date`. |
 | `location` | Location of the crop supply. |
-| `status` | Current supply status. |
+| `status` | Current supply lifecycle status. |
+| `moderation_status` | Admin review state: `pending`, `approved`, or `rejected`. |
+| `moderation_note` | Optional explanation from the reviewer. |
+| `reviewed_by` | Admin user who reviewed the record. |
+| `reviewed_at` | When the record was reviewed. |
 | `created_at` | When the crop supply record was created. |
 | `updated_at` | When the crop supply record was last updated. |
 
@@ -105,7 +115,11 @@ Stores procurement demand records created by institutional buyers.
 | `required_date` | Date the buyer needs the crop. |
 | `location` | Buyer location or required supply area. |
 | `notes` | Optional buyer notes. |
-| `status` | Current demand request status. |
+| `status` | Current demand request lifecycle status. |
+| `moderation_status` | Admin review state: `pending`, `approved`, or `rejected`. |
+| `moderation_note` | Optional explanation from the reviewer. |
+| `reviewed_by` | Admin user who reviewed the record. |
+| `reviewed_at` | When the record was reviewed. |
 | `created_at` | When the demand request was created. |
 | `updated_at` | When the demand request was last updated. |
 
@@ -256,6 +270,11 @@ docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/mig
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/009_seed_demo_data.sql
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/010_create_notifications.sql
 docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/011_seed_showcase_demo_data.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/012_add_created_at_indexes.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/013_add_admin_moderation_fields.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/014_add_user_account_status.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/015_create_admin_audit_logs.sql
+docker exec -i marketsync-postgres psql -U postgres -d marketsync < database/migrations/016_seed_admin_action_center_demo_data.sql
 ```
 
 Check the tables:
